@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = @attr_packed enum {
+    1,
+}
+
+B = @attr_packed enum {
+    1111,
+}
+
+C = enum {
+    1,
+}
+
+D = enum {
+    0x1111_0000_1111,
+}

@@ -1,0 +1,73 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 64, alignment: 64 }struct {
+    { offset: 0, size: 64 }a { size: 64, alignment: 64 }long long,
+}
+
+B = { size: 64, alignment: 64 }struct {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+}
+
+C = { size: 64, alignment: 64 }struct {
+    { offset: 0, size: 1 }a { size: 8, alignment: 8 }char:1,
+    _ { size: 64, alignment: 64 }long long:0,
+}
+
+D = { size: 0, alignment: 8 }struct {
+    _ { size: 64, alignment: 64 }long long:0,
+}
+
+E = { size: 8, alignment: 8 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    _ { size: 64, alignment: 64 }long long:0,
+}
+
+F = { size: 8, alignment: 8 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    _ { size: 32, alignment: 32 }int:0,
+    _ { size: 64, alignment: 64 }long long:0,
+}
+
+G = { size: 32, alignment: 8 }struct {
+    { offset: 0, size: 1 }@attr_packed a { size: 32, alignment: 32 }int:1,
+}
+
+H = { size: 32, alignment: 8 }struct {
+    { offset: 0, size: 1 }@align(16) @attr_packed a { size: 32, alignment: 32 }int:1,
+}
+
+A2 = { size: 64, alignment: 64 }union {
+    { offset: 0, size: 64 }a { size: 64, alignment: 64 }long long,
+}
+
+B2 = { size: 64, alignment: 64 }union {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+}
+
+C2 = { size: 8, alignment: 8 }union {
+    { offset: 0, size: 1 }a { size: 8, alignment: 8 }char:1,
+    _ { size: 64, alignment: 64 }long long:0,
+}
+
+D2 = { size: 0, alignment: 8 }union {
+    _ { size: 64, alignment: 64 }long long:0,
+}
+
+E2 = { size: 8, alignment: 8 }union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    _ { size: 64, alignment: 64 }long long:0,
+}
+
+F2 = { size: 8, alignment: 8 }union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    _ { size: 32, alignment: 32 }int:0,
+    _ { size: 64, alignment: 64 }long long:0,
+}
+
+G2 = { size: 8, alignment: 8 }union {
+    { offset: 0, size: 1 }@attr_packed a { size: 32, alignment: 32 }int:1,
+}
+
+H2 = { size: 8, alignment: 8 }union {
+    { offset: 0, size: 1 }@align(16) @attr_packed a { size: 32, alignment: 32 }int:1,
+}
+// hash: 8175a962152e6f0c

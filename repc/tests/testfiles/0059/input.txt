@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = @attr_packed struct {
+    c char,
+    @attr_packed _ int:1,
+    d char,
+}
+
+B = @attr_packed struct {
+    c char,
+    @attr_packed _ int:1,
+}
+
+// The following test does not work because of a bug in Clang's MSVC layout implementation.
+// C = @attr_packed struct {
+//     c char,
+//     @align(8) _ int:1,
+// }

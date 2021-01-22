@@ -1,0 +1,5 @@
+compiler = "./compiler.sh"
+
+#include_compilers = ["msvc"]
+#include_targets = [ "x86_64-pc-windows-gnu", ]
+#include_tests = ["0088"]

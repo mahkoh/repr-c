@@ -1,0 +1,25 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 32, alignment: 16 }@pragma_pack(16) @attr_packed struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 8, size: 1 }@attr_packed i { size: 16, alignment: 16 }int:1,
+    { offset: 16, size: 8 }d { size: 8, alignment: 8 }char,
+}
+
+B = { size: 128, alignment: 64 }@pragma_pack(16) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 64, size: 1 }@align(8) i { size: 16, alignment: 16 }int:1,
+    { offset: 72, size: 8 }d { size: 8, alignment: 8 }char,
+}
+
+C = { size: 16, alignment: 16 }@pragma_pack(16) @attr_packed union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 1 }@attr_packed i { size: 16, alignment: 16 }int:1,
+    { offset: 0, size: 8 }d { size: 8, alignment: 8 }char,
+}
+
+D = { size: 64, alignment: 64 }@pragma_pack(16) union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 1 }@align(8) i { size: 16, alignment: 16 }int:1,
+    { offset: 0, size: 8 }d { size: 8, alignment: 8 }char,
+}
+// hash: 3ed842cc22689b1a

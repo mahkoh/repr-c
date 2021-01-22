@@ -1,0 +1,9 @@
+[workspace]
+members = [
+    "cly/cli",
+    "cly/impl",
+    "repc/facade",
+    "repc/test-generator",
+    "repc/impl",
+    "repc/tests",
+]

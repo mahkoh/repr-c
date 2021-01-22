@@ -1,0 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+Int = { size: 96, alignment: 64 }@align(8) typedef { size: 96, alignment: 32 }[3]{ size: 32, alignment: 32 }int
+Y = { size: 384, alignment: 64 }struct {
+    { offset: 0, size: 320 }y { size: 320, alignment: 64 }[3]{ size: 96, alignment: 64 }Int,
+    { offset: 320, size: 32 }i { size: 32, alignment: 32 }int,
+}
+// hash: 29990805058b73ba

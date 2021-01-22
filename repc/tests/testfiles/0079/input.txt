@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = @attr_packed struct {
+    c char,
+    @align(2) i int:1,
+    d char,
+}
+
+B = struct {
+    c char,
+    @align(2) @attr_packed i int:1,
+    d char,
+}
+
+C = @attr_packed union {
+    c char,
+    @align(2) i int:1,
+    d char,
+}
+
+D = union {
+    c char,
+    @align(2) @attr_packed i int:1,
+    d char,
+}

@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 8, alignment: 8 }struct {
+    _ { size: 32, alignment: 32 }int:1,
+}
+
+B = { size: 8, alignment: 8 }union {
+    _ { size: 32, alignment: 32 }int:1,
+}
+// hash: 7701829aefa635aa

@@ -1,0 +1,30 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = struct {
+    c char,
+    s short,
+}
+
+B = @align(4) typedef short
+
+C = struct {
+    c char,
+    s B,
+}
+
+D = struct {
+    @align(8) c char:1,
+}
+
+E = struct {
+    c char,
+    s D,
+}
+
+F = @pragma_pack(4) struct {
+    @align(8) c char:1,
+}
+
+G = struct {
+    c char,
+    s D,
+}

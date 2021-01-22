@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+Int = @align(8) typedef [3]int
+
+Y = typedef [3]Int
+
+Z = struct {
+    y Y,
+    i int,
+}

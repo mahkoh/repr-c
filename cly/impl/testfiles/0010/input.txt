@@ -1,0 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+MyEnum = enum {
+    1,
+    2,
+    7,
+    sizeof(int),
+    9,
+}

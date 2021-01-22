@@ -1,0 +1,168 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A000 = struct {
+    c char,
+    @align(8) i int,
+}
+
+A001 = @attr_packed struct {
+    c char,
+    @align(8) i int,
+}
+
+A002 = struct {
+    c char,
+    @attr_packed @align(8) i int,
+}
+
+A003 = @attr_packed struct {
+    c char,
+    @attr_packed @align(8) i int,
+}
+
+A004 = @align(16) typedef int
+
+A005 = struct {
+    c char,
+    @align(8) i A004,
+}
+
+A006 = @attr_packed struct {
+    c char,
+    @align(8) i A004,
+}
+
+A007 = struct {
+    c char,
+    @attr_packed @align(8) i A004,
+}
+
+A008 = @attr_packed struct {
+    c char,
+    @attr_packed @align(8) i A004,
+}
+
+A100 = @pragma_pack(2) struct {
+    c char,
+    @align(8) i int,
+}
+
+A101 = @attr_packed @pragma_pack(2) struct {
+    c char,
+    @align(8) i int,
+}
+
+A102 = @pragma_pack(2) struct {
+    c char,
+    @attr_packed @align(8) i int,
+}
+
+A103 = @attr_packed @pragma_pack(2) struct {
+    c char,
+    @attr_packed @align(8) i int,
+}
+
+A104 = @align(16) typedef int
+
+A105 = @pragma_pack(2) struct {
+    c char,
+    @align(8) i A104,
+}
+
+A106 = @attr_packed @pragma_pack(2) struct {
+    c char,
+    @align(8) i A104,
+}
+
+A107 = @pragma_pack(2) struct {
+    c char,
+    @attr_packed @align(8) i A104,
+}
+
+A108 = @attr_packed @pragma_pack(2) struct {
+    c char,
+    @attr_packed @align(8) i A104,
+}
+
+B000 = union {
+    c char,
+    @align(8) i int,
+}
+
+B001 = @attr_packed union {
+    c char,
+    @align(8) i int,
+}
+
+B002 = union {
+    c char,
+    @attr_packed @align(8) i int,
+}
+
+B003 = @attr_packed union {
+    c char,
+    @attr_packed @align(8) i int,
+}
+
+B004 = @align(16) typedef int
+
+B005 = union {
+    c char,
+    @align(8) i A004,
+}
+
+B006 = @attr_packed union {
+    c char,
+    @align(8) i A004,
+}
+
+B007 = union {
+    c char,
+    @attr_packed @align(8) i A004,
+}
+
+B008 = @attr_packed union {
+    c char,
+    @attr_packed @align(8) i A004,
+}
+
+B100 = @pragma_pack(2) union {
+    c char,
+    @align(8) i int,
+}
+
+B101 = @attr_packed @pragma_pack(2) union {
+    c char,
+    @align(8) i int,
+}
+
+B102 = @pragma_pack(2) union {
+    c char,
+    @attr_packed @align(8) i int,
+}
+
+B103 = @attr_packed @pragma_pack(2) union {
+    c char,
+    @attr_packed @align(8) i int,
+}
+
+B104 = @align(16) typedef int
+
+B105 = @pragma_pack(2) union {
+    c char,
+    @align(8) i A104,
+}
+
+B106 = @attr_packed @pragma_pack(2) union {
+    c char,
+    @align(8) i A104,
+}
+
+B107 = @pragma_pack(2) union {
+    c char,
+    @attr_packed @align(8) i A104,
+}
+
+B108 = @attr_packed @pragma_pack(2) union {
+    c char,
+    @attr_packed @align(8) i A104,
+}

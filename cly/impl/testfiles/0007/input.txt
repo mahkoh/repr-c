@@ -1,0 +1,25 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+MyStruct = struct {
+    i int,
+    c char,
+}
+MyUnion = union {
+    i int,
+    c char,
+}
+MyStructWithFieldAnnotations = struct {
+    @attr_packed i int,
+    c char,
+}
+MyStructWithABitField = struct {
+    c char,
+    i int:4,
+}
+MyStructWithABitField2 = struct {
+    c char,
+    i int:2+2,
+}
+MyStructWithABitField3 = struct {
+    c char,
+    _ int:4
+}

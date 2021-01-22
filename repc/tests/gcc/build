@@ -1,0 +1,73 @@
+#!/bin/bash
+
+BINUTILS_SRC=~/c/binutils-gdb
+GCC_SRC=~/c/gcc2
+THREADS=10
+
+export LD=ld.lld
+
+set -ex
+
+rm -rf builds
+rm -rf $1
+
+mkdir -p builds/$1/{gcc,binutils}
+mkdir -p $1
+prefix=$(realpath $1)
+
+(
+set -ex
+cd builds/$1/binutils
+
+"$BINUTILS_SRC"/configure \
+    --prefix="$prefix" \
+    --target $1 \
+    --disable-nls \
+    --disable-werror \
+    --disable-gdb \
+    --disable-libdecnumber \
+    --disable-readline \
+    --disable-sim \
+    --program-prefix= \
+    --with-dwarf2
+
+make -j $THREADS all-gas
+make -j $THREADS install-gas
+)
+
+(
+set -ex
+cd builds/$1/gcc
+
+"$GCC_SRC"/configure \
+    --prefix="$prefix" \
+    --target $1 \
+    --disable-multilib \
+    --disable-nls \
+    --program-prefix= \
+    --enable-languages=c \
+    --without-headers \
+    --disable-libstdcxx \
+    --disable-gold \
+    --disable-ld \
+    --disable-lto \
+    --disable-host-shared
+
+make -j $THREADS all-gcc
+make -j $THREADS install-gcc
+)
+
+find $1 -type f -perm -u+w -print0 2>/dev/null | while IFS= read -rd '' binary ; do
+    case "$(file -bi "$binary")" in
+        *application/x-executable* | \
+        *application/x-pie-executable*)
+            strip_flags="$STRIP_SHARED";;
+        *)
+            continue ;;
+    esac
+    echo strip --strip-unneeded "$binary"
+    strip --strip-unneeded "$binary"
+done
+
+rm -rf builds
+touch done/$1

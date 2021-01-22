@@ -1,0 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = enum {
+    1,
+}
+E = @align(8) enum {
+    1,
+    0xffff_0fff_ffff,
+}

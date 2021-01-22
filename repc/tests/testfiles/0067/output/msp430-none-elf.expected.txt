@@ -1,0 +1,61 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A1 = { size: 48, alignment: 8 }@attr_packed struct {
+    { offset: 0, size: 16 }x { size: 16, alignment: 16 }int,
+    { offset: 16, size: 32 }y { size: 32, alignment: 16 }long,
+}
+
+A2 = { size: 48, alignment: 8 }struct {
+    { offset: 0, size: 16 }@attr_packed x { size: 16, alignment: 16 }int,
+    { offset: 16, size: 32 }@attr_packed y { size: 32, alignment: 16 }long,
+}
+
+B1 = { size: 32, alignment: 8 }@attr_packed union {
+    { offset: 0, size: 16 }x { size: 16, alignment: 16 }int,
+    { offset: 0, size: 32 }y { size: 32, alignment: 16 }long,
+}
+
+B2 = { size: 32, alignment: 8 }union {
+    { offset: 0, size: 16 }@attr_packed x { size: 16, alignment: 16 }int,
+    { offset: 0, size: 32 }@attr_packed y { size: 32, alignment: 16 }long,
+}
+
+C1 = { size: 40, alignment: 8 }@attr_packed struct {
+    { offset: 0, size: 1 }x { size: 16, alignment: 16 }int:1,
+    { offset: 8, size: 32 }y { size: 32, alignment: 16 }long,
+}
+
+C2 = { size: 40, alignment: 8 }struct {
+    { offset: 0, size: 1 }@attr_packed x { size: 16, alignment: 16 }int:1,
+    { offset: 8, size: 32 }@attr_packed y { size: 32, alignment: 16 }long,
+}
+
+D1 = { size: 32, alignment: 8 }@attr_packed union {
+    { offset: 0, size: 1 }x { size: 16, alignment: 16 }int:1,
+    { offset: 0, size: 32 }y { size: 32, alignment: 16 }long,
+}
+
+D2 = { size: 32, alignment: 8 }union {
+    { offset: 0, size: 1 }@attr_packed x { size: 16, alignment: 16 }int:1,
+    { offset: 0, size: 32 }@attr_packed y { size: 32, alignment: 16 }long,
+}
+
+E1 = { size: 32, alignment: 8 }@attr_packed struct {
+    _ { size: 16, alignment: 16 }int:0,
+    { offset: 0, size: 32 }y { size: 32, alignment: 16 }long,
+}
+
+E2 = { size: 32, alignment: 8 }struct {
+    @attr_packed _ { size: 16, alignment: 16 }int:0,
+    { offset: 0, size: 32 }@attr_packed y { size: 32, alignment: 16 }long,
+}
+
+F1 = { size: 32, alignment: 8 }@attr_packed union {
+    _ { size: 16, alignment: 16 }int:0,
+    { offset: 0, size: 32 }y { size: 32, alignment: 16 }long,
+}
+
+F2 = { size: 32, alignment: 8 }union {
+    @attr_packed _ { size: 16, alignment: 16 }int:0,
+    { offset: 0, size: 32 }@attr_packed y { size: 32, alignment: 16 }long,
+}
+// hash: 40bb668440e77a35

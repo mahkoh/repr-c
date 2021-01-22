@@ -1,0 +1,60 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A1 = @attr_packed struct {
+    x int,
+    y long,
+}
+
+A2 = struct {
+    @attr_packed x int,
+    @attr_packed y long,
+}
+
+B1 = @attr_packed union {
+    x int,
+    y long,
+}
+
+B2 = union {
+    @attr_packed x int,
+    @attr_packed y long,
+}
+
+C1 = @attr_packed struct {
+    x int:1,
+    y long,
+}
+
+C2 = struct {
+    @attr_packed x int:1,
+    @attr_packed y long,
+}
+
+D1 = @attr_packed union {
+    x int:1,
+    y long,
+}
+
+D2 = union {
+    @attr_packed x int:1,
+    @attr_packed y long,
+}
+
+E1 = @attr_packed struct {
+    _ int:0,
+    y long,
+}
+
+E2 = struct {
+    @attr_packed _ int:0,
+    @attr_packed y long,
+}
+
+F1 = @attr_packed union {
+    _ int:0,
+    y long,
+}
+
+F2 = union {
+    @attr_packed _ int:0,
+    @attr_packed y long,
+}

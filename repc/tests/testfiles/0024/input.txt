@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+X = union {
+    b []long long,
+}
+
+Y = union {
+    _ long long:0,
+    b []char,
+}

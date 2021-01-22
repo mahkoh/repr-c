@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+X = struct {
+    c char:1,
+    @attr_packed _ int:0,
+    d char,
+}
+
+Y = struct {
+    c char:1,
+    _ int:0,
+    d char,
+}

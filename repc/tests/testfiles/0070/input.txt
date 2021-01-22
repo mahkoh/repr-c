@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = @align(1) typedef int
+
+B = union {
+    a A: 1,
+}
+
+C = union {
+    @attr_packed a int: 1,
+}
+
+D = @pragma_pack(1) union {
+    a int: 1,
+}
+
+E = union {
+    a A: 9,
+}
+
+F = union {
+    @attr_packed a int: 9,
+}
+
+G = @pragma_pack(1) union {
+    a int: 9,
+}

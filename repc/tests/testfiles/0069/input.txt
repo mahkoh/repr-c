@@ -1,0 +1,72 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = struct {
+    a long long,
+}
+
+B = struct {
+    a long long:1,
+}
+
+C = struct {
+    a char:1,
+    _ long long:0,
+}
+
+D = struct {
+    _ long long:0,
+}
+
+E = struct {
+    c char,
+    _ long long:0,
+}
+
+F = struct {
+    c char,
+    _ int:0,
+    _ long long:0,
+}
+
+G = struct {
+    @attr_packed a int:1,
+}
+
+H = struct {
+    @align(16) @attr_packed a int:1,
+}
+
+A2 = union {
+    a long long,
+}
+
+B2 = union {
+    a long long:1,
+}
+
+C2 = union {
+    a char:1,
+    _ long long:0,
+}
+
+D2 = union {
+    _ long long:0,
+}
+
+E2 = union {
+    c char,
+    _ long long:0,
+}
+
+F2 = union {
+    c char,
+    _ int:0,
+    _ long long:0,
+}
+
+G2 = union {
+    @attr_packed a int:1,
+}
+
+H2 = union {
+    @align(16) @attr_packed a int:1,
+}

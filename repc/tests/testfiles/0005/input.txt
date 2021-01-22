@@ -1,0 +1,10 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+Int = @align(8) typedef int
+
+X = struct {
+    i Int:1,
+}
+
+Y = @pragma_pack(1) struct {
+    x X,
+}

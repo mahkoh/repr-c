@@ -1,0 +1,48 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// ra 8, fa 32
+A = @pragma_pack(2) struct {
+    @align(4) _ char:1,
+}
+
+B = struct {
+    a []A,
+}
+
+// ra 16, fa 16
+C = @align(2) typedef char
+
+D = struct {
+    a []C,
+}
+
+// ra 16, fa 64
+E = @pragma_pack(2) struct {
+    @align(8) _ char:1,
+    @align(2) c char,
+}
+
+F = struct {
+    a []E,
+}
+
+// ra 64, fa 128
+G = struct {
+    @align(16) _ char:1,
+    @align(8) c char,
+}
+
+H = struct {
+    a []G,
+}
+
+I = struct {
+    a []char,
+}
+
+J = struct {
+    @align(8) c []char,
+}
+
+K = struct {
+    @align(2) c []char,
+}

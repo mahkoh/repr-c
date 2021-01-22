@@ -1,0 +1,21 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// https://github.com/llvm/llvm-project/blob/b43c26d036dcbf7a6881f39e4434cf059364022a/clang/test/Layout/ms-aligned-array.c
+
+AlignedStruct = @align(16) struct {
+    x int,
+}
+AlignedInt = @align(16) typedef int
+
+A = @pragma_pack(2) struct {
+    a [1]AlignedStruct,
+}
+
+B = @pragma_pack(2) struct {
+    b char,
+    a [1]AlignedInt,
+}
+
+C = @pragma_pack(2) struct {
+    c char,
+    a []AlignedInt,
+}

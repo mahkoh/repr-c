@@ -1,0 +1,8 @@
+[package]
+name = "repc-impl"
+version = "0.1.0"
+authors = ["Julian Orth <ju.orth@gmail.com>"]
+edition = "2018"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/mahkoh/repr-c"
+description = "Implementation detail of the repc crate"

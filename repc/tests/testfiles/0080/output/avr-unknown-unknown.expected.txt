@@ -1,0 +1,33 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 16, alignment: 128 }@align(16) typedef { size: 16, alignment: 8 }int
+
+B = { size: 8, alignment: 8 }struct {
+    { offset: 0, size: 1 }a { size: 16, alignment: 128 }A:1,
+    { offset: 1, size: 1 }b { size: 16, alignment: 128 }A:1,
+    { offset: 2, size: 1 }c { size: 16, alignment: 128 }A:1,
+}
+
+C = { size: 24, alignment: 8 }struct {
+    { offset: 0, size: 16 }i { size: 16, alignment: 8 }int,
+    { offset: 16, size: 1 }a { size: 16, alignment: 128 }A:1,
+}
+
+D = { size: 24, alignment: 8 }struct {
+    { offset: 0, size: 15 }i { size: 16, alignment: 8 }short:15,
+    { offset: 15, size: 2 }j { size: 16, alignment: 8 }short:2,
+}
+
+E = { size: 40, alignment: 8 }struct {
+    { offset: 0, size: 24 }i { size: 24, alignment: 8 }[3]{ size: 8, alignment: 8 }char,
+    { offset: 24, size: 9 }j { size: 16, alignment: 8 }int:9,
+}
+
+F = { size: 64, alignment: 16 }@align(2) typedef { size: 64, alignment: 8 }long long
+
+G = { size: 104, alignment: 8 }struct {
+    { offset: 0, size: 8 }a { size: 8, alignment: 8 }char,
+    { offset: 8, size: 16 }b { size: 64, alignment: 16 }F:16,
+    { offset: 24, size: 15 }c { size: 64, alignment: 16 }F:15,
+    { offset: 39, size: 63 }d { size: 64, alignment: 16 }F:63,
+}
+// hash: a916c414bd2bf48

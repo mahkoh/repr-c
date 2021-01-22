@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = struct {
+    c char:1,
+    _ int:0,
+    d char,
+}
+
+B = struct {
+    c char:1,
+    _ int:0,
+}
+
+C = struct {
+    c char:1,
+    @align(128) _ int:0,
+    d char,
+}

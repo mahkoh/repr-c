@@ -1,0 +1,37 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 16, alignment: 8 }@align(001) typedef { size: 16, alignment: 16 }int
+B = { size: 16, alignment: 16 }@align(002) typedef { size: 16, alignment: 16 }int
+C = { size: 16, alignment: 32 }@align(004) typedef { size: 16, alignment: 16 }int
+D = { size: 16, alignment: 64 }@align(008) typedef { size: 16, alignment: 16 }int
+E = { size: 16, alignment: 128 }@align(016) typedef { size: 16, alignment: 16 }int
+F = { size: 16, alignment: 256 }@align(032) typedef { size: 16, alignment: 16 }int
+G = { size: 16, alignment: 512 }@align(064) typedef { size: 16, alignment: 16 }int
+H = { size: 16, alignment: 1024 }@align(128) typedef { size: 16, alignment: 16 }int
+
+AA = { size: 16, alignment: 8 }@align(001) typedef { size: 16, alignment: 8 }A
+AB = { size: 16, alignment: 16 }@align(002) typedef { size: 16, alignment: 8 }A
+AC = { size: 16, alignment: 32 }@align(004) typedef { size: 16, alignment: 8 }A
+AD = { size: 16, alignment: 64 }@align(008) typedef { size: 16, alignment: 8 }A
+AE = { size: 16, alignment: 128 }@align(016) typedef { size: 16, alignment: 8 }A
+AF = { size: 16, alignment: 256 }@align(032) typedef { size: 16, alignment: 8 }A
+AG = { size: 16, alignment: 512 }@align(064) typedef { size: 16, alignment: 8 }A
+AH = { size: 16, alignment: 1024 }@align(128) typedef { size: 16, alignment: 8 }A
+
+BA = { size: 16, alignment: 8 }@align(001) typedef { size: 16, alignment: 16 }B
+BB = { size: 16, alignment: 16 }@align(002) typedef { size: 16, alignment: 16 }B
+BC = { size: 16, alignment: 32 }@align(004) typedef { size: 16, alignment: 16 }B
+BD = { size: 16, alignment: 64 }@align(008) typedef { size: 16, alignment: 16 }B
+BE = { size: 16, alignment: 128 }@align(016) typedef { size: 16, alignment: 16 }B
+BF = { size: 16, alignment: 256 }@align(032) typedef { size: 16, alignment: 16 }B
+BG = { size: 16, alignment: 512 }@align(064) typedef { size: 16, alignment: 16 }B
+BH = { size: 16, alignment: 1024 }@align(128) typedef { size: 16, alignment: 16 }B
+
+DA = { size: 16, alignment: 8 }@align(001) typedef { size: 16, alignment: 64 }D
+DB = { size: 16, alignment: 16 }@align(002) typedef { size: 16, alignment: 64 }D
+DC = { size: 16, alignment: 32 }@align(004) typedef { size: 16, alignment: 64 }D
+DD = { size: 16, alignment: 64 }@align(008) typedef { size: 16, alignment: 64 }D
+DE = { size: 16, alignment: 128 }@align(016) typedef { size: 16, alignment: 64 }D
+DF = { size: 16, alignment: 256 }@align(032) typedef { size: 16, alignment: 64 }D
+DG = { size: 16, alignment: 512 }@align(064) typedef { size: 16, alignment: 64 }D
+DH = { size: 16, alignment: 1024 }@align(128) typedef { size: 16, alignment: 64 }D
+// hash: 18dfc68d8d63a1c4

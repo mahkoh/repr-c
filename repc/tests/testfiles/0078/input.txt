@@ -1,0 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = struct {
+    _ int:1,
+}
+
+B = union {
+    _ int:1,
+}

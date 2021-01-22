@@ -1,0 +1,104 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// https://github.com/llvm/llvm-project/blob/50337fb933e0f666d34d747a43d46840b3982bf7/clang/test/Layout/ms-x86-pack-and-align.cpp
+
+A = struct {
+    a char,
+}
+
+B = struct {
+	@align(4) a long long,
+}
+
+X = @pragma_pack(2) struct {
+    a B,
+    b char,
+    c int,
+}
+
+YA = @pragma_pack(16) struct {
+    @align(32) _ char:1,
+}
+
+YB = @pragma_pack(1) struct {
+    a char,
+    b YA,
+}
+
+YC = @pragma_pack(8) struct {
+    @align(32) _ char:1,
+}
+
+YD = @pragma_pack(1) struct {
+    a char,
+    b YC,
+}
+
+YE = @pragma_pack(4) struct {
+    @align(32) _ char:1,
+}
+
+YF = @pragma_pack(1) struct {
+    a char,
+    b YE,
+}
+
+D0 = @pragma_pack(16) @align(16) struct {
+    a char,
+}
+
+RB0 = @pragma_pack(1) @align(8) struct {
+    @align(1024) b int:3,
+}
+
+RC = @pragma_pack(1) struct {
+    a char,
+    @align(1024) c int:3,
+}
+
+RE = @pragma_pack(1) struct {
+    a char,
+    c RC,
+}
+
+PA = @align(4) struct {
+    c int,
+}
+
+PB = @align(8) typedef PA
+
+PC = @pragma_pack(1) struct {
+    a char,
+    x PB,
+}
+
+PD = typedef PB
+
+PE = @pragma_pack(1) struct {
+    a char,
+    x PD,
+}
+
+QA = @align(2) typedef int
+
+QB = @pragma_pack(1) struct {
+    a char,
+    b QA,
+}
+
+QC = struct {
+    a char,
+    b QA,
+}
+
+QD = struct {
+    a char,
+    b QA:3,
+}
+
+EmptyAlignedLongLongMemb = @align(4) struct {
+    FlexArrayMemb []long long,
+}
+
+EmptyPackedAlignedLongLongMemb = @pragma_pack(1) @align(4) struct {
+    FlexArrayMemb []long long,
+}

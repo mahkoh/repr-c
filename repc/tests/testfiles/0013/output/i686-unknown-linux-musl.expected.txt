@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 8, alignment: 8 }typedef { size: 8, alignment: 8 }char
+B = { size: 8, alignment: 8 }typedef { size: 8, alignment: 8 }unsigned char
+C = { size: 8, alignment: 8 }typedef { size: 8, alignment: 8 }signed char
+D = { size: 16, alignment: 16 }typedef { size: 16, alignment: 16 }unsigned short
+E = { size: 16, alignment: 16 }typedef { size: 16, alignment: 16 }short
+F = { size: 32, alignment: 32 }typedef { size: 32, alignment: 32 }unsigned int
+G = { size: 32, alignment: 32 }typedef { size: 32, alignment: 32 }int
+H = { size: 32, alignment: 32 }typedef { size: 32, alignment: 32 }unsigned long
+I = { size: 32, alignment: 32 }typedef { size: 32, alignment: 32 }long
+J = { size: 64, alignment: 32 }typedef { size: 64, alignment: 32 }unsigned long long
+K = { size: 64, alignment: 32 }typedef { size: 64, alignment: 32 }long long
+L = { size: 32, alignment: 32 }typedef { size: 32, alignment: 32 }ptr
+M = { size: 32, alignment: 32 }typedef { size: 32, alignment: 32 }float
+N = { size: 64, alignment: 32 }typedef { size: 64, alignment: 32 }double
+// hash: 6dc4b33b16b5f5f4

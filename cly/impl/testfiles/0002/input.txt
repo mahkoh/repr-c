@@ -1,0 +1,284 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+const A000 = !3
+const A001 = !0
+const A002 = -2
+const A003 = (-2)
+const A004 = BITS_PER_BYTE
+const A005 = sizeof(int)
+const A006 = sizeof_bits(int)
+
+A007 = struct {
+    a char,
+    b int:1,
+    c int:1,
+    d int,
+    e [3]struct {
+        a int,
+    },
+    d []struct {
+        a int:1,
+    },
+}
+
+const A008 = offsetof(A007, d)
+const A009 = offsetof_bits(A007, c)
+const A010 = offsetof(A007, e[1].a)
+const A011 = offsetof(A007, e[1])
+const A012 = offsetof_bits(A007, e[1].a)
+const A013 = A011 + A012
+const A014 = A013 == 108
+const A015 = A013 == 109
+const A016 = A013 != 109
+const A017 = A013 != 108
+const A018 = A013 <= 108
+const A019 = A013 <= 208
+const A020 = A013 <= 008
+const A021 = A013 < 108
+const A022 = A013 < 109
+const A023 = A013 < 008
+const A024 = A013 >= 108
+const A025 = A013 >= 208
+const A026 = A013 >= 008
+const A027 = A013 > 108
+const A028 = A013 > 107
+const A029 = A013 > 208
+const A030 = 1 + 2
+const A031 = 1 - 2
+const A032 = 2 * 3
+const A033 = 6 / 3
+const A034 = 7 % 3
+const A035 = 0 || 1
+const A036 = 0 || 0
+const A037 = 0 && 1
+const A038 = 1 && 1
+
+const A039 = -0b1111_1111
+const A040 = -0o077
+const A041 = -0xff
+
+const A042 = 2 * 2 / 4
+const A043 = 2 * 2 % 4
+const A044 = 2 / 2 * 4
+const A045 = 3 / 3 % 2
+const A046 = 2 % 2 * 4
+const A047 = 5 % 3 / 2
+
+const A048 = (2 * 2) / 4
+const A049 = (2 * 2) % 4
+const A050 = (2 / 2) * 4
+const A051 = (3 / 3) % 2
+const A052 = (2 % 2) * 4
+const A053 = (5 % 3) / 2
+
+const A054 = 2 * (2 / 4)
+const A055 = 2 * (2 % 4)
+const A056 = 2 / (2 * 4)
+const A057 = 3 / (3 % 2)
+const A058 = 2 % (2 * 4)
+const A059 = 5 % (3 / 2)
+
+const A060 = 2 * 2 + 1
+const A061 = (2 * 2) + 1
+const A062 = 2 * (2 + 1)
+const A063 = 2 * 2 - 1
+const A064 = (2 * 2) - 1
+const A065 = 2 * (2 - 1)
+
+const A066 = 1 + 2 * 2
+const A067 = 1 + (2 * 2)
+const A068 = (1 + 2) * 2
+const A069 = -1 + 2 * 2
+const A070 = -1 + (2 * 2)
+const A071 = (-1 + 2) * 2
+const A072 = 1 - 2 * 2
+const A073 = 1 - (2 * 2)
+const A077 = (1 - 2) * 2
+
+const A078 = 2 == 2 * 2
+const A079 = (2 == 2) * 2
+const A080 = 2 == (2 * 2)
+
+const A081 = 2 != 2 * 2
+const A082 = (2 != 2) * 2
+const A083 = 2 != (2 * 2)
+
+const A084 = 2 <= 2 * 2
+const A085 = (2 <= 2) * 2
+const A086 = 2 <= (2 * 2)
+
+const A087 = 2 < 2 * 2
+const A088 = (2 < 2) * 2
+const A089 = 2 < (2 * 2)
+
+const A090 = 2 >= 2 * 2
+const A091 = (2 >= 2) * 2
+const A092 = 2 >= (2 * 2)
+
+const A093 = 3 > 2 * 2
+const A094 = (3 > 2) * 2
+const A095 = 3 > (2 * 2)
+
+const A096_0 = 1 == 2 == 0
+const A097_0 = (1 == 2) == 0
+const A098_0 = 1 == (2 == 0)
+
+const A096 = 1 == 2 != 0
+const A097 = (1 == 2) != 0
+const A098 = 1 == (2 != 0)
+
+const A099 = 1 == 2 <= 0
+const A100 = (1 == 2) <= 0
+const A101 = 1 == (2 <= 0)
+
+const A102 = 0 == 0 < 0
+const A103 = (0 == 0) < 0
+const A104 = 0 == (0 < 0)
+
+const A105 = 2 == 2 >= 1
+const A106 = (2 == 2) >= 1
+const A107 = 2 == (2 >= 1)
+
+const A108 = 1 == 2 > 0
+const A109 = (1 == 2) > 0
+const A110 = 1 == (2 > 0)
+
+const A111 = 1 != 2 == 0
+const A112 = (1 != 2) == 0
+const A113 = 1 != (2 == 0)
+
+const A114 = 1 != 2 != 0
+const A115 = (1 != 2) != 0
+const A116 = 1 != (2 != 0)
+
+const A117 = 1 != 2 <= 0
+const A118 = (1 != 2) <= 0
+const A119 = 1 != (2 <= 0)
+
+const A120 = 1 != 1 < 0
+const A121 = (1 != 1) < 0
+const A122 = 1 != (1 < 0)
+
+const A123 = 2 != 2 >= 1
+const A124 = (2 != 2) >= 1
+const A125 = 2 != (2 >= 1)
+
+const A126 = 1 != 2 > 0
+const A127 = (1 != 2) > 0
+const A128 = 1 != (2 > 0)
+
+
+
+const A129 = 2 <= 1 == 0
+const A130 = (2 <= 1) == 0
+const A131 = 2 <= (1 == 0)
+
+const A132 = 2 <= 2 != 0
+const A133 = (2 <= 2) != 0
+const A134 = 2 <= (2 != 0)
+
+const A135 = 2 <= 2 <= 2
+const A136 = (2 <= 2) <= 2
+const A137 = 2 <= (2 <= 2)
+
+const A138 = 2 <= 1 < 1
+const A139 = (2 <= 1) < 1
+const A140 = 2 <= (1 < 1)
+
+const A141 = 2 <= 2 >= 1
+const A142 = (2 <= 2) >= 1
+const A143 = 2 <= (2 >= 1)
+
+const A144 = 2 <= 2 > 0
+const A145 = (2 <= 2) > 0
+const A146 = 2 <= (2 > 0)
+
+
+
+
+const A147 = 2 < 1 == 0
+const A148 = (2 < 1) == 0
+const A149 = 2 < (1 == 0)
+
+const A150 = 1 < 2 != 0
+const A151 = (1 < 2) != 0
+const A152 = 1 < (2 != 0)
+
+const A153 = 2 < 2 <= 2
+const A154 = (2 < 2) <= 2
+const A155 = 2 < (2 <= 2)
+
+const A156 = 2 < 1 < 1
+const A157 = (2 < 1) < 1
+const A158 = 2 < (1 < 1)
+
+const A159 = 1 < 2 >= 1
+const A160 = (1 < 2) >= 1
+const A161 = 1 < (2 >= 1)
+
+const A162 = 1 < 2 > 0
+const A163 = (1 < 2) > 0
+const A164 = 1 < (2 > 0)
+
+
+
+const A165 = 2 >= 1 == 0
+const A166 = (2 >= 1) == 0
+const A167 = 2 >= (1 == 0)
+
+const A168 = 1 >= 2 != 0
+const A169 = (1 >= 2) != 0
+const A170 = 1 >= (2 != 0)
+
+const A171 = 2 >= 2 <= 0
+const A172 = (2 >= 2) <= 0
+const A173 = 2 >= (2 <= 0)
+
+const A174 = 2 >= 1 < 1
+const A175 = (2 >= 1) < 1
+const A176 = 2 >= (1 < 1)
+
+const A177 = 1 >= 2 >= 1
+const A178 = (1 >= 2) >= 1
+const A179 = 1 >= (2 >= 1)
+
+const A180 = 1 >= 2 > 0
+const A181 = (1 >= 2) > 0
+const A182 = 1 >= (2 > 0)
+
+
+
+const A183 = 2 > 1 == 0
+const A184 = (2 > 1) == 0
+const A185 = 2 > (1 == 0)
+
+const A186 = 2 > 2 != 0
+const A187 = (2 > 2) != 0
+const A188 = 2 > (2 != 0)
+
+const A189 = 1 > 2 <= 3
+const A190 = (1 > 2) <= 3
+const A191 = 1 > (2 <= 3)
+
+const A192 = 2 > 1 < 1
+const A193 = (2 > 1) < 1
+const A194 = 2 > (1 < 1)
+
+const A195 = 2 > 2 >= 1
+const A196 = (2 > 2) >= 1
+const A197 = 2 > (2 >= 1)
+
+const A198 = 2 > 2 > 0
+const A199 = (2 > 2) > 0
+const A200 = 2 > (2 > 0)
+
+const A201 = 2 == 2 && 1
+const A202 = (2 == 2) && 1
+const A203 = 2 == (2 && 1)
+
+const A204 = 0 && 1 || 1
+const A205 = (0 && 1) || 1
+const A206 = 0 && (1 || 1)
+
+const A207 = 1 || 1 && 0
+const A208 = 1 || (1 && 0)
+const A209 = (1 || 1) && 0

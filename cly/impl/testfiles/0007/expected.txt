@@ -1,0 +1,25 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+MyStruct = { size: 64, alignment: 32 }struct {
+    { offset: 0, size: 32 }i { size: 32, alignment: 32 }int,
+    { offset: 32, size: 8 }c { size: 8, alignment: 8 }char,
+}
+MyUnion = { size: 32, alignment: 32 }union {
+    { offset: 0, size: 32 }i { size: 32, alignment: 32 }int,
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+}
+MyStructWithFieldAnnotations = { size: 40, alignment: 8 }struct {
+    { offset: 0, size: 32 }@attr_packed i { size: 32, alignment: 32 }int,
+    { offset: 32, size: 8 }c { size: 8, alignment: 8 }char,
+}
+MyStructWithABitField = { size: 64, alignment: 32 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 32, size: 4 }i { size: 32, alignment: 32 }int:4,
+}
+MyStructWithABitField2 = { size: 64, alignment: 32 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 32, size: 4 }i { size: 32, alignment: 32 }int:{4}2+2,
+}
+MyStructWithABitField3 = { size: 64, alignment: 32 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    _ { size: 32, alignment: 32 }int:4
+}

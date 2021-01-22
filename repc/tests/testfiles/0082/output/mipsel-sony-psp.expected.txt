@@ -1,0 +1,111 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 128, alignment: 64 }struct {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    _ { size: 64, alignment: 64 }long long:0,
+    { offset: 64, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+A_ = { size: 64, alignment: 64 }union {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    _ { size: 64, alignment: 64 }long long:0,
+    { offset: 0, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+B = { size: 128, alignment: 64 }struct {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    @attr_packed _ { size: 64, alignment: 64 }long long:0,
+    { offset: 64, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+B_ = { size: 64, alignment: 64 }union {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    @attr_packed _ { size: 64, alignment: 64 }long long:0,
+    { offset: 0, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+C = { size: 72, alignment: 8 }@attr_packed struct {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    _ { size: 64, alignment: 64 }long long:0,
+    { offset: 64, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+C_ = { size: 8, alignment: 8 }@attr_packed union {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    _ { size: 64, alignment: 64 }long long:0,
+    { offset: 0, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+D = { size: 72, alignment: 8 }@pragma_pack(1) @attr_packed struct {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    _ { size: 64, alignment: 64 }long long:0,
+    { offset: 64, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+D_ = { size: 8, alignment: 8 }@pragma_pack(1) @attr_packed union {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    _ { size: 64, alignment: 64 }long long:0,
+    { offset: 0, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+E = { size: 1032, alignment: 8 }@pragma_pack(1) @attr_packed struct {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    @align(128) _ { size: 64, alignment: 64 }long long:0,
+    { offset: 1024, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+E_ = { size: 8, alignment: 8 }@pragma_pack(1) @attr_packed union {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    @align(128) _ { size: 64, alignment: 64 }long long:0,
+    { offset: 0, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+F = { size: 1032, alignment: 8 }@attr_packed struct {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    @align(128) _ { size: 64, alignment: 64 }long long:0,
+    { offset: 1024, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+F_ = { size: 8, alignment: 8 }@attr_packed union {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    @align(128) _ { size: 64, alignment: 64 }long long:0,
+    { offset: 0, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+G = { size: 1088, alignment: 64 }struct {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    @attr_packed @align(128) _ { size: 64, alignment: 64 }long long:0,
+    { offset: 1024, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+G_ = { size: 64, alignment: 64 }union {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    @attr_packed @align(128) _ { size: 64, alignment: 64 }long long:0,
+    { offset: 0, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+H = { size: 1032, alignment: 8 }@pragma_pack(1) struct {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    @attr_packed @align(128) _ { size: 64, alignment: 64 }long long:0,
+    { offset: 1024, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+H_ = { size: 8, alignment: 8 }@pragma_pack(1) union {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    @attr_packed @align(128) _ { size: 64, alignment: 64 }long long:0,
+    { offset: 0, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+I = { size: 64, alignment: 1024 }@align(128) typedef { size: 64, alignment: 64 }long long
+
+J = { size: 1088, alignment: 64 }struct {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    @attr_packed _ { size: 64, alignment: 1024 }I:0,
+    { offset: 1024, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+
+J_ = { size: 64, alignment: 64 }union {
+    { offset: 0, size: 1 }a { size: 64, alignment: 64 }long long:1,
+    @attr_packed _ { size: 64, alignment: 1024 }I:0,
+    { offset: 0, size: 1 }b { size: 64, alignment: 64 }long long:1,
+}
+// hash: d05ccea738361ece

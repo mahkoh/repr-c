@@ -1,0 +1,49 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// ra 8, fa 32
+A = { size: 16, alignment: 32 }@pragma_pack(2) struct {
+    @align(4) _ { size: 8, alignment: 8 }char:1,
+}
+
+B = { size: 32, alignment: 32 }struct {
+    { offset: 0, size: 0 }a { size: 0, alignment: 32 }[]{ size: 16, alignment: 32 }A,
+}
+
+// ra 16, fa 16
+C = { size: 8, alignment: 16, required_alignment: 16 }@align(2) typedef { size: 8, alignment: 8 }char
+
+D = { size: 32, alignment: 16, required_alignment: 16 }struct {
+    { offset: 0, size: 0 }a { size: 0, alignment: 16, required_alignment: 16 }[]{ size: 8, alignment: 16, required_alignment: 16 }C,
+}
+
+// ra 16, fa 64
+E = { size: 32, alignment: 64, required_alignment: 16 }@pragma_pack(2) struct {
+    @align(8) _ { size: 8, alignment: 8 }char:1,
+    { offset: 16, size: 8 }@align(2) c { size: 8, alignment: 8 }char,
+}
+
+F = { size: 32, alignment: 64, required_alignment: 16 }struct {
+    { offset: 0, size: 0 }a { size: 0, alignment: 64, required_alignment: 16 }[]{ size: 32, alignment: 64, required_alignment: 16 }E,
+}
+
+// ra 64, fa 128
+G = { size: 128, alignment: 128, required_alignment: 64 }struct {
+    @align(16) _ { size: 8, alignment: 8 }char:1,
+    { offset: 64, size: 8 }@align(8) c { size: 8, alignment: 8 }char,
+}
+
+H = { size: 64, alignment: 128, required_alignment: 64 }struct {
+    { offset: 0, size: 0 }a { size: 0, alignment: 128, required_alignment: 64 }[]{ size: 128, alignment: 128, required_alignment: 64 }G,
+}
+
+I = { size: 32, alignment: 8 }struct {
+    { offset: 0, size: 0 }a { size: 0, alignment: 8 }[]{ size: 8, alignment: 8 }char,
+}
+
+J = { size: 64, alignment: 64, required_alignment: 64 }struct {
+    { offset: 0, size: 0 }@align(8) c { size: 0, alignment: 8 }[]{ size: 8, alignment: 8 }char,
+}
+
+K = { size: 32, alignment: 16, required_alignment: 16 }struct {
+    { offset: 0, size: 0 }@align(2) c { size: 0, alignment: 8 }[]{ size: 8, alignment: 8 }char,
+}
+// hash: 9925da53fea8a366

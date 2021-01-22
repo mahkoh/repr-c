@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 48, alignment: 8 }@attr_packed struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    @attr_packed _ { size: 32, alignment: 32 }int:1,
+    { offset: 40, size: 8 }d { size: 8, alignment: 8 }char,
+}
+
+B = { size: 40, alignment: 8 }@attr_packed struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    @attr_packed _ { size: 32, alignment: 32 }int:1,
+}
+
+// The following test does not work because of a bug in Clang's MSVC layout implementation.
+// C = @attr_packed struct {
+//     c char,
+//     @align(8) _ int:1,
+// }
+// hash: ee2fff722a752088

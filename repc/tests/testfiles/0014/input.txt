@@ -1,0 +1,36 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = @align(001) typedef int
+B = @align(002) typedef int
+C = @align(004) typedef int
+D = @align(008) typedef int
+E = @align(016) typedef int
+F = @align(032) typedef int
+G = @align(064) typedef int
+H = @align(128) typedef int
+
+AA = @align(001) typedef A
+AB = @align(002) typedef A
+AC = @align(004) typedef A
+AD = @align(008) typedef A
+AE = @align(016) typedef A
+AF = @align(032) typedef A
+AG = @align(064) typedef A
+AH = @align(128) typedef A
+
+BA = @align(001) typedef B
+BB = @align(002) typedef B
+BC = @align(004) typedef B
+BD = @align(008) typedef B
+BE = @align(016) typedef B
+BF = @align(032) typedef B
+BG = @align(064) typedef B
+BH = @align(128) typedef B
+
+DA = @align(001) typedef D
+DB = @align(002) typedef D
+DC = @align(004) typedef D
+DD = @align(008) typedef D
+DE = @align(016) typedef D
+DF = @align(032) typedef D
+DG = @align(064) typedef D
+DH = @align(128) typedef D

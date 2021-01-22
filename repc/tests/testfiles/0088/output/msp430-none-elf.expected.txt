@@ -1,0 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 64, alignment: 16 }@pragma_pack(1) typedef { size: 64, alignment: 16 }long long
+D = { size: 64, alignment: 16 }@align(2) @pragma_pack(1) typedef { size: 64, alignment: 16 }long long
+// hash: f0670d526d00c948

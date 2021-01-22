@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = @pragma_pack(1) enum {
+    1,
+}
+
+B = @pragma_pack(1) enum {
+    1111,
+}
+
+C = @pragma_pack(1) enum {
+    0x1111_0000_1111,
+}

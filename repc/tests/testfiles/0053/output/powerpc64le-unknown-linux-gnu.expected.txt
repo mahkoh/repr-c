@@ -1,0 +1,3 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 0, alignment: 32 }[]{ size: 32, alignment: 32 }int
+// hash: 50b022e46a0f2b68

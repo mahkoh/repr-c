@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = @pragma_pack(2) struct {
+    c char,
+    i int,
+}
+
+B = struct {
+    @align(8) i int:1,
+}
+
+C = @pragma_pack(2) struct {
+    c char,
+    b B,
+}

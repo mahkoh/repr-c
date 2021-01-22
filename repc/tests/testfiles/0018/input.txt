@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = [3]char
+B = [3]@align(4) typedef char
+C = [3][3]@align(4) typedef char
+
+D = [3]short
+E = [3]@align(4) typedef short
+F = [3][3]@align(4) typedef short
+
+G = [3]long long
+H = [3]@align(128) typedef long long
+I = [3][3]@align(128) typedef long long
+
+J = []int

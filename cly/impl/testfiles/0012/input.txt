@@ -1,0 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+MyOpaqueType = opaque { size: 128, alignment: 8 }
+MyExtensiveOpaqueType = opaque {
+    size: 48,
+    field_alignment: 32,
+    pointer_alignment: 16,
+    required_alignment: 16,
+}

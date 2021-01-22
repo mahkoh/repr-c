@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = struct {
+    @align(8) i int:1,
+}
+
+B = struct {
+    @align(1) i int:1,
+}
+
+C = union {
+    @align(8) i int:1,
+}
+
+D = union {
+    @align(1) i int:1,
+}

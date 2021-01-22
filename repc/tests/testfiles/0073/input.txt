@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = struct {
+    c char,
+    _ int:0,
+    d char,
+}
+
+B = union {
+    c char,
+    _ int:0,
+    d char,
+}
+
+C = @align(16) typedef int
+
+D = struct {
+    c char,
+    _ C:0,
+    d char,
+}
+
+E = union {
+    c char,
+    _ C:0,
+    d char,
+}

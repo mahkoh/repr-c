@@ -1,0 +1,56 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// ra 8, pa 32, fa 64
+A = { size: 32, alignment: 64 }@pragma_pack(4) struct {
+    @align(8) _ { size: 8, alignment: 8 }char:1,
+}
+
+BA = { size: 64, alignment: 64 }union {
+    { offset: 0, size: 0 }a { size: 0, alignment: 64 }[]{ size: 32, alignment: 64 }A,
+}
+
+BB = { size: 64, alignment: 64 }union {
+    @align(16) _ { size: 8, alignment: 8 }char:0,
+    { offset: 0, size: 0 }a { size: 0, alignment: 64 }[]{ size: 32, alignment: 64 }A,
+}
+
+BC = { size: 64, alignment: 64 }union {
+    { offset: 0, size: 0 }a { size: 0, alignment: 64 }[]{ size: 32, alignment: 64 }A,
+    @align(16) _ { size: 8, alignment: 8 }char:0,
+}
+
+BD = { size: 128, alignment: 128, required_alignment: 128 }@align(16) union {
+    { offset: 0, size: 0 }a { size: 0, alignment: 64 }[]{ size: 32, alignment: 64 }A,
+}
+
+BE = { size: 64, alignment: 64, required_alignment: 16 }@align(2) union {
+    { offset: 0, size: 0 }a { size: 0, alignment: 64 }[]{ size: 32, alignment: 64 }A,
+}
+
+// ra 64, pa 8, fa 64
+C = { size: 8, alignment: 64, required_alignment: 64 }@align(8) typedef { size: 8, alignment: 8 }char
+
+D = { size: 64, alignment: 64, required_alignment: 64 }union {
+    { offset: 0, size: 0 }a { size: 0, alignment: 64, required_alignment: 64 }[]{ size: 8, alignment: 64, required_alignment: 64 }C,
+}
+
+E = { size: 32, alignment: 8 }union {
+    _ { size: 8, alignment: 8 }char:0,
+}
+
+F = { size: 32, alignment: 8 }union {
+    _ { size: 32, alignment: 32 }int:0,
+}
+
+G = { size: 32, alignment: 8 }union {
+    _ { size: 64, alignment: 64 }long long:0,
+}
+
+H = { size: 32, alignment: 8 }union {
+    _ { size: 8, alignment: 8 }char:0,
+    _ { size: 64, alignment: 64 }long long:0,
+}
+
+I = { size: 8, alignment: 8 }union {
+    { offset: 0, size: 0 }c { size: 0, alignment: 8 }[]{ size: 8, alignment: 8 }char,
+}
+// hash: 6221684ab46c6f88

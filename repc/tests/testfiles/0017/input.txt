@@ -1,0 +1,3 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = @align(4) typedef char
+B = [3]A

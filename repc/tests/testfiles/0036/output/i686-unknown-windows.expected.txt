@@ -1,0 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+S = { size: 8, alignment: 8 }struct {
+    { offset: 0, size: 8 }v { size: 8, alignment: 8 }bool:8,
+}
+// hash: 2eb7873027f8f97f

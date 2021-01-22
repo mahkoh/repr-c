@@ -1,0 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 32, alignment: 32 }@align(1) typedef { size: 32, alignment: 32 }int
+B = { size: 8, alignment: 64, required_alignment: 64 }@align(8) typedef { size: 8, alignment: 8 }char
+C = { size: 32, alignment: 32, required_alignment: 32 }@align(4) typedef { size: 32, alignment: 32 }int
+D = { size: 8, alignment: 128, required_alignment: 128 }@align(4) typedef { size: 8, alignment: 128, required_alignment: 128 }@align(16) typedef { size: 8, alignment: 8 }char
+// hash: 179baaf36c672940

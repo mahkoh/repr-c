@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = @align(2) typedef [3]char
+B = [3]A
+
+C = [3]char
+
+D = []B
+
+E = struct {
+    c char,
+    d D,
+}
+
+F = struct {
+    c char,
+    d []B,
+}

@@ -1,0 +1,27 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = @align(8) typedef int
+
+B = @pragma_pack(4) struct {
+    @align(2) i int,
+    @align(8) j int:1,
+}
+
+const D = sizeof_bits(A)
+
+C = struct {
+    a char,
+    b opaque {
+        size: D + sizeof_bits(B),
+        field_alignment: 128,
+        pointer_alignment: 32,
+        required_alignment: 64
+    },
+}
+
+E = opaque { size: 8, alignment: 16 }
+
+F = opaque { size: 8, field_alignment: 16, pointer_alignment: 32 }
+
+G = opaque { size: 8, field_alignment: 16, pointer_alignment: 32, required_alignment: 64 }
+
+H = opaque { size: 8, alignment: 32, required_alignment: 64 }

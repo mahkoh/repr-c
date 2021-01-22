@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+S2 = @pragma_pack(1) struct {
+    @align(2) a char:1,
+}
+S4 = @pragma_pack(1) struct {
+    @align(4) a char:1,
+}
+S8 = @pragma_pack(1) struct {
+    @align(8) a char:1,
+}
+S16 = @pragma_pack(1) struct {
+    @align(16) a char:1,
+}
+S32 = @pragma_pack(1) struct {
+    @align(32) a char:1,
+}

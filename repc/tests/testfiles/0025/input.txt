@@ -1,0 +1,55 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// ra 8, pa 32, fa 64
+A = @pragma_pack(4) struct {
+    @align(8) _ char:1,
+}
+
+BA = union {
+    a []A,
+}
+
+BB = union {
+    @align(16) _ char:0,
+    a []A,
+}
+
+BC = union {
+    a []A,
+    @align(16) _ char:0,
+}
+
+BD = @align(16) union {
+    a []A,
+}
+
+BE = @align(2) union {
+    a []A,
+}
+
+// ra 64, pa 8, fa 64
+C = @align(8) typedef char
+
+D = union {
+    a []C,
+}
+
+E = union {
+    _ char:0,
+}
+
+F = union {
+    _ int:0,
+}
+
+G = union {
+    _ long long:0,
+}
+
+H = union {
+    _ char:0,
+    _ long long:0,
+}
+
+I = union {
+    c []char,
+}

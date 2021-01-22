@@ -1,0 +1,3 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+MyType = int
+const MyConstant = 1 + 1

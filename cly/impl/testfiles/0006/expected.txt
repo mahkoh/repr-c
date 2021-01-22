@@ -1,0 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+MyTypedefInt = { size: 32, alignment: 32 }typedef { size: 32, alignment: 32 }int
+MyPlainInt = { size: 32, alignment: 32 }int
+MyTypedefIntWithAnnotations = { size: 32, field_alignment: 64, pointer_alignment: 32, required_alignment: 64 }@align(8) typedef { size: 32, alignment: 32 }int

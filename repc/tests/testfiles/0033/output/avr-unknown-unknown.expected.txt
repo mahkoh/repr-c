@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 40, alignment: 8 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 8, size: 32 }a { size: 32, alignment: 8 }long,
+}
+B = { size: 40, alignment: 8 }@pragma_pack(1) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 8, size: 32 }@align(2) a { size: 32, alignment: 8 }long,
+}
+C = { size: 40, alignment: 8 }@pragma_pack(1) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 8, size: 32 }a { size: 32, alignment: 8 }long,
+}
+// hash: 82b4470db00a457a

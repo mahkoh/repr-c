@@ -1,0 +1,1223 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A000 = struct {
+    c char:1,
+    @align(2) d char:1,
+    e char:1,
+}
+
+A001 = @pragma_pack(1) struct {
+    c char:1,
+    @align(2) d char:1,
+    e char:1,
+}
+
+A002 = @pragma_pack(2) struct {
+    c char:1,
+    @align(4) d char:1,
+    e char:1,
+}
+
+A003 = @pragma_pack(4) struct {
+    c char:1,
+    @align(4) d char:1,
+    e char:1,
+}
+
+A004 = @pragma_pack(8) struct {
+    c char:1,
+    @align(4) d char:1,
+    e char:1,
+}
+
+A005 = struct {
+    c char:1,
+    @attr_packed @align(2) d char:1,
+    e char:1,
+}
+
+A006 = @pragma_pack(1) struct {
+    c char:1,
+    @attr_packed @align(2) d char:1,
+    e char:1,
+}
+
+A007 = @pragma_pack(2) struct {
+    c char:1,
+    @attr_packed @align(4) d char:1,
+    e char:1,
+}
+
+A008 = @pragma_pack(4) struct {
+    c char:1,
+    @attr_packed @align(4) d char:1,
+    e char:1,
+}
+
+A009 = @pragma_pack(8) struct {
+    c char:1,
+    @attr_packed @align(4) d char:1,
+    e char:1,
+}
+
+A010 = struct {
+    c char:1,
+    @align(2) d char:8,
+    e char:1,
+}
+
+A011 = @pragma_pack(1) struct {
+    c char:1,
+    @align(2) d char:8,
+    e char:1,
+}
+
+A012 = @pragma_pack(2) struct {
+    c char:1,
+    @align(4) d char:8,
+    e char:1,
+}
+
+A013 = @pragma_pack(4) struct {
+    c char:1,
+    @align(4) d char:8,
+    e char:1,
+}
+
+A014 = @pragma_pack(8) struct {
+    c char:1,
+    @align(4) d char:8,
+    e char:1,
+}
+
+A015 = struct {
+    c char:1,
+    @attr_packed @align(2) d char:8,
+    e char:1,
+}
+
+A016 = @pragma_pack(1) struct {
+    c char:1,
+    @attr_packed @align(2) d char:8,
+    e char:1,
+}
+
+A017 = @pragma_pack(2) struct {
+    c char:1,
+    @attr_packed @align(4) d char:8,
+    e char:1,
+}
+
+A018 = @pragma_pack(4) struct {
+    c char:1,
+    @attr_packed @align(4) d char:8,
+    e char:1,
+}
+
+A019 = @pragma_pack(8) struct {
+    c char:1,
+    @attr_packed @align(4) d char:8,
+    e char:1,
+}
+
+
+
+
+
+
+A100 = struct {
+    c char:2,
+    @align(2) d long:1,
+    e char:1,
+}
+
+A101 = @pragma_pack(1) struct {
+    c char:2,
+    @align(2) d long:1,
+    e char:1,
+}
+
+A102 = @pragma_pack(2) struct {
+    c char:2,
+    @align(4) d long:1,
+    e char:1,
+}
+
+A103 = @pragma_pack(4) struct {
+    c char:2,
+    @align(4) d long:1,
+    e char:1,
+}
+
+A104 = @pragma_pack(8) struct {
+    c char:2,
+    @align(4) d long:1,
+    e char:1,
+}
+
+A105 = struct {
+    c char:2,
+    @attr_packed @align(2) d long:1,
+    e char:1,
+}
+
+A106 = @pragma_pack(1) struct {
+    c char:2,
+    @attr_packed @align(2) d long:1,
+    e char:1,
+}
+
+A107 = @pragma_pack(2) struct {
+    c char:2,
+    @attr_packed @align(4) d long:1,
+    e char:1,
+}
+
+A108 = @pragma_pack(4) struct {
+    c char:2,
+    @attr_packed @align(4) d long:1,
+    e char:1,
+}
+
+A109 = @pragma_pack(8) struct {
+    c char:2,
+    @attr_packed @align(4) d long:1,
+    e char:1,
+}
+
+A110 = struct {
+    c char:2,
+    @align(2) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A111 = @pragma_pack(1) struct {
+    c char:2,
+    @align(2) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A112 = @pragma_pack(2) struct {
+    c char:2,
+    @align(4) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A113 = @pragma_pack(4) struct {
+    c char:2,
+    @align(4) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A114 = @pragma_pack(8) struct {
+    c char:2,
+    @align(4) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A115 = struct {
+    c char:2,
+    @attr_packed @align(2) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A116 = @pragma_pack(1) struct {
+    c char:2,
+    @attr_packed @align(2) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A117 = @pragma_pack(2) struct {
+    c char:2,
+    @attr_packed @align(4) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A118 = @pragma_pack(4) struct {
+    c char:2,
+    @attr_packed @align(4) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A119 = @pragma_pack(8) struct {
+    c char:2,
+    @attr_packed @align(4) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A200 = struct {
+    c char:1,
+    d char:1,
+    e char:1,
+}
+
+A201 = @pragma_pack(1) struct {
+    c char:1,
+    d char:1,
+    e char:1,
+}
+
+A202 = @pragma_pack(2) struct {
+    c char:1,
+    d char:1,
+    e char:1,
+}
+
+A203 = @pragma_pack(4) struct {
+    c char:1,
+    d char:1,
+    e char:1,
+}
+
+A204 = @pragma_pack(8) struct {
+    c char:1,
+    d char:1,
+    e char:1,
+}
+
+A205 = struct {
+    c char:1,
+    @attr_packed d char:1,
+    e char:1,
+}
+
+A206 = @pragma_pack(1) struct {
+    c char:1,
+    @attr_packed d char:1,
+    e char:1,
+}
+
+A207 = @pragma_pack(2) struct {
+    c char:1,
+    @attr_packed d char:1,
+    e char:1,
+}
+
+A208 = @pragma_pack(4) struct {
+    c char:1,
+    @attr_packed d char:1,
+    e char:1,
+}
+
+A209 = @pragma_pack(8) struct {
+    c char:1,
+    @attr_packed d char:1,
+    e char:1,
+}
+
+A210 = struct {
+    c char:1,
+    d char:8,
+    e char:1,
+}
+
+A211 = @pragma_pack(1) struct {
+    c char:1,
+    d char:8,
+    e char:1,
+}
+
+A212 = @pragma_pack(2) struct {
+    c char:1,
+    d char:8,
+    e char:1,
+}
+
+A213 = @pragma_pack(4) struct {
+    c char:1,
+    d char:8,
+    e char:1,
+}
+
+A214 = @pragma_pack(8) struct {
+    c char:1,
+    d char:8,
+    e char:1,
+}
+
+A215 = struct {
+    c char:1,
+    @attr_packed d char:8,
+    e char:1,
+}
+
+A216 = @pragma_pack(1) struct {
+    c char:1,
+    @attr_packed d char:8,
+    e char:1,
+}
+
+A217 = @pragma_pack(2) struct {
+    c char:1,
+    @attr_packed d char:8,
+    e char:1,
+}
+
+A218 = @pragma_pack(4) struct {
+    c char:1,
+    @attr_packed d char:8,
+    e char:1,
+}
+
+A219 = @pragma_pack(8) struct {
+    c char:1,
+    @attr_packed d char:8,
+    e char:1,
+}
+
+
+
+
+
+
+A300 = struct {
+    c char:2,
+    d long:1,
+    e char:1,
+}
+
+A301 = @pragma_pack(1) struct {
+    c char:2,
+    d long:1,
+    e char:1,
+}
+
+A302 = @pragma_pack(2) struct {
+    c char:2,
+    d long:1,
+    e char:1,
+}
+
+A303 = @pragma_pack(4) struct {
+    c char:2,
+    d long:1,
+    e char:1,
+}
+
+A304 = @pragma_pack(8) struct {
+    c char:2,
+    d long:1,
+    e char:1,
+}
+
+A305 = struct {
+    c char:2,
+    @attr_packed d long:1,
+    e char:1,
+}
+
+A306 = @pragma_pack(1) struct {
+    c char:2,
+    @attr_packed d long:1,
+    e char:1,
+}
+
+A307 = @pragma_pack(2) struct {
+    c char:2,
+    @attr_packed d long:1,
+    e char:1,
+}
+
+A308 = @pragma_pack(4) struct {
+    c char:2,
+    @attr_packed d long:1,
+    e char:1,
+}
+
+A309 = @pragma_pack(8) struct {
+    c char:2,
+    @attr_packed d long:1,
+    e char:1,
+}
+
+A310 = struct {
+    c char:2,
+    d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A311 = @pragma_pack(1) struct {
+    c char:2,
+    d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A312 = @pragma_pack(2) struct {
+    c char:2,
+    d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A313 = @pragma_pack(4) struct {
+    c char:2,
+    d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A314 = @pragma_pack(8) struct {
+    c char:2,
+    d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A315 = struct {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A316 = @pragma_pack(1) struct {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A317 = @pragma_pack(2) struct {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A318 = @pragma_pack(4) struct {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A319 = @pragma_pack(8) struct {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+A410 = struct {
+    c char:2,
+    @align(2) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A411 = @pragma_pack(1) struct {
+    c char:2,
+    @align(2) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A412 = @pragma_pack(2) struct {
+    c char:2,
+    @align(4) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A413 = @pragma_pack(4) struct {
+    c char:2,
+    @align(4) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A414 = @pragma_pack(8) struct {
+    c char:2,
+    @align(4) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A415 = struct {
+    c char:2,
+    @attr_packed @align(2) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A416 = @pragma_pack(1) struct {
+    c char:2,
+    @attr_packed @align(2) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A417 = @pragma_pack(2) struct {
+    c char:2,
+    @attr_packed @align(4) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A418 = @pragma_pack(4) struct {
+    c char:2,
+    @attr_packed @align(4) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A419 = @pragma_pack(8) struct {
+    c char:2,
+    @attr_packed @align(4) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A510 = struct {
+    c char:2,
+    d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A511 = @pragma_pack(1) struct {
+    c char:2,
+    d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A512 = @pragma_pack(2) struct {
+    c char:2,
+    d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A513 = @pragma_pack(4) struct {
+    c char:2,
+    d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A514 = @pragma_pack(8) struct {
+    c char:2,
+    d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A515 = struct {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A516 = @pragma_pack(1) struct {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A517 = @pragma_pack(2) struct {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A518 = @pragma_pack(4) struct {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+A519 = @pragma_pack(8) struct {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+
+
+
+B000 = union {
+    c char:1,
+    @align(2) d char:1,
+    e char:1,
+}
+
+B001 = @pragma_pack(1) union {
+    c char:1,
+    @align(2) d char:1,
+    e char:1,
+}
+
+B002 = @pragma_pack(2) union {
+    c char:1,
+    @align(4) d char:1,
+    e char:1,
+}
+
+B003 = @pragma_pack(4) union {
+    c char:1,
+    @align(4) d char:1,
+    e char:1,
+}
+
+B004 = @pragma_pack(8) union {
+    c char:1,
+    @align(4) d char:1,
+    e char:1,
+}
+
+B005 = union {
+    c char:1,
+    @attr_packed @align(2) d char:1,
+    e char:1,
+}
+
+B006 = @pragma_pack(1) union {
+    c char:1,
+    @attr_packed @align(2) d char:1,
+    e char:1,
+}
+
+B007 = @pragma_pack(2) union {
+    c char:1,
+    @attr_packed @align(4) d char:1,
+    e char:1,
+}
+
+B008 = @pragma_pack(4) union {
+    c char:1,
+    @attr_packed @align(4) d char:1,
+    e char:1,
+}
+
+B009 = @pragma_pack(8) union {
+    c char:1,
+    @attr_packed @align(4) d char:1,
+    e char:1,
+}
+
+B010 = union {
+    c char:1,
+    @align(2) d char:8,
+    e char:1,
+}
+
+B011 = @pragma_pack(1) union {
+    c char:1,
+    @align(2) d char:8,
+    e char:1,
+}
+
+B012 = @pragma_pack(2) union {
+    c char:1,
+    @align(4) d char:8,
+    e char:1,
+}
+
+B013 = @pragma_pack(4) union {
+    c char:1,
+    @align(4) d char:8,
+    e char:1,
+}
+
+B014 = @pragma_pack(8) union {
+    c char:1,
+    @align(4) d char:8,
+    e char:1,
+}
+
+B015 = union {
+    c char:1,
+    @attr_packed @align(2) d char:8,
+    e char:1,
+}
+
+B016 = @pragma_pack(1) union {
+    c char:1,
+    @attr_packed @align(2) d char:8,
+    e char:1,
+}
+
+B017 = @pragma_pack(2) union {
+    c char:1,
+    @attr_packed @align(4) d char:8,
+    e char:1,
+}
+
+B018 = @pragma_pack(4) union {
+    c char:1,
+    @attr_packed @align(4) d char:8,
+    e char:1,
+}
+
+B019 = @pragma_pack(8) union {
+    c char:1,
+    @attr_packed @align(4) d char:8,
+    e char:1,
+}
+
+
+
+
+
+
+B100 = union {
+    c char:2,
+    @align(2) d long:1,
+    e char:1,
+}
+
+B101 = @pragma_pack(1) union {
+    c char:2,
+    @align(2) d long:1,
+    e char:1,
+}
+
+B102 = @pragma_pack(2) union {
+    c char:2,
+    @align(4) d long:1,
+    e char:1,
+}
+
+B103 = @pragma_pack(4) union {
+    c char:2,
+    @align(4) d long:1,
+    e char:1,
+}
+
+B104 = @pragma_pack(8) union {
+    c char:2,
+    @align(4) d long:1,
+    e char:1,
+}
+
+B105 = union {
+    c char:2,
+    @attr_packed @align(2) d long:1,
+    e char:1,
+}
+
+B106 = @pragma_pack(1) union {
+    c char:2,
+    @attr_packed @align(2) d long:1,
+    e char:1,
+}
+
+B107 = @pragma_pack(2) union {
+    c char:2,
+    @attr_packed @align(4) d long:1,
+    e char:1,
+}
+
+B108 = @pragma_pack(4) union {
+    c char:2,
+    @attr_packed @align(4) d long:1,
+    e char:1,
+}
+
+B109 = @pragma_pack(8) union {
+    c char:2,
+    @attr_packed @align(4) d long:1,
+    e char:1,
+}
+
+B110 = union {
+    c char:2,
+    @align(2) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B111 = @pragma_pack(1) union {
+    c char:2,
+    @align(2) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B112 = @pragma_pack(2) union {
+    c char:2,
+    @align(4) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B113 = @pragma_pack(4) union {
+    c char:2,
+    @align(4) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B114 = @pragma_pack(8) union {
+    c char:2,
+    @align(4) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B115 = union {
+    c char:2,
+    @attr_packed @align(2) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B116 = @pragma_pack(1) union {
+    c char:2,
+    @attr_packed @align(2) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B117 = @pragma_pack(2) union {
+    c char:2,
+    @attr_packed @align(4) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B118 = @pragma_pack(4) union {
+    c char:2,
+    @attr_packed @align(4) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B119 = @pragma_pack(8) union {
+    c char:2,
+    @attr_packed @align(4) d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B200 = union {
+    c char:1,
+    d char:1,
+    e char:1,
+}
+
+B201 = @pragma_pack(1) union {
+    c char:1,
+    d char:1,
+    e char:1,
+}
+
+B202 = @pragma_pack(2) union {
+    c char:1,
+    d char:1,
+    e char:1,
+}
+
+B203 = @pragma_pack(4) union {
+    c char:1,
+    d char:1,
+    e char:1,
+}
+
+B204 = @pragma_pack(8) union {
+    c char:1,
+    d char:1,
+    e char:1,
+}
+
+B205 = union {
+    c char:1,
+    @attr_packed d char:1,
+    e char:1,
+}
+
+B206 = @pragma_pack(1) union {
+    c char:1,
+    @attr_packed d char:1,
+    e char:1,
+}
+
+B207 = @pragma_pack(2) union {
+    c char:1,
+    @attr_packed d char:1,
+    e char:1,
+}
+
+B208 = @pragma_pack(4) union {
+    c char:1,
+    @attr_packed d char:1,
+    e char:1,
+}
+
+B209 = @pragma_pack(8) union {
+    c char:1,
+    @attr_packed d char:1,
+    e char:1,
+}
+
+B210 = union {
+    c char:1,
+    d char:8,
+    e char:1,
+}
+
+B211 = @pragma_pack(1) union {
+    c char:1,
+    d char:8,
+    e char:1,
+}
+
+B212 = @pragma_pack(2) union {
+    c char:1,
+    d char:8,
+    e char:1,
+}
+
+B213 = @pragma_pack(4) union {
+    c char:1,
+    d char:8,
+    e char:1,
+}
+
+B214 = @pragma_pack(8) union {
+    c char:1,
+    d char:8,
+    e char:1,
+}
+
+B215 = union {
+    c char:1,
+    @attr_packed d char:8,
+    e char:1,
+}
+
+B216 = @pragma_pack(1) union {
+    c char:1,
+    @attr_packed d char:8,
+    e char:1,
+}
+
+B217 = @pragma_pack(2) union {
+    c char:1,
+    @attr_packed d char:8,
+    e char:1,
+}
+
+B218 = @pragma_pack(4) union {
+    c char:1,
+    @attr_packed d char:8,
+    e char:1,
+}
+
+B219 = @pragma_pack(8) union {
+    c char:1,
+    @attr_packed d char:8,
+    e char:1,
+}
+
+
+
+
+
+
+B300 = union {
+    c char:2,
+    d long:1,
+    e char:1,
+}
+
+B301 = @pragma_pack(1) union {
+    c char:2,
+    d long:1,
+    e char:1,
+}
+
+B302 = @pragma_pack(2) union {
+    c char:2,
+    d long:1,
+    e char:1,
+}
+
+B303 = @pragma_pack(4) union {
+    c char:2,
+    d long:1,
+    e char:1,
+}
+
+B304 = @pragma_pack(8) union {
+    c char:2,
+    d long:1,
+    e char:1,
+}
+
+B305 = union {
+    c char:2,
+    @attr_packed d long:1,
+    e char:1,
+}
+
+B306 = @pragma_pack(1) union {
+    c char:2,
+    @attr_packed d long:1,
+    e char:1,
+}
+
+B307 = @pragma_pack(2) union {
+    c char:2,
+    @attr_packed d long:1,
+    e char:1,
+}
+
+B308 = @pragma_pack(4) union {
+    c char:2,
+    @attr_packed d long:1,
+    e char:1,
+}
+
+B309 = @pragma_pack(8) union {
+    c char:2,
+    @attr_packed d long:1,
+    e char:1,
+}
+
+B310 = union {
+    c char:2,
+    d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B311 = @pragma_pack(1) union {
+    c char:2,
+    d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B312 = @pragma_pack(2) union {
+    c char:2,
+    d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B313 = @pragma_pack(4) union {
+    c char:2,
+    d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B314 = @pragma_pack(8) union {
+    c char:2,
+    d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B315 = union {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B316 = @pragma_pack(1) union {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B317 = @pragma_pack(2) union {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B318 = @pragma_pack(4) union {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B319 = @pragma_pack(8) union {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-1,
+    e char:1,
+}
+
+B410 = union {
+    c char:2,
+    @align(2) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B411 = @pragma_pack(1) union {
+    c char:2,
+    @align(2) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B412 = @pragma_pack(2) union {
+    c char:2,
+    @align(4) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B413 = @pragma_pack(4) union {
+    c char:2,
+    @align(4) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B414 = @pragma_pack(8) union {
+    c char:2,
+    @align(4) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B415 = union {
+    c char:2,
+    @attr_packed @align(2) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B416 = @pragma_pack(1) union {
+    c char:2,
+    @attr_packed @align(2) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B417 = @pragma_pack(2) union {
+    c char:2,
+    @attr_packed @align(4) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B418 = @pragma_pack(4) union {
+    c char:2,
+    @attr_packed @align(4) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B419 = @pragma_pack(8) union {
+    c char:2,
+    @attr_packed @align(4) d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B510 = union {
+    c char:2,
+    d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B511 = @pragma_pack(1) union {
+    c char:2,
+    d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B512 = @pragma_pack(2) union {
+    c char:2,
+    d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B513 = @pragma_pack(4) union {
+    c char:2,
+    d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B514 = @pragma_pack(8) union {
+    c char:2,
+    d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B515 = union {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B516 = @pragma_pack(1) union {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B517 = @pragma_pack(2) union {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B518 = @pragma_pack(4) union {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-2,
+    e char:1,
+}
+
+B519 = @pragma_pack(8) union {
+    c char:2,
+    @attr_packed d long:sizeof_bits(long)-2,
+    e char:1,
+}

@@ -1,0 +1,18 @@
+[package]
+name = "generator"
+version = "0.1.0"
+authors = ["Julian Orth <ju.orth@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+repc-tests = { path = "../tests" }
+repc-impl = { path = "../impl" }
+cly-impl = { path = "../../cly/impl" }
+anyhow =  "1.0.38"
+tempdir = "0.3.7"
+serde = { version = "1.0.120", features = ["derive"] }
+toml = "0.5.8"
+rayon = "1.5.0"
+gimli = "0.23.0"
+pdb = { git = "https://github.com/willglynn/pdb.git", rev = "01025d3a8ef9fcad814fa741adabb0396c29ca7d" }
+object = { git = "https://github.com/mahkoh/object.git", rev = "bddaeeac024b46c64ba92b62077d762e6631c993", features = ["coff"] }

@@ -1,0 +1,39 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Tests the relationship of required, natural, and packing alignment when it comes
+// to bitfields
+
+// n < p < r
+a = @align(8) typedef short
+A = @pragma_pack(4) struct {
+    i a: 1
+}
+
+// n < r < p
+b = @align(4) typedef short
+B = @pragma_pack(8) struct {
+    i b: 1
+}
+
+// p < n < r
+c = @align(8) typedef int
+C = @pragma_pack(2) struct {
+    i c: 1
+}
+
+// p < r < n
+d = @align(4) typedef long long
+D = @pragma_pack(2) struct {
+    i d: 1
+}
+
+// r < n < p
+e = @align(2) typedef int
+E = @pragma_pack(8) struct {
+    i e: 1
+}
+
+// r < p < n
+f = @align(2) typedef long long
+F = @pragma_pack(4) struct {
+    i f: 1
+}

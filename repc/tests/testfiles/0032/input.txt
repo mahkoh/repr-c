@@ -1,0 +1,13 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = struct {
+    a long,
+}
+B = union {
+    a long,
+}
+C = struct {
+    @align(2) a long,
+}
+D = union {
+    @align(2) a long,
+}

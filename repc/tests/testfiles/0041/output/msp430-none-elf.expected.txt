@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 16, alignment: 16 }union {
+    { offset: 0, size: 1 }a { size: 16, alignment: 16 }int:1,
+}
+
+B = { size: 64, alignment: 64 }union {
+    { offset: 0, size: 1 }@align(8) a { size: 16, alignment: 16 }int:1,
+}
+
+C = { size: 0, alignment: 8 }union {
+    @align(8) _ { size: 16, alignment: 16 }int:0,
+}
+
+D = { size: 8, alignment: 8 }union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    @align(8) _ { size: 16, alignment: 16 }int:0,
+}
+
+E = { size: 8, alignment: 8 }union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    @align(8) _ { size: 16, alignment: 16 }int:0,
+    @align(8) _ { size: 16, alignment: 16 }int:0,
+}
+// hash: b79193e145ace05b

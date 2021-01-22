@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+MyType = { size: 32, alignment: 32 }int
+MyStruct = { size: 128, alignment: 32 }struct {
+    { offset: 0, size: 32 }my_type { size: 32, alignment: 32 }MyType,
+    { offset: 32, size: 96 }my_undeclared_type { size: 96, alignment: 32 }[3]{ size: 32, alignment: 32 }union {
+        { offset: 0, size: 32 }i { size: 32, alignment: 32 }int,
+        { offset: 0, size: 4 }j { size: 32, alignment: 32 }MyType:4,
+    }
+}
