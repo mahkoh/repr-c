@@ -1,0 +1,6 @@
+Int = @align(8) typedef int
+
+X = struct {
+    i int:1,
+    j Int:1,
+}

@@ -1,0 +1,7 @@
+X = @align(1) struct {
+    c long long,
+}
+
+Y = @pragma_pack(1) struct {
+    x X,
+}

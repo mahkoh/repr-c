@@ -1,0 +1,14 @@
+A = typedef char
+B = typedef unsigned char
+C = typedef signed char
+D = typedef unsigned short
+E = typedef short
+F = typedef unsigned int
+G = typedef int
+H = typedef unsigned long
+I = typedef long
+J = typedef unsigned long long
+K = typedef long long
+L = typedef ptr
+M = typedef float
+N = typedef double

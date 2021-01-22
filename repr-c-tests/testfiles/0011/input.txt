@@ -1,0 +1,5 @@
+I1 = @align(8) typedef int
+I2 = @align(1) typedef I1
+X = struct {
+    i I2,
+}

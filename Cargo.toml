@@ -1,0 +1,2 @@
+[workspace]
+members = [ "repr-c", "c-layout-priv", "c-layout", "generator", "repr-c-tests" ]

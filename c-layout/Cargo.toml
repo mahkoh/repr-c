@@ -1,0 +1,14 @@
+[package]
+name = "c-layout"
+version = "0.1.0"
+authors = ["Julian Orth <ju.orth@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+c-layout-priv = { path = "../c-layout-priv" }
+repr-c = { path = "../repr-c" }
+clap = "2"
+cfg-if = "1.0.0"
+anyhow = "1.0.38"

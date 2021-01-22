@@ -1,0 +1,6 @@
+X = @align(2) struct {
+    a int,
+}
+Y = @pragma_pack(1) struct {
+    x X,
+}

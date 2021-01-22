@@ -1,0 +1,14 @@
+[package]
+name = "c-layout-priv"
+version = "0.1.0"
+authors = ["Julian Orth <ju.orth@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+lalrpop-util = "0.19.4"
+regex = "1"
+repr-c = { path = "../repr-c" }
+anyhow = "1.0.38"
+
+[build-dependencies]
+lalrpop = "0.19.4"

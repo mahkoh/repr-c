@@ -1,0 +1,5 @@
+Int = @align(8) typedef [3]int
+Y = struct {
+    y [3]Int,
+    i int,
+}

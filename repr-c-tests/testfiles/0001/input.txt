@@ -1,0 +1,5 @@
+X = struct {
+    a int,
+    b long,
+    c ptr,
+}
