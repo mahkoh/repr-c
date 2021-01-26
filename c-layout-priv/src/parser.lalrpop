@@ -5,8 +5,8 @@ use crate::ast::{
     DeclarationType, OffsetofType, IndexType, Index, Span, State,
 };
 use crate::result::{CustomError};
-use std::str::FromStr;
-use lalrpop_util::ParseError;
+use std::collections::HashMap;
+use crate::parser_util::{parse_type_layout, components_to_hashmap, parse_field_layout, parse_number};
 
 grammar<'a>(state: &'a mut State);
 
@@ -45,9 +45,13 @@ Type: Type =
         let id = state.next_id;
         state.next_id += 1;
         if let TypeVariant::Record(r) = &mut variant {
-            for (pos, f) in r.fields.iter_mut().enumerate() {
+            let mut pos = 0;
+            for f in &mut r.fields {
                 f.parent_id = id;
-                f.pos = pos;
+                if f.name.is_some() {
+                    f.pos = Some(pos);
+                    pos += 1;
+                }
             }
         }
         Type {
@@ -60,43 +64,36 @@ Type: Type =
         }
     };
 
-TypeLayout: TypeLayout =
-        <lo:@L> "{" <c:Comma<LayoutComponent>> "}" <hi:@R> =>? {
-            h!(c, "size", "alignment", "required");
-            Ok(TypeLayout {
-                size_bits: g!(c, "size", lo, hi),
-                alignment_bits: g!(c, "alignment", lo, hi),
-                required_alignment_bits: g!(c, "required", lo, hi, Some(8)),
+TypeLayout: TypeLayout = <lo:@L> "{" <c:Components<u64>> "}" <hi:@R> =>? {
+    let [size, field, pointer, required] = parse_type_layout(&c, Span(lo, hi), 8)?;
+    Ok(TypeLayout {
+        size_bits: size,
+        field_alignment_bits: field,
+        pointer_alignment_bits: pointer,
+        required_alignment_bits: required,
+    })
+};
+
+OpaqueTypeLayout: OpaqueTypeLayout =
+        <lo:@L> "{" <c:Components<Expr>> "}" <hi:@R> =>? {
+            let def = Expr { span: Span(lo, hi), value: Some(8), value_hi: hi, ty: ExprType::Lit(8) };
+            let [size, field, pointer, required] = parse_type_layout(&c, Span(lo, hi), def)?;
+            Ok(OpaqueTypeLayout {
+                size_bits: Box::new(size),
+                field_alignment_bits: Box::new(field),
+                pointer_alignment_bits: Box::new(pointer),
+                required_alignment_bits: Box::new(required),
             })
          };
 
 FieldLayout: FieldLayout =
-        <lo:@L> "{" <c:Comma<LayoutComponent>> "}" <hi:@R> =>? {
-            h!(c, "offset", "size");
-            Ok(FieldLayout {
-                offset_bits: g!(c, "offset", lo, hi),
-                size_bits: g!(c, "size", lo, hi),
-            })
-         };
+        <lo:@L> "{" <c:Components<u64>> "}" <hi:@R> =>? parse_field_layout(&c, Span(lo, hi));
 
-LayoutComponent = Component<u64>;
+Components<T>: HashMap<String, (T, Span)> = <c:Comma<Component<T>>> =>?
+            components_to_hashmap(c);
 
 Component<T>: (String, T, Span) = {
     <lo:@L> <c:id> <hi:@L> ":" <n:T> => (c, n, Span(lo, hi)),
-};
-
-OpaqueTypeLayout: OpaqueTypeLayout =
-        <lo:@L> "{" <c:Comma<OpaqueLayoutComponent>> "}" <hi:@R> =>? {
-            h!(c, "size", "alignment", "required");
-            Ok(OpaqueTypeLayout {
-                size_bits: Box::new(g!(c, "size", lo, hi)),
-                alignment_bits: Box::new(g!(c, "alignment", lo, hi)),
-                required_alignment_bits: Box::new(g!(c, "required", lo, hi, Some(Expr { span: Span(lo, hi), value: Some(8), value_hi: hi, ty: ExprType::Lit(8) }))),
-            })
-         };
-
-OpaqueLayoutComponent: (String, Expr, Span) = {
-    <lo:@L> <c:id> <hi:@L> ":" <n:Expr> => (c, n, Span(lo, hi)),
 };
 
 Annotation: Annotation = {
@@ -136,7 +133,7 @@ RecordField: RecordField =
         <bit_width:(":" <TopLevelExpr>)?>
     =>
     RecordField {
-        pos: 0,
+        pos: None,
         parent_id: 0,
         lo,
         layout,
@@ -185,19 +182,11 @@ BuiltinType: BuiltinType = {
     "ptr" => BuiltinType::Pointer,
 };
 
-u64: u64 = <lo:@L> <s:r"[0-9]+"> <hi:@R> =>? u64::from_str(s).map_err(|_| ParseError::User {
-    error: CustomError {
-        span: Span(lo, hi),
-        msg: format!("Out of bounds integer for u64"),
-    }
-});
+u64: u64 = <lo:@L> <s:number> <hi:@R> =>? parse_number(s, Span(lo, hi));
 
-i128: i128 = <lo:@L> <s:r"[0-9]+"> <hi:@R> =>? i128::from_str(s).map_err(|_| ParseError::User {
-    error: CustomError {
-        span: Span(lo, hi),
-        msg: format!("Out of bounds integer for i128"),
-    }
-});
+i128: i128 = <lo:@L> <s:number> <hi:@R> =>? parse_number(s, Span(lo, hi));
+
+number: &'input str = <r"(0x[0-9a-fA-F_]+|[0-9]+|0o[0-7]+|0b[01]+)">;
 
 id: String = <s:r"[a-zA-Z_][a-zA-Z_0-9]*"> => s.to_string();
 

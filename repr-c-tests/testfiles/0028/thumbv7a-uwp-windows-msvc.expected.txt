@@ -1,0 +1,49 @@
+// The required alignment of the field is the maximum of the required alignment of the
+// underlying type and the __declspec(align) annotation on the field itself.
+//
+// ```c,msvc,msvc-tc-0028
+// __declspec(align(4)) typedef char Char;
+//
+// #pragma pack(1)
+//
+// struct A {
+//         Char a;
+// };
+//
+// struct B {
+//         __declspec(align(4)) char a;
+// };
+//
+// struct C {
+//         __declspec(align(8)) Char a;
+// };
+//
+// struct D {
+//         __declspec(align(2)) Char a;
+// };
+//
+// static void f(void) {
+//         static_assert(_Alignof(struct A) == 4, "");
+//         static_assert(_Alignof(struct B) == 4, "");
+//         static_assert(_Alignof(struct C) == 8, "");
+//         static_assert(_Alignof(struct D) == 4, "");
+// }
+// ```
+Char = { size: 8, alignment: 32, required_alignment: 32 }@align(4) typedef { size: 8, alignment: 8 }char
+
+A = { size: 32, alignment: 32, required_alignment: 32 }@pragma_pack(1) struct {
+    { offset: 0, size: 8 }a { size: 8, alignment: 32, required_alignment: 32 }Char,
+}
+
+B = { size: 32, alignment: 32, required_alignment: 32 }struct {
+    { offset: 0, size: 8 }@align(4) a { size: 8, alignment: 8 }char,
+}
+
+C = { size: 64, alignment: 64, required_alignment: 64 }struct {
+    { offset: 0, size: 8 }@align(8) a { size: 8, alignment: 32, required_alignment: 32 }Char,
+}
+
+D = { size: 32, alignment: 32, required_alignment: 32 }struct {
+    { offset: 0, size: 8 }@align(2) a { size: 8, alignment: 32, required_alignment: 32 }Char,
+}
+// hash: c169b321f28b3e25

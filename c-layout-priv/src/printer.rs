@@ -46,13 +46,22 @@ impl<'a, 'b> Printer_<'a, 'b> {
     fn print_type(&mut self, t: &Type) -> Result {
         self.set_pos(t.lo)?;
         if let Some(l) = t.layout {
-            write!(
-                self.f,
-                "{{ size: {}, alignment: {}",
-                l.size_bits, l.alignment_bits
-            )?;
+            write!(self.f, "{{ size: {}, ", l.size_bits)?;
+            if l.field_alignment_bits == l.pointer_alignment_bits {
+                write!(self.f, "alignment: {}", l.field_alignment_bits)?;
+            } else {
+                write!(
+                    self.f,
+                    "field_alignment: {}, pointer_alignment: {}",
+                    l.field_alignment_bits, l.pointer_alignment_bits,
+                )?;
+            }
             if l.required_alignment_bits != 8 {
-                write!(self.f, ", required: {}", l.required_alignment_bits)?;
+                write!(
+                    self.f,
+                    ", required_alignment: {}",
+                    l.required_alignment_bits
+                )?;
             }
             write!(self.f, " }}")?;
         }

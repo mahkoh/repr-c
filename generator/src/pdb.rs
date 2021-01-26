@@ -67,21 +67,26 @@ impl<'a> Convert for Converter<'a> {
             Builtin(bi) => return Ok(self.target.builtin_type_layout(*bi)),
             Opaque(_) => unreachable!(),
         };
+        let alignment = self.get_b_offset(name, "alignment");
+        let size_bits = self.get_b_offset(name, "size") - 8;
         Ok(TypeLayout {
-            size_bits: self.get_b_offset(name, "size"),
-            alignment_bits: self.get_b_offset(name, "alignment"),
+            size_bits,
+            // We have no way to extract the pointer alignment. Set it to the same value
+            // as the field alignment so that it does not get printed.
+            pointer_alignment_bits: alignment,
+            field_alignment_bits: alignment,
             required_alignment_bits: self.get_b_offset(name, "required_alignment"),
         })
     }
 
-    fn extract_field(&self, field: &ast::RecordField) -> Result<FieldLayout> {
+    fn extract_field(&self, field: &ast::RecordField, fpos: usize) -> Result<FieldLayout> {
         let name = self.ids.get(&field.parent_id).unwrap();
         let fields = self.records.get(name).unwrap();
         let mut pos = 0;
         let mut offset = None;
         let mut size = None;
         self.for_each_member(*fields, |m| {
-            if pos == field.pos {
+            if pos == fpos {
                 match field.bit_width {
                     Some(_) => {
                         let bf = self.bitfields.get(&m.field_type.0).unwrap();
@@ -118,7 +123,7 @@ impl<'a> Convert for Converter<'a> {
     }
 }
 
-pub fn convert(
+pub(crate) fn convert(
     target: &dyn Target,
     input: &str,
     d: &[Declaration],
@@ -165,6 +170,7 @@ pub fn convert(
                 pdb_index_names.insert(idx, name.clone());
                 sizes.insert(name, a.dimensions.last().copied().unwrap() as u64);
             }
+            TypeData::Enumeration(_) => {}
             _ => bail!("unexpected type info {:?}", ti),
         }
     }

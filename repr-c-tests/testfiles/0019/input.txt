@@ -1,0 +1,20 @@
+// Enums always have the base type int even if the values do not fit into int. The
+// values are silently truncated if necessary.
+//
+// ```c,msvc,msvc-tc-0019
+// #pragma pack(1)
+//
+// enum E {
+//         A = 1,
+//         B = 0xffff0fffffff,
+// };
+//
+// static void f(void) {
+//         static_assert(sizeof(enum E) == 4, "");
+//         static_assert(B == 0x0fffffff, "");
+// }
+// ```
+E = enum {
+    1,
+    0xffff0fffffff,
+}

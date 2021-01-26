@@ -1,5 +1,5 @@
 use crate::layout::{
-    Annotation, Array, BuiltinType, LayoutInfo, Record, RecordField, Type, TypeLayout, TypeVariant,
+    Annotation, Array, BuiltinType, LayoutInfo, Record, RecordField, Type, TypeVariant,
 };
 
 pub trait Visitor<I: LayoutInfo> {
@@ -31,7 +31,7 @@ pub trait Visitor<I: LayoutInfo> {
         visit_array(self, array, ty);
     }
 
-    fn visit_opaque_type(&mut self, layout: TypeLayout, ty: &Type<I>) {
+    fn visit_opaque_type(&mut self, layout: I::OpaqueLayout, ty: &Type<I>) {
         visit_opaque_type(self, layout, ty);
     }
 
@@ -115,7 +115,7 @@ pub fn visit_array<I: LayoutInfo>(
 
 pub fn visit_opaque_type<I: LayoutInfo>(
     visitor: &mut (impl Visitor<I> + ?Sized),
-    layout: TypeLayout,
+    layout: I::OpaqueLayout,
     ty: &Type<I>,
 ) {
     let _ = visitor;

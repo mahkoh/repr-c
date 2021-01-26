@@ -2,7 +2,9 @@ use crate::layout::{Annotation, Array, BuiltinType, Record, RecordField, Type, T
 use crate::result::{Error, Result};
 use crate::target::{LayoutAlgorithm, Target};
 use crate::util::BITS_PER_BYTE;
-use crate::visitor::{visit_array, visit_builtin_type, visit_opaque_type, visit_record_field, Visitor, visit_typedef};
+use crate::visitor::{
+    visit_array, visit_builtin_type, visit_opaque_type, visit_record_field, visit_typedef, Visitor,
+};
 use std::ops::Not;
 
 mod common;
@@ -73,17 +75,9 @@ impl Visitor<()> for PreValidator {
     }
 
     fn visit_record_field(&mut self, field: &RecordField<()>, rt: &Record<()>, ty: &Type<()>) {
-        match field.bit_width {
-            Some(0) => {
-                if field.name.is_some() {
-                    self.0.push(Error::NamedZeroSizeBitField);
-                }
-            }
-            None => {
-                if field.name.is_none() {
-                    self.0.push(Error::UnnamedRegularField);
-                }
-            }
+        match (field.bit_width, field.named) {
+            (Some(0), true) => self.0.push(Error::NamedZeroSizeBitField),
+            (None, false) => self.0.push(Error::UnnamedRegularField),
             _ => {}
         }
         visit_record_field(self, field, rt, ty);
@@ -92,7 +86,7 @@ impl Visitor<()> for PreValidator {
     fn visit_typedef(&mut self, dst: &Type<()>, ty: &Type<()>) {
         for a in &dst.annotations {
             match a {
-                Annotation::Aligned(_) => {},
+                Annotation::Aligned(_) => {}
                 Annotation::PragmaPack(_) => self.0.push(Error::PackedTypedef),
                 Annotation::AttrPacked => self.0.push(Error::PackedTypedef),
             }
@@ -114,7 +108,7 @@ impl Visitor<()> for PreValidator {
         if layout.size_bits % BITS_PER_BYTE != 0 {
             self.0.push(Error::SubByteSize);
         }
-        self.validate_alignment(layout.alignment_bits);
+        self.validate_alignment(layout.field_alignment_bits);
         self.validate_alignment(layout.required_alignment_bits);
         visit_opaque_type(self, layout, ty);
     }

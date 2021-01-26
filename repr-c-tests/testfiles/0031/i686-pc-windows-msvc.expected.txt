@@ -1,0 +1,22 @@
+// If the field or struct is packed, reduce the alignment of the field ...
+// ... but the required alignment still takes precedence.
+//
+// ```c,msvc,msvc-tc-0031
+// __declspec(align(4)) typedef char Char;
+//
+// #pragma pack(2)
+//
+// struct A {
+//         Char a;
+// };
+//
+// static void f(void) {
+//         static_assert(_Alignof(struct A) == 4, "");
+// }
+// ```
+Char = { size: 8, alignment: 32, required_alignment: 32 }@align(4) typedef { size: 8, alignment: 8 }char
+
+A = { size: 32, alignment: 32, required_alignment: 32 }@pragma_pack(2) struct {
+    { offset: 0, size: 8 }a { size: 8, alignment: 32, required_alignment: 32 }Char,
+}
+// hash: 98b9b2239a6c3411

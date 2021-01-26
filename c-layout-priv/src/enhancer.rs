@@ -71,7 +71,7 @@ fn enhance_record_field(f: &ast::RecordField, fc: &RecordField<TypeLayout>) -> a
         parent_id: f.parent_id,
         pos: f.pos,
         lo: f.lo,
-        layout: Some(fc.layout),
+        layout: fc.layout,
         layout_hi: f.layout_hi,
         annotations: enhance_annotations(&f.annotations, &fc.annotations),
         name: f.name.clone(),

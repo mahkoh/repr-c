@@ -38,7 +38,7 @@ pub fn extract_layouts(input: &str, d: &[ast::Declaration]) -> Result<Conversion
             }
         }
 
-        fn extract_field(&self, t: &ast::RecordField) -> Result<FieldLayout> {
+        fn extract_field(&self, t: &ast::RecordField, _pos: usize) -> Result<FieldLayout> {
             match t.layout {
                 None => Err(anyhow!(
                     "At {}: Missing field layout",
@@ -68,7 +68,7 @@ pub fn compute_layouts(
             Ok(())
         }
 
-        fn extract_field(&self, _: &ast::RecordField) -> Result<()> {
+        fn extract_field(&self, _: &ast::RecordField, _: usize) -> Result<()> {
             Ok(())
         }
     }
@@ -76,13 +76,14 @@ pub fn compute_layouts(
 }
 
 pub trait Convert {
-    type Src: LayoutInfo;
+    type Src: LayoutInfo<OpaqueLayout = TypeLayout>;
 
     fn convert(&self, ty: Type<Self::Src>) -> Result<Type<TypeLayout>>;
     fn extract_type(&self, ty: &ast::Type) -> Result<Self::Src>;
     fn extract_field(
         &self,
         field: &ast::RecordField,
+        pos: usize,
     ) -> Result<<Self::Src as LayoutInfo>::FieldLayout>;
 }
 
@@ -213,7 +214,8 @@ impl<'a, C: Convert> Computer<'a, C> {
         let variant = match &t.variant {
             ast::TypeVariant::Opaque(l) => TypeVariant::Opaque(TypeLayout {
                 size_bits: self.eval_u64_expr(&l.size_bits)?,
-                alignment_bits: self.eval_u64_expr(&l.alignment_bits)?,
+                pointer_alignment_bits: self.eval_u64_expr(&l.pointer_alignment_bits)?,
+                field_alignment_bits: self.eval_u64_expr(&l.field_alignment_bits)?,
                 required_alignment_bits: self.eval_u64_expr(&l.required_alignment_bits)?,
             }),
             ast::TypeVariant::Builtin(bi) => TypeVariant::Builtin(*bi),
@@ -258,9 +260,12 @@ impl<'a, C: Convert> Computer<'a, C> {
 
     fn convert_record_field(&mut self, f: &'a ast::RecordField) -> Result<RecordField<C::Src>> {
         Ok(RecordField {
-            layout: self.converter.extract_field(f)?,
+            layout: match f.pos {
+                Some(p) => Some(self.converter.extract_field(f, p)?),
+                _ => None,
+            },
             annotations: self.convert_annotations(&f.annotations)?,
-            name: f.name.clone(),
+            named: f.name.is_some(),
             bit_width: f
                 .bit_width
                 .as_ref()
@@ -354,7 +359,7 @@ impl<'a, C: Convert> Computer<'a, C> {
                 let layout = self.compute_type_layout(t)?.layout;
                 Ok(match k {
                     TypeExprType::Sizeof => (layout.size_bits / BITS_PER_BYTE) as i128,
-                    TypeExprType::Alignof => (layout.alignment_bits / BITS_PER_BYTE) as i128,
+                    TypeExprType::Alignof => (layout.field_alignment_bits / BITS_PER_BYTE) as i128,
                 })
             }
             ExprType::Name(n) => match self.declarations.get(&**n) {
@@ -403,19 +408,19 @@ impl<'a, C: Convert> Computer<'a, C> {
                         ))
                     }
                 };
-                let f = r
+                let pos = ar
                     .fields
                     .iter()
-                    .filter(|f| f.name.as_ref() == Some(name))
-                    .next()
+                    .position(|f| f.name.as_ref() == Some(name))
                     .unwrap();
+                let f = &r.fields[pos];
                 if f.bit_width.is_some() && k == OffsetofType::Bytes {
                     return Err(anyhow!(
                         "At {}: Cannot compute bytewise offset of bit field",
                         self.span(head.span)
                     ));
                 }
-                (&af.ty, &f.ty, f.layout.offset_bits)
+                (&af.ty, &f.ty, f.layout.unwrap().offset_bits)
             }
             (ast::TypeVariant::Array(aa), TypeVariant::Array(a), IndexType::Array(pos)) => {
                 let pos = self.eval_u64_expr(pos)?;

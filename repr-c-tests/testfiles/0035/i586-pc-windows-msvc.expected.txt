@@ -1,0 +1,30 @@
+// A zero-sized bit-field that does not follow a non-zero-sized bit-field does not affect
+// the overall layout of the record. Even in a union where the order would otherwise
+// not matter.
+//
+// ```c,msvc,msvc-tc-0035
+// union X {
+//         int :0;
+//         char :1;
+// };
+//
+// union Y {
+//         char :1;
+//         int :0;
+// };
+//
+// static void f(void) {
+//         static_assert(sizeof(union X) == 1, "");
+//         static_assert(sizeof(union Y) == 4, "");
+// }
+// ```
+X = { size: 8, alignment: 8 }union {
+    _ { size: 32, alignment: 32 }int:0,
+    _ { size: 8, alignment: 8 }char:1,
+}
+
+Y = { size: 32, alignment: 8 }union {
+    _ { size: 8, alignment: 8 }char:1,
+    _ { size: 32, alignment: 32 }int:0,
+}
+// hash: 60cc2d70010c061a

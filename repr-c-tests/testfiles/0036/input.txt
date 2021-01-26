@@ -1,0 +1,14 @@
+// Even _Bool allows bitfields up to its type size.
+//
+// ```c,msvc,msvc-tc-0036
+// struct S {
+//         _Bool v:8;
+// };
+//
+// static void f(void) {
+//         static_assert(sizeof(struct S) == 1, "");
+// }
+// ```
+S = struct {
+    v bool:8,
+}

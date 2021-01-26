@@ -1,0 +1,18 @@
+// The offset of the field is based on the alignment of the underlying type.
+//
+// ```c,msvc,msvc-tc-0027
+// #include <stdlib.h>
+//
+// struct Y {
+//         char c;
+//         int i;
+// };
+//
+// static void f(void) {
+//         static_assert(offsetof(struct Y, i) == 4, "");
+// }
+// ```
+Y = struct {
+    c char,
+    i int,
+}

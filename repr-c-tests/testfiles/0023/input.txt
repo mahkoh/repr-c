@@ -1,0 +1,25 @@
+// The required alignment can be increased by adding a __declspec(align)
+// annotation.
+//
+// ```c,msvc,msvc-tc-0023
+// __declspec(align(8)) struct X {
+//         char c;
+// };
+//
+// #pragma pack(1)
+//
+// struct Y {
+//         struct X x;
+// };
+//
+// static void f(void) {
+//         static_assert(_Alignof(struct Y) == 8, "");
+// }
+// ```
+X = @align(8) struct {
+    c char,
+}
+
+Y = @pragma_pack(1) struct {
+    x X,
+}

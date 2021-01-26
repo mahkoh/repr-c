@@ -1,0 +1,31 @@
+// On arm and arm64, bitfields increase the alignment of a struct to at
+// most 8 bytes. Presumably due to a bug in the implementation of _Alignof,
+// _Alignof returns the requested alignment.
+//
+// ```c,msvc,msvc-tc-0021
+// #include <stdlib.h>
+//
+// struct Y {
+//         __declspec(align(16)) int i:1;
+// };
+//
+// struct Z {
+//         char c;
+//         struct Y y;
+// };
+//
+// static void f(void) {
+//         static_assert(_Alignof(struct Y) == 16, "");
+//         static_assert(sizeof(struct Z) == 16, "");
+//         static_assert(_Alignof(struct Z) == 8, "");
+//         static_assert(offsetof(struct Z, y) == 8, "");
+// }
+// ```
+Y = { size: 128, alignment: 128 }struct {
+    { offset: 0, size: 1 }@align(16) i { size: 32, alignment: 32 }int:1,
+}
+Z = { size: 256, alignment: 128 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 128, size: 128 }y { size: 128, alignment: 128 }Y,
+}
+// hash: 116db1a85336a928

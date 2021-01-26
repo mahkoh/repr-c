@@ -51,7 +51,7 @@ pub struct Record {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RecordField {
     pub parent_id: usize,
-    pub pos: usize,
+    pub pos: Option<usize>,
     pub lo: usize,
     pub layout: Option<FieldLayout>,
     pub layout_hi: usize,
@@ -76,7 +76,8 @@ pub enum TypeVariant {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct OpaqueTypeLayout {
     pub size_bits: Box<Expr>,
-    pub alignment_bits: Box<Expr>,
+    pub pointer_alignment_bits: Box<Expr>,
+    pub field_alignment_bits: Box<Expr>,
     pub required_alignment_bits: Box<Expr>,
 }
 

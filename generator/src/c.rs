@@ -15,7 +15,10 @@ pub enum Dialect {
     Gcc,
 }
 
-pub fn generate(i: &[Declaration], dialect: Dialect) -> Result<(String, HashMap<usize, String>)> {
+pub(crate) fn generate(
+    i: &[Declaration],
+    dialect: Dialect,
+) -> Result<(String, HashMap<usize, String>)> {
     let mut g = Generator {
         next: 1,
         ids: Default::default(),
@@ -95,18 +98,25 @@ impl Generator {
         }
 
         writeln!(&mut self.current, "struct {}_alignment {{", name)?;
-        writeln!(&mut self.current, "    char a;")?;
-        writeln!(&mut self.current, "    {} b;", name)?;
+        writeln!(&mut self.current, "    char a[_Alignof({})];", name)?;
+        writeln!(&mut self.current, "    char b;")?;
         writeln!(&mut self.current, "}};")?;
         let id = self.generate_id();
         writeln!(&mut self.current, "struct {}_alignment var{};", name, id)?;
 
         writeln!(&mut self.current, "#pragma pack(1)")?;
-        writeln!(&mut self.current, "struct {}_required_alignment {{", name)?;
-        writeln!(&mut self.current, "    char a;")?;
-        writeln!(&mut self.current, "    {} b;", name)?;
+        writeln!(&mut self.current, "struct {}_packed {{", name)?;
+        writeln!(&mut self.current, "    {} a;", name)?;
         writeln!(&mut self.current, "}};")?;
         writeln!(&mut self.current, "#pragma pack()")?;
+        writeln!(&mut self.current, "struct {}_required_alignment {{", name)?;
+        writeln!(
+            &mut self.current,
+            "    char a[_Alignof(struct {}_packed)];",
+            name
+        )?;
+        writeln!(&mut self.current, "    char b;")?;
+        writeln!(&mut self.current, "}};")?;
         let id = self.generate_id();
         writeln!(
             &mut self.current,
@@ -115,7 +125,7 @@ impl Generator {
         )?;
 
         writeln!(&mut self.current, "struct {}_size {{", name)?;
-        writeln!(&mut self.current, "    {} a;", name)?;
+        writeln!(&mut self.current, "    char a[sizeof({})+1];", name)?;
         writeln!(&mut self.current, "    char b;")?;
         writeln!(&mut self.current, "}};")?;
         let id = self.generate_id();
@@ -196,7 +206,7 @@ impl Generator {
             Unit | U8 | U16 | U32 | U64 | U128 | I8 | I16 | I32 | I64 | I128 | F32 | F64 => {
                 bail!("type {:?} cannot be used", bi)
             }
-            Bool => "bool",
+            Bool => "_Bool",
             Char => "char",
             SignedChar => "signed char",
             UnsignedChar => "unsigned char",
@@ -211,7 +221,6 @@ impl Generator {
             Float => "float",
             Double => "double",
             Pointer => "void*",
-            _ => unimplemented!(),
         };
         write!(&mut self.current, "{}", s)?;
         Ok(())

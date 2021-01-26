@@ -1,0 +1,46 @@
+// The required alignment of a record is the maximum of the required alignments of its
+// fields except that the required alignment of bitfields is ignored.
+//
+// ```c,msvc,msvc-tc-0029
+// __declspec(align(4)) typedef char Char;
+//
+// struct A {
+//         Char a;
+// };
+//
+// struct B {
+//         Char a:1;
+// };
+//
+// #pragma pack(1)
+//
+// struct C {
+//         struct A a;
+// };
+//
+// struct D {
+//         struct B a;
+// };
+//
+// static void f(void) {
+//         static_assert(_Alignof(struct C) == 4, "");
+//         static_assert(_Alignof(struct D) == 1, "");
+// }
+// ```
+Char = @align(4) typedef char
+
+A = struct {
+    a Char,
+}
+
+B = struct {
+    a Char:1,
+}
+
+C = @pragma_pack(1) struct {
+    a A,
+}
+
+D = @pragma_pack(1) struct {
+    a B,
+}

@@ -28,11 +28,11 @@ impl Display for Pretty<'_> {
             last
         )?;
         write!(f, "Size: {}", self.ty.layout.size_bits)?;
-        if self.ty.layout.size_bits % self.ty.layout.alignment_bits != 0 {
+        if self.ty.layout.size_bits % self.ty.layout.field_alignment_bits != 0 {
             write!(f, " (not a multiple of the alignment)")?;
         }
         writeln!(f)?;
-        writeln!(f, "Alignment: {}", self.ty.layout.alignment_bits)?;
+        writeln!(f, "Alignment: {}", self.ty.layout.field_alignment_bits)?;
         writeln!(
             f,
             "Required alignment: {}\n",
@@ -81,7 +81,7 @@ impl<'a, 'b> Printer<'a, 'b> {
     ) -> Result {
         if let Some(name) = &field.name {
             self.set_position(self.record_start + field.layout.offset_bits, true)?;
-            self.prefix.push(format!("{}", name));
+            self.prefix.push(name.clone());
             if let Some(n) = field.bit_width {
                 self.write_start()?;
                 self.set_position(self.position + n, false)?;

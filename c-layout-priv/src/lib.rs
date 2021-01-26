@@ -4,54 +4,14 @@ pub use converter::{compute_layouts, extract_layouts};
 pub use enhancer::enhance_declarations;
 use lalrpop_util::lexer::Token;
 pub use printer::{printer, Printer};
-use repr_c::target::{
-    AArch64PcWindowsMsvc, I686PcWindowsMsvc, Target, Thumbv7aPcWindowsMsvc, X8664PcWindowsMsvc,
-};
 use std::fmt;
 use std::fmt::{Display, Formatter};
-
-macro_rules! g {
-    ($c:expr, $name:expr, $lo:expr, $hi:expr) => {
-        g!($c, $name, $lo, $hi, None)
-    };
-    ($c:expr, $name:expr, $lo:expr, $hi:expr, $def:expr) => {{
-        let iter = || $c.iter().filter(|c| c.0 == $name);
-        if iter().count() > 1 {
-            let second = iter().skip(1).next().unwrap();
-            return Err(ParseError::User {
-                error: CustomError {
-                    msg: format!("multiple {}", $name),
-                    span: second.2,
-                },
-            });
-        }
-        iter()
-            .map(|c| c.1.clone())
-            .next()
-            .or($def)
-            .ok_or_else(|| ParseError::User {
-                error: CustomError {
-                    msg: format!("missing {}", $name),
-                    span: Span($lo, $hi),
-                },
-            })?
-    }};
-}
-
-macro_rules! h {
-    ($c:expr, $($name:expr),+) => {{
-        for n in &$c {
-            if $(n.0 != $name)&&+ {
-                return Err(ParseError::User { error: CustomError { msg: format!("unknown layout component {}", n.0), span: n.2 }});
-            }
-        }
-    }}
-}
 
 pub mod ast;
 pub mod converter;
 mod enhancer;
 mod parser;
+mod parser_util;
 mod printer;
 mod result;
 
@@ -173,10 +133,3 @@ fn expected_fmt<'a>(e: &'a [String]) -> impl Display + 'a {
 
     D(e)
 }
-
-pub static TEST_TARGETS: &'static [&'static dyn Target] = &[
-    &AArch64PcWindowsMsvc,
-    &Thumbv7aPcWindowsMsvc,
-    &X8664PcWindowsMsvc,
-    &I686PcWindowsMsvc,
-];

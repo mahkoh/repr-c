@@ -7,6 +7,21 @@ pub struct Type<I: LayoutInfo> {
     pub variant: TypeVariant<I>,
 }
 
+impl<I: LayoutInfo> Type<I> {
+    pub fn into<J: LayoutInfo>(self) -> Type<J>
+    where
+        I: Into<J>,
+        I::FieldLayout: Into<J::FieldLayout>,
+        I::OpaqueLayout: Into<J::OpaqueLayout>,
+    {
+        Type {
+            layout: self.layout.into(),
+            annotations: self.annotations,
+            variant: self.variant.into(),
+        }
+    }
+}
+
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum Annotation {
     PragmaPack(u64),
@@ -14,24 +29,16 @@ pub enum Annotation {
     Aligned(u64),
 }
 
-impl From<Type<TypeLayout>> for Type<()> {
-    fn from(src: Type<TypeLayout>) -> Self {
-        Type {
-            layout: (),
-            annotations: src.annotations,
-            variant: src.variant.into(),
-        }
-    }
-}
-
 pub trait LayoutInfo: Copy + Default + Debug + Eq + PartialEq {
     type FieldLayout: Copy + Default + Debug + Eq + PartialEq;
+    type OpaqueLayout: Copy + Default + Debug + Eq + PartialEq;
 }
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Default)]
 pub struct TypeLayout {
     pub size_bits: u64,
-    pub alignment_bits: u64,
+    pub field_alignment_bits: u64,
+    pub pointer_alignment_bits: u64,
     pub required_alignment_bits: u64,
 }
 
@@ -43,10 +50,20 @@ pub struct FieldLayout {
 
 impl LayoutInfo for TypeLayout {
     type FieldLayout = FieldLayout;
+    type OpaqueLayout = TypeLayout;
 }
 
 impl LayoutInfo for () {
     type FieldLayout = ();
+    type OpaqueLayout = TypeLayout;
+}
+
+impl Into<()> for TypeLayout {
+    fn into(self) {}
+}
+
+impl Into<()> for FieldLayout {
+    fn into(self) {}
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -56,7 +73,31 @@ pub enum TypeVariant<I: LayoutInfo> {
     Typedef(Box<Type<I>>),
     Array(Array<I>),
     Enum(Vec<i128>),
-    Opaque(TypeLayout),
+    Opaque(I::OpaqueLayout),
+}
+
+impl<I: LayoutInfo> TypeVariant<I> {
+    pub fn into<J: LayoutInfo>(self) -> TypeVariant<J>
+    where
+        I: Into<J>,
+        I::FieldLayout: Into<J::FieldLayout>,
+        I::OpaqueLayout: Into<J::OpaqueLayout>,
+    {
+        match self {
+            TypeVariant::Builtin(bi) => TypeVariant::Builtin(bi),
+            TypeVariant::Record(rt) => TypeVariant::Record(Record {
+                kind: rt.kind,
+                fields: rt.fields.into_iter().map(|v| v.into()).collect(),
+            }),
+            TypeVariant::Typedef(td) => TypeVariant::Typedef(Box::new((*td).into())),
+            TypeVariant::Array(at) => TypeVariant::Array(Array {
+                element_type: Box::new((*at.element_type).into()),
+                num_elements: at.num_elements,
+            }),
+            TypeVariant::Opaque(l) => TypeVariant::Opaque(l.into()),
+            TypeVariant::Enum(v) => TypeVariant::Enum(v),
+        }
+    }
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -71,42 +112,28 @@ pub struct Array<I: LayoutInfo> {
     pub num_elements: u64,
 }
 
-impl From<TypeVariant<TypeLayout>> for TypeVariant<()> {
-    fn from(src: TypeVariant<TypeLayout>) -> Self {
-        match src {
-            TypeVariant::Builtin(bi) => TypeVariant::Builtin(bi),
-            TypeVariant::Record(rt) => TypeVariant::Record(Record {
-                kind: rt.kind,
-                fields: rt.fields.into_iter().map(|v| v.into()).collect(),
-            }),
-            TypeVariant::Typedef(td) => TypeVariant::Typedef(Box::new((*td).into())),
-            TypeVariant::Array(at) => TypeVariant::Array(Array {
-                element_type: Box::new((*at.element_type).into()),
-                num_elements: at.num_elements,
-            }),
-            TypeVariant::Opaque(l) => TypeVariant::Opaque(l),
-            TypeVariant::Enum(v) => TypeVariant::Enum(v),
-        }
-    }
-}
-
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RecordField<I: LayoutInfo> {
-    pub layout: I::FieldLayout,
+    pub layout: Option<I::FieldLayout>,
     pub annotations: Vec<Annotation>,
-    pub name: Option<String>,
+    pub named: bool,
     pub bit_width: Option<u64>,
     pub ty: Type<I>,
 }
 
-impl From<RecordField<TypeLayout>> for RecordField<()> {
-    fn from(src: RecordField<TypeLayout>) -> Self {
+impl<I: LayoutInfo> RecordField<I> {
+    pub fn into<J: LayoutInfo>(self) -> RecordField<J>
+    where
+        I: Into<J>,
+        I::FieldLayout: Into<J::FieldLayout>,
+        I::OpaqueLayout: Into<J::OpaqueLayout>,
+    {
         RecordField {
-            layout: (),
-            annotations: src.annotations,
-            name: src.name,
-            bit_width: src.bit_width,
-            ty: src.ty.into(),
+            layout: self.layout.map(|v| v.into()),
+            annotations: self.annotations,
+            named: self.named,
+            bit_width: self.bit_width,
+            ty: self.ty.into(),
         }
     }
 }
@@ -118,7 +145,6 @@ pub enum RecordKind {
 }
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
-#[non_exhaustive]
 pub enum BuiltinType {
     /// `()`
     Unit,

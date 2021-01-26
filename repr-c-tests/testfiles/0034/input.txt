@@ -1,0 +1,17 @@
+// Set the size of the record to the maximum of the current size and the end of
+// the field.
+//
+// ```c,msvc,msvc-tc-0034
+// union U {
+//         int l;
+//         char c;
+// };
+//
+// static void f(void) {
+//         static_assert(sizeof(union U) == 4, "");
+// }
+// ```
+U = union {
+    l int,
+    c char,
+}

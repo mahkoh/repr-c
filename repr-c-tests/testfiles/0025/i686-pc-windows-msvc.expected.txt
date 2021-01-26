@@ -1,0 +1,24 @@
+// If all fields in a union have size 0, the size of the whole enum is set to ...
+// ... 4 bytes if it contains only bitfields.
+//
+// ```c,msvc,msvc-tc-0025
+// union X {
+//         long long :0;
+// };
+//
+// union Y {
+//         char :0;
+// };
+//
+// static void f(void) {
+//         static_assert(sizeof(union X) == 4, "");
+//         static_assert(sizeof(union Y) == 4, "");
+// }
+// ```
+X = { size: 32, alignment: 8 }union {
+    _ { size: 64, alignment: 64 }long long:0,
+}
+Y = { size: 32, alignment: 8 }union {
+    _ { size: 8, alignment: 8 }char:0,
+}
+// hash: 1a261fd1b1fa4a40

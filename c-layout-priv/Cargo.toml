@@ -9,6 +9,7 @@ lalrpop-util = "0.19.4"
 regex = "1"
 repr-c = { path = "../repr-c" }
 anyhow = "1.0.38"
+num-traits = "0.2.14"
 
 [build-dependencies]
 lalrpop = "0.19.4"

@@ -1,0 +1,100 @@
+// The effect of #pragma pack(N) depends on the target.
+//
+// x86: By default, there is no maximum field alignment. N={1,2,4} set the maximum field
+//      alignment to that value. All other N activate the default.
+// x64: By default, there is no maximum field alignment. N={1,2,4,8} set the maximum field
+//      alignment to that value. All other N activate the default.
+// arm: By default, the maximum field alignment is 8. N={1,2,4,8,16} set the maximum field
+//      alignment to that value. All other N activate the default.
+// arm64: By default, the maximum field alignment is 8. N={1,2,4,8} set the maximum field
+//        alignment to that value. N=16 disables the maximum field alignment. All other N
+//        activate the default.
+//
+// ```c,msvc,msvc-tc-0020
+// struct A {
+//         __declspec(align(128)) int i:1;
+// };
+//
+// struct B {
+//         struct A x;
+// };
+//
+// #pragma pack(4)
+// struct C {
+//         struct A x;
+// };
+// #pragma pack()
+//
+// #pragma pack(8)
+// struct D {
+//         struct A x;
+// };
+// #pragma pack()
+//
+// #pragma pack(16)
+// struct E {
+//         struct A x;
+// };
+// #pragma pack()
+//
+// #pragma pack(32)
+// struct F {
+//         struct A x;
+// };
+// #pragma pack()
+//
+// static void f(void) {
+// #if defined(_M_IX86)
+//         static_assert(_Alignof(struct B) == 128, "");
+//         static_assert(_Alignof(struct C) == 4, "");
+//         static_assert(_Alignof(struct D) == 128, "");
+//         static_assert(_Alignof(struct E) == 128, "");
+//         static_assert(_Alignof(struct F) == 128, "");
+// #elif defined(_M_X64)
+//         static_assert(_Alignof(struct B) == 128, "");
+//         static_assert(_Alignof(struct C) == 4, "");
+//         static_assert(_Alignof(struct D) == 8, "");
+//         static_assert(_Alignof(struct E) == 128, "");
+//         static_assert(_Alignof(struct F) == 128, "");
+// #elif defined(_M_ARM)
+//         static_assert(_Alignof(struct B) == 8, "");
+//         static_assert(_Alignof(struct C) == 4, "");
+//         static_assert(_Alignof(struct D) == 8, "");
+//         static_assert(_Alignof(struct E) == 16, "");
+//         static_assert(_Alignof(struct F) == 8, "");
+// #elif defined(_M_ARM64)
+//         static_assert(_Alignof(struct B) == 8, "");
+//         static_assert(_Alignof(struct C) == 4, "");
+//         static_assert(_Alignof(struct D) == 8, "");
+//         static_assert(_Alignof(struct E) == 128, "");
+//         static_assert(_Alignof(struct F) == 8, "");
+// #else
+//         static_assert(0, "unknown target");
+// #endif
+// }
+// ```
+
+A = { size: 64, alignment: 1024 }struct {
+    { offset: 0, size: 1 }@align(128) i { size: 32, alignment: 32 }int:1,
+}
+
+B = { size: 64, alignment: 64 }struct {
+    { offset: 0, size: 64 }a { size: 64, alignment: 1024 }A,
+}
+
+C = { size: 64, alignment: 32 }@pragma_pack(4) struct {
+    { offset: 0, size: 64 }a { size: 64, alignment: 1024 }A,
+}
+
+D = { size: 64, alignment: 64 }@pragma_pack(8) struct {
+    { offset: 0, size: 64 }a { size: 64, alignment: 1024 }A,
+}
+
+E = { size: 1024, alignment: 1024 }@pragma_pack(16) struct {
+    { offset: 0, size: 64 }a { size: 64, alignment: 1024 }A,
+}
+
+F = { size: 64, alignment: 64 }@pragma_pack(32) struct {
+    { offset: 0, size: 64 }a { size: 64, alignment: 1024 }A,
+}
+// hash: 94f287ca6faf2dca

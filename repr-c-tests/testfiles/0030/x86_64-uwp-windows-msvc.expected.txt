@@ -1,0 +1,16 @@
+// If the field or struct is packed, reduce the alignment of the field ...
+// ```c,msvc,msvc-tc-0030
+// #pragma pack(2)
+//
+// struct A {
+//         int a;
+// };
+//
+// static void f(void) {
+//         static_assert(_Alignof(struct A) == 2, "");
+// }
+// ```
+A = { size: 32, alignment: 16 }@pragma_pack(2) struct {
+    { offset: 0, size: 32 }a { size: 32, alignment: 32 }int,
+}
+// hash: 1ca86068db8e450f

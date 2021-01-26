@@ -1,0 +1,25 @@
+// https://github.com/llvm/llvm-project/blob/b43c26d036dcbf7a6881f39e4434cf059364022a/clang/test/Layout/ms-x86-empty-layout.c
+
+EmptyIntMemb = struct {
+    FlexArrayMemb []int,
+}
+
+EmptyLongLongMemb = struct {
+    FlexArrayMemb []long long,
+}
+
+EmptyAligned2LongLongMemb = struct {
+    @align(2) FlexArrayMemb []long long,
+}
+
+EmptyAligned8LongLongMemb = struct {
+    @align(8) FlexArrayMemb []long long,
+}
+
+EmptyPackedAligned4LongLongMemb = @align(4) @pragma_pack(1) struct {
+    FlexArrayMemb []long long,
+}
+
+EmptyPackedAligned8LongLongMemb = @pragma_pack(1) struct {
+    @align(8) FlexArrayMemb []long long,
+}

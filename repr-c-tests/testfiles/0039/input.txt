@@ -1,0 +1,22 @@
+// A zero-width bitfield only increases to size of the struct to the
+// offset a non-zero-width bitfield with the same alignment would
+// start.
+//
+// ```c,msvc,msvc-tc-0039
+// #include <stdlib.h>
+//
+// struct S {
+//         char c:1;
+//         int :0;
+//         char d;
+// };
+//
+// static void f(void) {
+//         static_assert(offsetof(struct S, d) == 4, "");
+// }
+// ```
+S = struct {
+    c char:1,
+    _ int:0,
+    d char,
+}

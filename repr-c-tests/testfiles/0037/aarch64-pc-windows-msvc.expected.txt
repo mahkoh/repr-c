@@ -1,0 +1,21 @@
+// If there is an ongoing bit-field in a struct whose underlying type has the same size and
+// if there is enough space left to place this bit-field, then this bit-field is placed in
+// the ongoing bit-field and the overall layout of the struct is not affected by this
+// bit-field.
+//
+// ```c,msvc,msvc-tc-0037
+// struct S {
+//         unsigned int i:1;
+//         __declspec(align(128)) long j:1;
+// };
+//
+// static void f(void) {
+//         static_assert(sizeof(struct S) == 4, "");
+//         static_assert(_Alignof(struct S) == 4, "");
+// }
+// ```
+S = { size: 32, alignment: 32 }struct {
+    { offset: 0, size: 1 }i { size: 32, alignment: 32 }unsigned int:1,
+    { offset: 1, size: 1 }@align(128) j { size: 32, alignment: 32 }long:1,
+}
+// hash: 26e1052cea7f74fb
