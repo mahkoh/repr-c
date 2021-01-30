@@ -1,0 +1,6 @@
+A = { size: 16, alignment: 1024 }@align(128) @pragma_pack(1) enum {
+    1,
+    2,
+    3,
+}
+// hash: 1a444d2e206ec445

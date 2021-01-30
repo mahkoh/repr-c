@@ -1,0 +1,6 @@
+// tc-0031
+Char = @align(4) typedef char
+
+A = @pragma_pack(2) struct {
+    a Char,
+}

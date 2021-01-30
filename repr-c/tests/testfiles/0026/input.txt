@@ -1,0 +1,7 @@
+// tc-0026
+X = struct {
+    @align(2) b []long long,
+}
+Y = struct {
+    @align(8) b []long long,
+}

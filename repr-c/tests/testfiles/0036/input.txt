@@ -1,0 +1,4 @@
+// tc-0036
+S = struct {
+    v bool:8,
+}

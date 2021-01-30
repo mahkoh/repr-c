@@ -1,0 +1,4 @@
+compiler = "./compiler.sh"
+
+# include_targets = ["msp430-none-elf"]
+include_tests = ["0013"]

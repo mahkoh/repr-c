@@ -1,3 +1,0 @@
-A = { size: 8, alignment: 32, required_alignment: 32 }@align(4) typedef { size: 8, alignment: 8 }char
-B = { size: 24, alignment: 32, required_alignment: 32 }[3]{ size: 8, alignment: 32, required_alignment: 32 }A
-// hash: 4c638dc895eff63b

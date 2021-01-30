@@ -1,0 +1,13 @@
+[package]
+name = "repr-c-tests"
+version = "0.1.0"
+authors = ["Julian Orth <ju.orth@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+repr-c-impl = { path = "../impl" }
+c-layout-impl = { path = "../../c-layout/impl" }
+anyhow = "1.0.38"
+rayon = "1.5.0"
+serde = { version = "1.0.120", features = ["derive"] }
+toml = "0.5.8"

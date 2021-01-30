@@ -1,0 +1,10 @@
+// tc-0035
+X = union {
+    _ int:0,
+    _ char:1,
+}
+
+Y = union {
+    _ char:1,
+    _ int:0,
+}

@@ -1,0 +1,4 @@
+// tc-0030
+A = @pragma_pack(2) struct {
+    a int,
+}

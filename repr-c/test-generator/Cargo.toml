@@ -1,0 +1,18 @@
+[package]
+name = "generator"
+version = "0.1.0"
+authors = ["Julian Orth <ju.orth@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+repr-c-tests = { path = "../tests" }
+repr-c-impl = { path = "../impl" }
+c-layout-impl = { path = "../../c-layout/impl" }
+anyhow =  "1.0.38"
+tempdir = "0.3.7"
+pdb = { path = "../../../pdb" }
+serde = { version = "1.0.120", features = ["derive"] }
+toml = "0.5.8"
+rayon = "1.5.0"
+gimli = "0.23.0"
+object = "0.23.0"

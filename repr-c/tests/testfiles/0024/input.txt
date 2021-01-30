@@ -1,0 +1,9 @@
+// tc-0024
+X = union {
+    b []long long,
+}
+
+Y = union {
+    _ long long:0,
+    b []char,
+}

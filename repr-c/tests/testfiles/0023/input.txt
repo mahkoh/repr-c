@@ -1,0 +1,8 @@
+// tc-0023
+X = @align(8) struct {
+    c char,
+}
+
+Y = @pragma_pack(1) struct {
+    x X,
+}

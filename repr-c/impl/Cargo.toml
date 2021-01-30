@@ -1,0 +1,5 @@
+[package]
+name = "repr-c-impl"
+version = "0.1.0"
+authors = ["Julian Orth <ju.orth@gmail.com>"]
+edition = "2018"

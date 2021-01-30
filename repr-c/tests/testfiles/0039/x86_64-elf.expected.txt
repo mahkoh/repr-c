@@ -1,0 +1,7 @@
+// tc-0039
+S = { size: 40, alignment: 8 }struct {
+    { offset: 0, size: 1 }c { size: 8, alignment: 8 }char:1,
+    _ { size: 32, alignment: 32 }int:0,
+    { offset: 32, size: 8 }d { size: 8, alignment: 8 }char,
+}
+// hash: 385517aa6b613b9b

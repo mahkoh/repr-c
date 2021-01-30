@@ -1,0 +1,24 @@
+// tc-0020
+A = struct {
+    @align(128) i int:1,
+}
+
+B = struct {
+    a A,
+}
+
+C = @pragma_pack(4) struct {
+    a A,
+}
+
+D = @pragma_pack(8) struct {
+    a A,
+}
+
+E = @pragma_pack(16) struct {
+    a A,
+}
+
+F = @pragma_pack(32) struct {
+    a A,
+}

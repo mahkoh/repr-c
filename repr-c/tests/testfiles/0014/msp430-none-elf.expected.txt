@@ -1,0 +1,10 @@
+// tc-0014
+A = { size: 16, alignment: 16 }@align(2) typedef { size: 16, alignment: 16 }int
+B = { size: 16, alignment: 64 }@align(8) typedef { size: 16, alignment: 16 }int
+X = { size: 16, alignment: 8 }@pragma_pack(1) struct {
+    { offset: 0, size: 16 }a { size: 16, alignment: 16 }A,
+}
+Y = { size: 16, alignment: 8 }@pragma_pack(1) struct {
+    { offset: 0, size: 16 }b { size: 16, alignment: 64 }B,
+}
+// hash: 94e57218b347431b

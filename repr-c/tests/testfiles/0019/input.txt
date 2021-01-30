@@ -1,0 +1,5 @@
+// tc-0019
+E = @align(8) enum {
+    1,
+    0xffff0fffffff,
+}

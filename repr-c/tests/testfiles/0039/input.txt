@@ -1,0 +1,6 @@
+// tc-0039
+S = struct {
+    c char:1,
+    _ int:0,
+    d char,
+}

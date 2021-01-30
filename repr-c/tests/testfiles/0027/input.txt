@@ -1,0 +1,5 @@
+// tc-0027
+Y = struct {
+    c char,
+    i int,
+}

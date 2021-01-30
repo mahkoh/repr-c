@@ -1,0 +1,6 @@
+X = { size: 64, alignment: 8 }struct {
+    { offset: 0, size: 16 }a { size: 16, alignment: 8 }int,
+    { offset: 16, size: 32 }b { size: 32, alignment: 8 }long,
+    { offset: 48, size: 16 }c { size: 16, alignment: 8 }ptr,
+}
+// hash: d7dccb6d7c568473

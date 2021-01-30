@@ -1,2 +1,9 @@
 [workspace]
-members = [ "repr-c", "c-layout-priv", "c-layout", "generator", "repr-c-tests" ]
+members = [
+    "c-layout/cli",
+    "c-layout/impl",
+    "repr-c/facade",
+    "repr-c/test-generator",
+    "repr-c/impl",
+    "repr-c/tests",
+]

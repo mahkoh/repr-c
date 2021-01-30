@@ -1,0 +1,5 @@
+// tc-0037
+S = struct {
+    i unsigned int:1,
+    @align(128) j long:1,
+}

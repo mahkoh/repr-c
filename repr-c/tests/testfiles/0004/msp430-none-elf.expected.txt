@@ -1,0 +1,8 @@
+X = { size: 16, alignment: 16 }struct {
+    { offset: 0, size: 16 }@align(2) a { size: 16, alignment: 16 }int,
+}
+
+Y = { size: 16, alignment: 8 }@pragma_pack(1) struct {
+    { offset: 0, size: 16 }x { size: 16, alignment: 16 }X,
+}
+// hash: 29f7f6529f5e2747

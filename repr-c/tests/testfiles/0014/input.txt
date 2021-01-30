@@ -1,0 +1,9 @@
+// tc-0014
+A = @align(2) typedef int
+B = @align(8) typedef int
+X = @pragma_pack(1) struct {
+    a A,
+}
+Y = @pragma_pack(1) struct {
+    b B,
+}
