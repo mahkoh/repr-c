@@ -1,0 +1,3 @@
+X = { size: 128, alignment: 64 }typedef { size: 128, alignment: 64 }i128
+Y = { size: 128, alignment: 64 }typedef { size: 128, alignment: 64 }u128
+// hash: 9ba3ed1a7b28cc7e

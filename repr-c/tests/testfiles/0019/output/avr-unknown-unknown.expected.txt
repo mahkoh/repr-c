@@ -1,0 +1,6 @@
+// tc-0019
+E = { size: 64, alignment: 8 }@align(8) enum {
+    1,
+    0xffff0fffffff,
+}
+// hash: 2243894789ff965b

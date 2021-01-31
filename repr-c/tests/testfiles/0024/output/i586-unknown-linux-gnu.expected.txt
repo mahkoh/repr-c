@@ -1,0 +1,10 @@
+// tc-0024
+X = { size: 0, alignment: 32 }union {
+    { offset: 0, size: 0 }b { size: 0, alignment: 32 }[]{ size: 64, alignment: 32 }long long,
+}
+
+Y = { size: 0, alignment: 8 }union {
+    _ { size: 64, alignment: 32 }long long:0,
+    { offset: 0, size: 0 }b { size: 0, alignment: 8 }[]{ size: 8, alignment: 8 }char,
+}
+// hash: 471c928b6a64a97e

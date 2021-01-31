@@ -1,0 +1,10 @@
+Int = { size: 32, alignment: 64, required_alignment: 64 }@align(8) typedef { size: 32, alignment: 32 }int
+
+X = { size: 64, alignment: 64 }struct {
+    { offset: 0, size: 1 }i { size: 32, alignment: 64, required_alignment: 64 }Int:1,
+}
+
+Y = { size: 64, alignment: 8 }@pragma_pack(1) struct {
+    { offset: 0, size: 64 }x { size: 64, alignment: 64 }X,
+}
+// hash: a555217c47146e32

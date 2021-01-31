@@ -1,0 +1,10 @@
+A = { size: 8, alignment: 8 }union {
+    _ { size: 32, alignment: 32 }long:0,
+    { offset: 0, size: 1 }a { size: 8, alignment: 8 }char:1,
+}
+
+B = { size: 32, alignment: 8 }union {
+    { offset: 0, size: 1 }a { size: 8, alignment: 8 }char:1,
+    _ { size: 32, alignment: 32 }long:0,
+}
+// hash: d48ceb27cf9985d5

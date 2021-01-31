@@ -1,0 +1,9 @@
+// tc-0023
+X = { size: 64, alignment: 64, required_alignment: 64 }@align(8) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+}
+
+Y = { size: 64, alignment: 64, required_alignment: 64 }@pragma_pack(1) struct {
+    { offset: 0, size: 64 }x { size: 64, alignment: 64, required_alignment: 64 }X,
+}
+// hash: 95e12d0bd7e2a79b

@@ -1,0 +1,6 @@
+I1 = { size: 32, alignment: 64 }@align(8) typedef { size: 32, alignment: 32 }int
+I2 = { size: 32, alignment: 8 }@align(1) typedef { size: 32, alignment: 64 }I1
+X = { size: 32, alignment: 8 }struct {
+    { offset: 0, size: 32 }i { size: 32, alignment: 8 }I2,
+}
+// hash: f5f5ca530806a89a

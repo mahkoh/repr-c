@@ -1,0 +1,9 @@
+// tc-0045
+Char = { size: 24, alignment: 16, required_alignment: 16 }@align(2) typedef { size: 24, alignment: 8 }[3]{ size: 8, alignment: 8 }char
+
+X = { size: 24, alignment: 8 }typedef { size: 24, alignment: 8 }[3]{ size: 8, alignment: 8 }char
+
+Y = { size: 24, alignment: 8 }struct {
+    { offset: 0, size: 24 }x { size: 24, alignment: 8 }X,
+}
+// hash: 28cdac3925cc6736

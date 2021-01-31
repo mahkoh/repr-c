@@ -1,0 +1,13 @@
+// tc-0049
+X = { size: 40, alignment: 8 }struct {
+    { offset: 0, size: 1 }c { size: 8, alignment: 8 }char:1,
+    @attr_packed _ { size: 32, alignment: 32 }int:0,
+    { offset: 32, size: 8 }d { size: 8, alignment: 8 }char,
+}
+
+Y = { size: 40, alignment: 8 }struct {
+    { offset: 0, size: 1 }c { size: 8, alignment: 8 }char:1,
+    _ { size: 32, alignment: 32 }int:0,
+    { offset: 32, size: 8 }d { size: 8, alignment: 8 }char,
+}
+// hash: 3dad1b305e869097

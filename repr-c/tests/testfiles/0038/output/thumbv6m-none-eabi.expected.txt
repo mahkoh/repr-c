@@ -1,0 +1,7 @@
+// tc-0038
+S = { size: 8, alignment: 8 }@pragma_pack(1) struct {
+    { offset: 0, size: 1 }@align(4) c { size: 8, alignment: 8 }char:1,
+}
+
+X = { size: 24, alignment: 8 }[3]{ size: 8, alignment: 8 }S
+// hash: 2ee8f0c0d55dd8ad

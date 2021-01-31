@@ -1,0 +1,19 @@
+// tc-0029
+Char = { size: 8, alignment: 32 }@align(4) typedef { size: 8, alignment: 8 }char
+
+A = { size: 32, alignment: 32 }struct {
+    { offset: 0, size: 8 }a { size: 8, alignment: 32 }Char,
+}
+
+B = { size: 8, alignment: 8 }struct {
+    { offset: 0, size: 1 }a { size: 8, alignment: 32 }Char:1,
+}
+
+C = { size: 32, alignment: 8 }@pragma_pack(1) struct {
+    { offset: 0, size: 32 }a { size: 32, alignment: 32 }A,
+}
+
+D = { size: 8, alignment: 8 }@pragma_pack(1) struct {
+    { offset: 0, size: 8 }a { size: 8, alignment: 8 }B,
+}
+// hash: 860b483eccaa28a7

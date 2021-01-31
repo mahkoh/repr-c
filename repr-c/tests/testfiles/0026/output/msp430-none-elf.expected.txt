@@ -1,0 +1,8 @@
+// tc-0026
+X = { size: 0, alignment: 16 }struct {
+    { offset: 0, size: 0 }@align(2) b { size: 0, alignment: 16 }[]{ size: 64, alignment: 16 }long long,
+}
+Y = { size: 0, alignment: 64 }struct {
+    { offset: 0, size: 0 }@align(8) b { size: 0, alignment: 16 }[]{ size: 64, alignment: 16 }long long,
+}
+// hash: 7ae15ae91008e135

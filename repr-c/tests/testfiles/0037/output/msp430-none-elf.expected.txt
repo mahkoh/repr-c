@@ -1,0 +1,6 @@
+// tc-0037
+S = { size: 2048, alignment: 1024 }struct {
+    { offset: 0, size: 1 }i { size: 16, alignment: 16 }unsigned int:1,
+    { offset: 1024, size: 1 }@align(128) j { size: 32, alignment: 16 }long:1,
+}
+// hash: 9f98b5919e229334

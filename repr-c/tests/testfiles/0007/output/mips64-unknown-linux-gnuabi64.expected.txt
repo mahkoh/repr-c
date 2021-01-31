@@ -1,0 +1,39 @@
+// Tests the relationship of required, natural, and packing alignment when it comes
+// to bitfields
+
+// n < p < r
+a = { size: 16, alignment: 64 }@align(8) typedef { size: 16, alignment: 16 }short
+A = { size: 32, alignment: 32 }@pragma_pack(4) struct {
+    { offset: 0, size: 1 }i { size: 16, alignment: 64 }a: 1
+}
+
+// n < r < p
+b = { size: 16, alignment: 32 }@align(4) typedef { size: 16, alignment: 16 }short
+B = { size: 32, alignment: 32 }@pragma_pack(8) struct {
+    { offset: 0, size: 1 }i { size: 16, alignment: 32 }b: 1
+}
+
+// p < n < r
+c = { size: 32, alignment: 64 }@align(8) typedef { size: 32, alignment: 32 }int
+C = { size: 16, alignment: 16 }@pragma_pack(2) struct {
+    { offset: 0, size: 1 }i { size: 32, alignment: 64 }c: 1
+}
+
+// p < r < n
+d = { size: 64, alignment: 32 }@align(4) typedef { size: 64, alignment: 64 }long long
+D = { size: 16, alignment: 16 }@pragma_pack(2) struct {
+    { offset: 0, size: 1 }i { size: 64, alignment: 32 }d: 1
+}
+
+// r < n < p
+e = { size: 32, alignment: 16 }@align(2) typedef { size: 32, alignment: 32 }int
+E = { size: 16, alignment: 16 }@pragma_pack(8) struct {
+    { offset: 0, size: 1 }i { size: 32, alignment: 16 }e: 1
+}
+
+// r < p < n
+f = { size: 64, alignment: 16 }@align(2) typedef { size: 64, alignment: 64 }long long
+F = { size: 16, alignment: 16 }@pragma_pack(4) struct {
+    { offset: 0, size: 1 }i { size: 64, alignment: 16 }f: 1
+}
+// hash: e8b3c8fec5a95c39
