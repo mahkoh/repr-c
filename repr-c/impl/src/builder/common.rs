@@ -39,16 +39,55 @@ pub fn resolve_typedefs(mut ty: &Type<()>) -> &Type<()> {
 pub fn unnamed_field_affects_record_alignment(target: Target) -> bool {
     use Target::*;
     match target {
-        Aarch64Fuchsia
+        | Aarch64Fuchsia
         | Aarch64LinuxAndroid
         | Aarch64UnknownFreebsd
         | Aarch64UnknownHermit
+        | Aarch64UnknownLinuxGnu
+        | Aarch64UnknownLinuxMusl
         | Aarch64UnknownNetbsd
         | Aarch64UnknownNone
         | Aarch64UnknownOpenbsd
+        | Aarch64UnknownRedox
+        | Armebv7rUnknownNoneEabi
+        | Armebv7rUnknownNoneEabihf
+        | ArmLinuxAndroideabi
+        | ArmUnknownLinuxGnueabi
+        | ArmUnknownLinuxGnueabihf
+        | Armv4tUnknownLinuxGnueabi
+        | Armv5teUnknownLinuxGnueabi
+        | Armv5teUnknownLinuxUclibcgnueabi
+        | Armv6UnknownFreebsdGnueabihf
+        | Armv6UnknownNetbsdelfEabihf
+        | Armv7aNoneEabi
+        | Armv7aNoneEabihf
+        | Armv7AppleIos
+        | Armv7NoneLinuxAndroid
+        | Armv7rUnknownNoneEabi
+        | Armv7rUnknownNoneEabihf
+        | Armv7sAppleIos
+        | Armv7UnknownFreebsdGnueabihf
+        | Armv7UnknownLinuxGnueabi
+        | Armv7UnknownLinuxGnueabihf
+        | Armv7UnknownNetbsdelfEabihf
         | AvrUnknownUnknown
-        | Aarch64UnknownRedox => true,
+        | Thumbv4tNoneEabi
+        | Thumbv6mNoneEabi
+        | Thumbv7emNoneEabi
+        | Thumbv7emNoneEabihf
+        | Thumbv7mNoneEabi
+        | Thumbv8mBaseNoneEabi
+        | Thumbv8mMainNoneEabi
+        | Thumbv8mMainNoneEabihf => true,
         _ => false,
+    }
+}
+
+pub fn min_zero_width_bitfield_alignment(target: Target) -> Option<u64> {
+    use Target::*;
+    match target {
+        Armv7AppleIos | Armv7sAppleIos => Some(32),
+        _ => None,
     }
 }
 
@@ -59,7 +98,7 @@ pub fn builtin_type_layout(target: Target, b: BuiltinType) -> TypeLayout {
     match target {
         AvrUnknownUnknown => return avr_builtin_type_layout(b),
         Msp430NoneElf => return msp430_builtin_type_layout(b),
-        _ => { },
+        _ => {}
     }
 
     let (size_bytes, alignment_bytes) = match b {
@@ -67,28 +106,77 @@ pub fn builtin_type_layout(target: Target, b: BuiltinType) -> TypeLayout {
         Char | SignedChar | UnsignedChar | Bool | U8 | I8 => (1, 1),
         Short | UnsignedShort | U16 | I16 => (2, 2),
         Float | F32 | Int | UnsignedInt | U32 | I32 => (4, 4),
-        Double | F64 | LongLong | UnsignedLongLong | U64 | I64 => (8, 8),
-        U128 | I128 => (16, 16),
+        Double | F64 | LongLong | UnsignedLongLong | U64 | I64 => match target {
+            I386AppleIos | I686LinuxAndroid | I686UnknownFreebsd | I686UnknownHaiku
+            | I686UnknownNetbsdelf | I686UnknownOpenbsd | Armv7AppleIos | Armv7sAppleIos
+            | I586UnknownLinuxGnu | I586UnknownLinuxMusl | I686UnknownLinuxGnu
+            | I686UnknownLinuxMusl => (8, 4),
+            _ => (8, 8),
+        },
+        U128 | I128 => match target {
+            S390xUnknownLinuxGnu => (16, 8),
+            _ => (16, 16),
+        },
         Long | UnsignedLong => match target {
-            Aarch64PcWindowsMsvc
-            | I586PcWindowsMsvc
-            | I686PcWindowsMsvc
-            | Thumbv7aPcWindowsMsvc
+            | Aarch64PcWindowsMsvc
+            | Armebv7rUnknownNoneEabi
+            | Armebv7rUnknownNoneEabihf
+            | ArmLinuxAndroideabi
+            | ArmUnknownLinuxGnueabi
+            | ArmUnknownLinuxGnueabihf
+            | Armv4tUnknownLinuxGnueabi
+            | Armv5teUnknownLinuxGnueabi
+            | Armv5teUnknownLinuxUclibcgnueabi
+            | Armv6UnknownFreebsdGnueabihf
+            | Armv6UnknownNetbsdelfEabihf
+            | Armv7aNoneEabi
+            | Armv7aNoneEabihf
+            | Armv7AppleIos
+            | Armv7NoneLinuxAndroid
+            | Armv7rUnknownNoneEabi
+            | Armv7rUnknownNoneEabihf
+            | Armv7sAppleIos
+            | Armv7UnknownFreebsdGnueabihf
+            | Armv7UnknownLinuxGnueabi
+            | Armv7UnknownLinuxGnueabihf
+            | Armv7UnknownNetbsdelfEabihf
             | AvrUnknownUnknown
+            | HexagonUnknownLinuxMusl
             | I386AppleIos
+            | I586PcWindowsMsvc
+            | I586UnknownLinuxGnu
+            | I586UnknownLinuxMusl
             | I686LinuxAndroid
+            | I686PcWindowsGnu
+            | I686PcWindowsMsvc
             | I686UnknownFreebsd
             | I686UnknownHaiku
+            | I686UnknownLinuxGnu
+            | I686UnknownLinuxMusl
             | I686UnknownNetbsdelf
             | I686UnknownOpenbsd
+            | I686UnknownWindows
             | MipselSonyPsp
+            | MipselUnknownLinuxGnu
+            | MipselUnknownLinuxMusl
+            | MipselUnknownLinuxUclibc
             | MipselUnknownNone
+            | Mipsisa32r6elUnknownLinuxGnu
+            | Mipsisa32r6UnknownLinuxGnu
+            | MipsUnknownLinuxGnu
+            | MipsUnknownLinuxMusl
+            | MipsUnknownLinuxUclibc
             | Msp430NoneElf
+            | PowerpcUnknownLinuxGnu
+            | PowerpcUnknownLinuxGnuspe
+            | PowerpcUnknownLinuxMusl
             | PowerpcUnknownNetbsd
             | Riscv32
-            | Sparcv9SunSolaris
+            | Riscv32UnknownLinuxGnu
+            | SparcUnknownLinuxGnu
             | Thumbv4tNoneEabi
             | Thumbv6mNoneEabi
+            | Thumbv7aPcWindowsMsvc
             | Thumbv7emNoneEabi
             | Thumbv7emNoneEabihf
             | Thumbv7mNoneEabi
@@ -98,55 +186,70 @@ pub fn builtin_type_layout(target: Target, b: BuiltinType) -> TypeLayout {
             | Wasm32UnknownEmscripten
             | Wasm32UnknownUnknown
             | Wasm32Wasi
-            | X86_64PcWindowsMsvc => (4, 4),
-            X86_64AppleIos
-            | X86_64AppleIos13_0Macabi
-            | X86_64AppleTvos
-            | X86_64Elf
-            | X86_64Fuchsia
-            | X86_64LinuxAndroid
-            | X86_64PcSolaris
-            | X86_64RumprunNetbsd
-            | X86_64UnknownDragonfly
-            | X86_64UnknownFreebsd
-            | X86_64UnknownHaiku
-            | X86_64UnknownHermit
-            | X86_64UnknownL4reUclibc
-            | X86_64UnknownNetbsd
-            | X86_64UnknownOpenbsd
-            | X86_64UnknownRedox
-            | Aarch64Fuchsia
-            | Aarch64LinuxAndroid
-            | Aarch64UnknownFreebsd
-            | Aarch64UnknownHermit
-            | Aarch64UnknownNetbsd
-            | Aarch64UnknownNone
-            | Aarch64UnknownOpenbsd
-            | Aarch64UnknownRedox
-            | Arm64AppleIos
-            | Arm64AppleIosMacabi
-            | Arm64AppleTvos
-            | X86_64UnknownLinuxGnu => (8, 8),
+            | X86_64PcWindowsGnu
+            | X86_64PcWindowsMsvc
+            | X86_64UnknownWindows => (4, 4),
+            _ => (8, 8),
         },
         Pointer => match target {
-            I586PcWindowsMsvc
-            | I686PcWindowsMsvc
-            | Thumbv7aPcWindowsMsvc
+            | Armebv7rUnknownNoneEabi
+            | Armebv7rUnknownNoneEabihf
+            | ArmLinuxAndroideabi
+            | ArmUnknownLinuxGnueabi
+            | ArmUnknownLinuxGnueabihf
+            | Armv4tUnknownLinuxGnueabi
+            | Armv5teUnknownLinuxGnueabi
+            | Armv5teUnknownLinuxUclibcgnueabi
+            | Armv6UnknownFreebsdGnueabihf
+            | Armv6UnknownNetbsdelfEabihf
+            | Armv7aNoneEabi
+            | Armv7aNoneEabihf
+            | Armv7AppleIos
+            | Armv7NoneLinuxAndroid
+            | Armv7rUnknownNoneEabi
+            | Armv7rUnknownNoneEabihf
+            | Armv7sAppleIos
+            | Armv7UnknownFreebsdGnueabihf
+            | Armv7UnknownLinuxGnueabi
+            | Armv7UnknownLinuxGnueabihf
+            | Armv7UnknownNetbsdelfEabihf
             | AvrUnknownUnknown
+            | HexagonUnknownLinuxMusl
             | I386AppleIos
+            | I586PcWindowsMsvc
+            | I586UnknownLinuxGnu
+            | I586UnknownLinuxMusl
             | I686LinuxAndroid
+            | I686PcWindowsGnu
+            | I686PcWindowsMsvc
             | I686UnknownFreebsd
             | I686UnknownHaiku
+            | I686UnknownLinuxGnu
+            | I686UnknownLinuxMusl
             | I686UnknownNetbsdelf
             | I686UnknownOpenbsd
+            | I686UnknownWindows
             | MipselSonyPsp
+            | MipselUnknownLinuxGnu
+            | MipselUnknownLinuxMusl
+            | MipselUnknownLinuxUclibc
             | MipselUnknownNone
+            | Mipsisa32r6elUnknownLinuxGnu
+            | Mipsisa32r6UnknownLinuxGnu
+            | MipsUnknownLinuxGnu
+            | MipsUnknownLinuxMusl
+            | MipsUnknownLinuxUclibc
             | Msp430NoneElf
+            | PowerpcUnknownLinuxGnu
+            | PowerpcUnknownLinuxGnuspe
+            | PowerpcUnknownLinuxMusl
             | PowerpcUnknownNetbsd
             | Riscv32
-            | Sparcv9SunSolaris
+            | Riscv32UnknownLinuxGnu
+            | SparcUnknownLinuxGnu
             | Thumbv4tNoneEabi
             | Thumbv6mNoneEabi
+            | Thumbv7aPcWindowsMsvc
             | Thumbv7emNoneEabi
             | Thumbv7emNoneEabihf
             | Thumbv7mNoneEabi
@@ -156,36 +259,7 @@ pub fn builtin_type_layout(target: Target, b: BuiltinType) -> TypeLayout {
             | Wasm32UnknownEmscripten
             | Wasm32UnknownUnknown
             | Wasm32Wasi => (4, 4),
-            X86_64AppleIos
-            | X86_64AppleIos13_0Macabi
-            | X86_64AppleTvos
-            | X86_64Elf
-            | X86_64Fuchsia
-            | X86_64LinuxAndroid
-            | X86_64PcSolaris
-            | X86_64RumprunNetbsd
-            | X86_64UnknownDragonfly
-            | X86_64UnknownFreebsd
-            | X86_64UnknownHaiku
-            | X86_64UnknownHermit
-            | X86_64UnknownL4reUclibc
-            | X86_64UnknownNetbsd
-            | X86_64UnknownOpenbsd
-            | X86_64UnknownRedox
-            | Aarch64PcWindowsMsvc
-            | X86_64PcWindowsMsvc
-            | Aarch64Fuchsia
-            | Aarch64LinuxAndroid
-            | Aarch64UnknownFreebsd
-            | Aarch64UnknownHermit
-            | Aarch64UnknownNetbsd
-            | Aarch64UnknownNone
-            | Aarch64UnknownOpenbsd
-            | Aarch64UnknownRedox
-            | Arm64AppleIos
-            | Arm64AppleIosMacabi
-            | Arm64AppleTvos
-            | X86_64UnknownLinuxGnu => (8, 8),
+            _ => (8, 8),
         },
     };
     TypeLayout {
@@ -202,11 +276,10 @@ pub fn avr_builtin_type_layout(b: BuiltinType) -> TypeLayout {
     let size_bytes = match b {
         Unit => 0,
         Char | SignedChar | UnsignedChar | Bool | U8 | I8 => 1,
-        Short | UnsignedShort | U16 | I16 | Int | UnsignedInt => 2,
+        Pointer | Short | UnsignedShort | U16 | I16 | Int | UnsignedInt => 2,
         Long | UnsignedLong | Double | Float | F32 | U32 | I32 => 4,
         F64 | LongLong | UnsignedLongLong | U64 | I64 => 8,
         U128 | I128 => 16,
-        Pointer => 2,
     };
     TypeLayout {
         size_bits: size_bytes * BITS_PER_BYTE,
@@ -226,12 +299,11 @@ pub fn msp430_builtin_type_layout(b: BuiltinType) -> TypeLayout {
         Char | SignedChar | UnsignedChar | Bool | U8 | I8 => {
             alignment = 1;
             1
-        },
-        Short | UnsignedShort | U16 | I16 | Int | UnsignedInt => 2,
+        }
+        Pointer | Short | UnsignedShort | U16 | I16 | Int | UnsignedInt => 2,
         Long | UnsignedLong | Float | F32 | U32 | I32 => 4,
         Double | F64 | LongLong | UnsignedLongLong | U64 | I64 => 8,
         U128 | I128 => 16,
-        Pointer => 2,
     };
     TypeLayout {
         size_bits: size_bytes * BITS_PER_BYTE,
@@ -241,10 +313,26 @@ pub fn msp430_builtin_type_layout(b: BuiltinType) -> TypeLayout {
     }
 }
 
-pub fn bitfield_type_alignment_matters(target: Target) -> bool {
+pub fn always_consider_bitfield_type_alignment(target: Target) -> bool {
+    use Target::*;
+    match target {
+        AvrUnknownUnknown | Armv7AppleIos | Armv7sAppleIos => false,
+        _ => true,
+    }
+}
+
+pub fn consider_zero_sized_bitfield_type_alignment(target: Target) -> bool {
     use Target::*;
     match target {
         AvrUnknownUnknown => false,
         _ => true,
+    }
+}
+
+pub fn short_enums(target: Target) -> bool {
+    use Target::*;
+    match target {
+        HexagonUnknownLinuxMusl => true,
+        _ => false,
     }
 }

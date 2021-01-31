@@ -6,7 +6,6 @@ use std::io::{stdin, Read};
 use std::process;
 
 fn args() -> (Target, Option<String>) {
-    let possible_targets: Vec<_> = TARGETS.iter().map(|t| t.name()).collect();
     let matches = App::new("c-layout")
         .arg(
             Arg::with_name("print-targets")
@@ -17,8 +16,7 @@ fn args() -> (Target, Option<String>) {
             Arg::with_name("target")
                 .long("target")
                 .takes_value(true)
-                .help("Sets the target")
-                .possible_values(&possible_targets),
+                .help("Sets the target"),
         )
         .arg(Arg::with_name("input").required(false))
         .get_matches();
@@ -36,7 +34,7 @@ fn args() -> (Target, Option<String>) {
         .next();
     let target = match target {
         None => {
-            eprintln!("The default target {} is not available.", env!("TARGET"));
+            eprintln!("The target {} is not available.", env!("TARGET"));
             eprintln!("Specify a different target with the --target option.");
             eprintln!("Print all available targets with the --print-targets flag.");
             process::exit(1);

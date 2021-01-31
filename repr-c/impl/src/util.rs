@@ -135,15 +135,21 @@ pub(crate) fn is_attr_packed(a: &[Annotation]) -> bool {
 }
 
 pub(crate) fn annotation_alignment(a: &[Annotation]) -> Option<u64> {
-    a.iter()
-        .flat_map(|a| {
-            match a {
-                Annotation::Aligned(n) => Some(*n),
-                _ => None,
-            }
-            .into_iter()
-        })
-        .max()
+    for a in a {
+        if let Annotation::Aligned(n) = a {
+            return Some(*n);
+        }
+    }
+    None
+}
+
+pub(crate) fn pragma_pack_value(a: &[Annotation]) -> Option<u64> {
+    for a in a {
+        if let Annotation::PragmaPack(n) = a {
+            return Some(*n);
+        }
+    }
+    None
 }
 
 pub(crate) fn size_mul(a: u64, b: u64) -> Result<u64> {

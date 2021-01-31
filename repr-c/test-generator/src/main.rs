@@ -35,7 +35,7 @@ fn main_() -> Result<()> {
         }
     }
     dirs.sort();
-    dirs.iter().try_for_each(|dir| {
+    dirs.par_iter().try_for_each(|dir| {
         let config = read_input_config(dir)
             .with_context(|| anyhow!("cannot read config in {}", dir.display()))?;
         let input_path = dir.join("input.txt");
@@ -48,7 +48,8 @@ fn main_() -> Result<()> {
         };
         let declarations = c_layout_impl::parse(&input)
             .with_context(|| anyhow!("Parsing of {} failed", input_path.display()))?;
-        TARGETS.iter().try_for_each(|target| {
+        std::fs::create_dir_all(dir.join("output"))?;
+        TARGETS.par_iter().try_for_each(|target| {
             process_target(
                 &dir,
                 &input,
@@ -97,7 +98,10 @@ fn process_target(
     if !userconfig.test_target(target) {
         return Ok(());
     }
-    let expected_file = dir.join(target.name()).with_extension("expected.txt");
+    let expected_file = dir
+        .join("output")
+        .join(target.name())
+        .with_extension("expected.txt");
     if up_to_date(hash, &expected_file)? {
         return Ok(());
     }

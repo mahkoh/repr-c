@@ -1,9 +1,0 @@
-Int = { size: 48, alignment: 64 }@align(8) typedef { size: 48, alignment: 16 }[3]{ size: 16, alignment: 16 }int
-
-Y = { size: 192, alignment: 64 }typedef { size: 192, alignment: 64 }[3]{ size: 48, alignment: 64 }Int
-
-Z = { size: 256, alignment: 64 }struct {
-    { offset: 0, size: 192 }y { size: 192, alignment: 64 }Y,
-    { offset: 192, size: 16 }i { size: 16, alignment: 16 }int,
-}
-// hash: bdc00fd39baca83c

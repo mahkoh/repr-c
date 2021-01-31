@@ -7,7 +7,7 @@ edition = "2018"
 [dependencies]
 lalrpop-util = "0.19.4"
 regex = "1"
-repr-c-impl = { path = "../../repr-c/impl" }
+repr-c-impl = { path = "../../repr-c/impl", version = "0.1.0" }
 anyhow = "1.0.38"
 num-traits = "0.2.14"
 

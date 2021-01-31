@@ -1,6 +1,0 @@
-// tc-0033
-A = { size: 128, alignment: 64 }struct {
-    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
-    { offset: 64, size: 64 }a { size: 64, alignment: 64 }long,
-}
-// hash: 871186b213c920bf

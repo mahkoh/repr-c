@@ -1,0 +1,12 @@
+// tc-0049
+X = struct {
+    c char:1,
+    @attr_packed _ int:0,
+    d char,
+}
+
+Y = struct {
+    c char:1,
+    _ int:0,
+    d char,
+}

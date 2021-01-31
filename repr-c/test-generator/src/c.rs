@@ -182,7 +182,7 @@ impl Generator {
     fn emit_typedef(&mut self, n: &str, a: &Annotations, u: &Type) -> Result<()> {
         write!(&mut self.current, "typedef ")?;
         self.emit_type_name(u)?;
-        writeln!(&mut self.current, " {}", n)?;
+        write!(&mut self.current, " {}", n)?;
         self.emit_gcc_attributes(a)?;
         writeln!(&mut self.current, ";")?;
         Ok(())
@@ -205,9 +205,11 @@ impl Generator {
     fn emit_builtin_type(&mut self, bi: BuiltinType) -> Result<()> {
         use BuiltinType::*;
         let s = match bi {
-            Unit | U8 | U16 | U32 | U64 | U128 | I8 | I16 | I32 | I64 | I128 | F32 | F64 => {
+            Unit | U8 | U16 | U32 | U64 | I8 | I16 | I32 | I64 | F32 | F64 => {
                 bail!("type {:?} cannot be used", bi)
             }
+            I128 => "__int128",
+            U128 => "unsigned __int128",
             Bool => "_Bool",
             Char => "char",
             SignedChar => "signed char",

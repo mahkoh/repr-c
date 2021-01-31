@@ -1,6 +1,0 @@
-// tc-0034
-U = { size: 16, alignment: 16 }union {
-    { offset: 0, size: 16 }l { size: 16, alignment: 16 }int,
-    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
-}
-// hash: 9483e3b60409e5ab

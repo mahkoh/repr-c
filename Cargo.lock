@@ -362,6 +362,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "isnt"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2a7558cc96ddcaf0b4144d7149984ace2899bb29d4ee2999979d429efc305200"
+
+[[package]]
 name = "itertools"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -476,8 +482,6 @@ dependencies = [
 [[package]]
 name = "object"
 version = "0.23.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a9a7ab5d64814df0fe4a4b5ead45ed6c5f181ee3ff04ba344313a6c80446c5d4"
 dependencies = [
  "flate2",
  "wasmparser",
@@ -664,6 +668,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "c-layout-impl",
+ "isnt",
  "rayon",
  "repr-c-impl",
  "serde",

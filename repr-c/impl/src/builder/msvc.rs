@@ -137,7 +137,7 @@ fn compute_record_layout(
     RecordLayoutBuilder::new(target, ty, annotations)?.compute(u)
 }
 
-struct RecordLayoutBuilder<'a> {
+pub(crate) struct RecordLayoutBuilder<'a> {
     target: Target,
     // The annotations of this type.
     annotations: &'a [Annotation],
@@ -174,7 +174,11 @@ struct OngoingBitfield {
 }
 
 impl<'a> RecordLayoutBuilder<'a> {
-    fn new(target: Target, kind: RecordKind, annotations: &'a [Annotation]) -> Result<Self> {
+    pub(crate) fn new(
+        target: Target,
+        kind: RecordKind,
+        annotations: &'a [Annotation],
+    ) -> Result<Self> {
         let min_pack_value = annotations
             .iter()
             .flat_map(|a| {
@@ -275,7 +279,9 @@ impl<'a> RecordLayoutBuilder<'a> {
         use Target::*;
         let max_field_alignment_bits = match (min_pack_value, target) {
             (Some(8), _) | (Some(16), _) | (Some(32), _) => min_pack_value,
-            (Some(64), I586PcWindowsMsvc) | (Some(64), I686PcWindowsMsvc) => None,
+            (Some(64), I586PcWindowsMsvc)
+            | (Some(64), I686PcWindowsMsvc)
+            | (Some(64), I686UnknownWindows) => None,
             (Some(64), _) => min_pack_value,
             (Some(128), Thumbv7aPcWindowsMsvc) => min_pack_value,
             (Some(128), _) => None,

@@ -1,0 +1,12 @@
+// tc-0047
+X = struct {
+    a char,
+    _ int:1,
+    c char,
+}
+
+Y = struct {
+    a char,
+    _ char:0,
+    c char,
+}

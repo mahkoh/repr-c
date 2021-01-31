@@ -1,4 +1,4 @@
 compiler = "./compiler.sh"
 
-# include_targets = ["msp430-none-elf"]
-include_tests = ["0013"]
+#include_targets = [ "hexagon-unknown-linux-musl", "powerpc-unknown-linux-gnuspe", ]
+#include_tests = ["0013"]

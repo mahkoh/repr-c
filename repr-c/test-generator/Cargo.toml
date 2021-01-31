@@ -10,9 +10,9 @@ repr-c-impl = { path = "../impl" }
 c-layout-impl = { path = "../../c-layout/impl" }
 anyhow =  "1.0.38"
 tempdir = "0.3.7"
-pdb = { path = "../../../pdb" }
 serde = { version = "1.0.120", features = ["derive"] }
 toml = "0.5.8"
 rayon = "1.5.0"
 gimli = "0.23.0"
-object = "0.23.0"
+object = { path = "../../vendored/object" }
+pdb = { path = "../../vendored/pdb" }

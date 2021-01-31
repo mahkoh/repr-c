@@ -1,9 +1,0 @@
-// tc-0021
-Y = { size: 64, alignment: 128 }struct {
-    { offset: 0, size: 1 }@align(16) i { size: 32, alignment: 32 }int:1,
-}
-Z = { size: 128, alignment: 64 }struct {
-    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
-    { offset: 64, size: 64 }y { size: 64, alignment: 128 }Y,
-}
-// hash: a1516860ed52ae65

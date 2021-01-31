@@ -1,12 +1,13 @@
 use crate::{read_input_config, GlobalConfig, InputConfig};
 use anyhow::{anyhow, bail, Context, Result};
 use c_layout_impl::ast::Declaration;
+use isnt::std_1::vec::IsntVecExt;
 use rayon::iter::IntoParallelRefIterator;
 use rayon::iter::ParallelIterator;
 use repr_c_impl::layout::{FieldLayout, LayoutInfo, Type, TypeLayout};
 use repr_c_impl::target::{Target, TARGETS};
 use std::path::Path;
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Mutex;
 
 #[test]
 fn test() -> Result<()> {
@@ -21,27 +22,38 @@ fn test() -> Result<()> {
         }
     }
     dirs.sort();
-    let has_errors = AtomicBool::new(false);
+    let failed = Mutex::new(vec![]);
     let r: Result<()> = dirs.par_iter().try_for_each(|dir| {
-        process_dir(dir, &has_errors, &userconfig)
+        process_dir(dir, &userconfig, &failed)
             .with_context(|| anyhow!("processing {} failed", dir.display()))
     });
     r?;
-    if has_errors.load(Ordering::Relaxed) {
+    let mut failed = failed.lock().unwrap();
+    if failed.is_not_empty() {
+        failed.sort();
+        for s in &*failed {
+            eprintln!("{} failed", s);
+        }
         bail!("some tests failed");
     }
     Ok(())
 }
 
-fn process_dir(dir: &Path, has_errors: &AtomicBool, global_config: &GlobalConfig) -> Result<()> {
+fn process_dir(
+    dir: &Path,
+    global_config: &GlobalConfig,
+    failed: &Mutex<Vec<String>>,
+) -> Result<()> {
     let config = read_input_config(dir)?.1;
     let input_path = dir.join("input.txt");
     let input = std::fs::read_to_string(&input_path)?;
     let declarations = c_layout_impl::parse(&input).context("Parsing failed")?;
     TARGETS.par_iter().try_for_each(|target| {
         if !process_target(&dir, &input, &declarations, *target, &config, global_config)? {
-            has_errors.store(true, Ordering::Relaxed);
-            eprintln!("{}/{} failed", dir.display(), target.name());
+            failed
+                .lock()
+                .unwrap()
+                .push(format!("{}/{}", dir.display(), target.name()));
         }
         Ok(())
     })
@@ -71,7 +83,10 @@ fn process_target(
         })
         .collect();
 
-    let expected_file = dir.join(target.name()).with_extension("expected.txt");
+    let output_dir = dir.join("output");
+    let expected_file = output_dir
+        .join(target.name())
+        .with_extension("expected.txt");
     let expected = std::fs::read_to_string(&expected_file)
         .with_context(|| anyhow!("cannot read {}", expected_file.display()))?;
     let expected_declarations = c_layout_impl::parse(&expected)
@@ -83,7 +98,7 @@ fn process_target(
         return Ok(true);
     }
 
-    let actual_file = dir.join(target.name()).with_extension("actual.txt");
+    let actual_file = output_dir.join(target.name()).with_extension("actual.txt");
     let enhanced = c_layout_impl::enhance_declarations(declarations, &actual_conversion_result);
     std::fs::write(
         actual_file,

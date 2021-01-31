@@ -1,0 +1,2 @@
+X = typedef i128
+Y = typedef u128

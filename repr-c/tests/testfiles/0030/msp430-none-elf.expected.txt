@@ -1,5 +1,0 @@
-// tc-0030
-A = { size: 16, alignment: 16 }@pragma_pack(2) struct {
-    { offset: 0, size: 16 }a { size: 16, alignment: 16 }int,
-}
-// hash: a394ef36418f623c

@@ -10,7 +10,7 @@ use gimli::{
     Attribute, AttributeValue, DW_AT_bit_size, DW_AT_byte_size, DW_AT_data_bit_offset,
     DW_AT_data_member_location, DW_AT_name, DW_AT_type, DW_TAG_member, DW_TAG_pointer_type,
     DW_TAG_structure_type, DW_TAG_typedef, DW_TAG_union_type, DebuggingInformationEntry,
-    EndianRcSlice, EntriesTree, EvaluationResult, Location, SectionId,
+    EndianRcSlice, EntriesTree, EvaluationResult, Location, RunTimeEndian, SectionId,
 };
 use object::{Object, ObjectSection};
 use repr_c_impl::builder::common::builtin_type_layout;
@@ -117,9 +117,9 @@ pub(crate) fn convert(
 ) -> Result<ConversionResult> {
     let object = object::File::parse(dwarf_bytes).unwrap();
     let endian = if object.is_little_endian() {
-        gimli::RunTimeEndian::Little
+        RunTimeEndian::Little
     } else {
-        gimli::RunTimeEndian::Big
+        RunTimeEndian::Big
     };
 
     let load_section = |id: gimli::SectionId| -> Result<_> {
@@ -136,7 +136,7 @@ pub(crate) fn convert(
                     }
                     _ => return Ok(Cow::Owned(Vec::with_capacity(1))),
                 };
-                add_relocations(&mut relocations, &object, &section, target);
+                add_relocations(&mut relocations, &object, &section);
                 section.uncompressed_data()
             })()?
         };

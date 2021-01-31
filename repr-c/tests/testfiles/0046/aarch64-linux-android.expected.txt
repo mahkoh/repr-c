@@ -1,3 +1,0 @@
-// tc-0046
-Int = { size: 32, alignment: 8 }@align(1) typedef { size: 32, alignment: 32 }int
-// hash: 12754fae955b0533

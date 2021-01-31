@@ -1,85 +1,32 @@
 use gimli::{Reader, ReaderOffset};
-use object::{Object, ObjectSection, ObjectSymbol, Relocation, RelocationKind, RelocationTarget};
+use object::{Object, ObjectSection, ObjectSymbol, RelocationKind, RelocationTarget};
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::rc::Rc;
-use repr_c_impl::target::Target;
 
 pub fn add_relocations(
-    relocations: &mut HashMap<usize, Relocation>,
+    relocations: &mut HashMap<usize, (bool, i64)>,
     file: &object::File,
     section: &object::Section,
-    target: Target,
 ) {
-    for (offset64, mut relocation) in section.relocations() {
+    for (offset64, relocation) in section.relocations() {
         let offset = offset64 as usize;
-        let mut kind = relocation.kind();
-        if let RelocationKind::Elf(e) = kind {
-            use Target::*;
-            match target {
-                AvrUnknownUnknown => {
-                    const R_AVR_32: u32 = 1;
-                    const R_AVR_16: u32 = 4;
-                    match e {
-                        R_AVR_16 | R_AVR_32 => kind = RelocationKind::Absolute,
-                        _ => panic!("unsupported avr relocation kind {:?}", e),
-                    }
-                }
-                MipselSonyPsp | MipselUnknownNone => {
-                    const R_MIPS_16: u32 = 1;
-                    const R_MIPS_32: u32 = 2;
-                    match e {
-                        R_MIPS_16 | R_MIPS_32 => kind = RelocationKind::Absolute,
-                        _ => panic!("unsupported mips relocation kind {:?}", e),
-                    }
-                }
-                Msp430NoneElf => {
-                    const R_MSP430_32: u32 = 1;
-                    const R_MSP430_16_BYTE: u32 = 5;
-                    match e {
-                        R_MSP430_32 | R_MSP430_16_BYTE => kind = RelocationKind::Absolute,
-                        _ => panic!("unsupported msp430 relocation kind {:?}", e),
-                    }
-                }
-                PowerpcUnknownNetbsd => {
-                    const R_PPC_ADDR32: u32 = 1;
-                    match e {
-                        R_PPC_ADDR32 => kind = RelocationKind::Absolute,
-                        _ => panic!("unsupported powerpc relocation kind {:?}", e),
-                    }
-                }
-                Riscv32 => {
-                    const R_RISCV_32: u32 = 1;
-                    match e {
-                        R_RISCV_32 => kind = RelocationKind::Absolute,
-                        _ => panic!("unsupported riscv relocation kind {:?}", e),
-                    }
-                }
-                Sparcv9SunSolaris => {
-                    const R_SPARC_32: u32 = 3;
-                    const R_SPARC_UA32: u32 = 23;
-                    const R_SPARC_64: u32 = 32;
-                    match e {
-                        R_SPARC_32 | R_SPARC_UA32 | R_SPARC_64 => kind = RelocationKind::Absolute,
-                        _ => panic!("unsupported sparc relocation kind {:?}", e),
-                    }
-                }
-                _ => { },
-            }
-        }
-        if kind != RelocationKind::Absolute {
-            panic!("unsupported relocation kind {:?}", relocation.kind());
-        }
+        let mut addend = match relocation.kind() {
+            RelocationKind::Absolute => relocation.addend(),
+            RelocationKind::SectionOffset => relocation.addend() - section.address() as i64,
+            _ => panic!("unsupported relocation kind {:#?}", relocation),
+        };
         if let RelocationTarget::Symbol(symbol_idx) = relocation.target() {
-            match file.symbol_by_index(symbol_idx) {
-                Ok(symbol) => {
-                    let addend = symbol.address().wrapping_add(relocation.addend() as u64);
-                    relocation.set_addend(addend as i64);
-                }
-                Err(_) => panic!(),
+            if let Ok(symbol) = file.symbol_by_index(symbol_idx) {
+                addend = symbol.address().wrapping_add(addend as u64) as i64;
+            } else {
+                panic!("could not find symbol of relocation {:#?}", relocation);
             }
         }
-        if relocations.insert(offset, relocation).is_some() {
+        if relocations
+            .insert(offset, (relocation.has_implicit_addend(), addend))
+            .is_some()
+        {
             panic!();
         }
     }
@@ -87,20 +34,18 @@ pub fn add_relocations(
 
 #[derive(Debug, Clone)]
 pub struct Relocate<R: Reader<Offset = usize>> {
-    pub relocations: Rc<HashMap<usize, Relocation>>,
+    pub relocations: Rc<HashMap<usize, (bool, i64)>>,
     pub section: R,
     pub reader: R,
 }
 
 impl<R: Reader<Offset = usize>> Relocate<R> {
     fn relocate(&self, offset: usize, value: u64) -> u64 {
-        if let Some(relocation) = self.relocations.get(&offset) {
-            if relocation.has_implicit_addend() {
-                // Use the explicit addend too, because it may have the symbol value.
-                return value.wrapping_add(relocation.addend() as u64);
-            } else {
-                return relocation.addend() as u64;
-            }
+        if let Some(&(has_implicit_addend, addend)) = self.relocations.get(&offset) {
+            return match has_implicit_addend {
+                true => value.wrapping_add(addend as u64),
+                false => addend as u64,
+            };
         }
         value
     }

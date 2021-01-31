@@ -7,3 +7,7 @@ members = [
     "repr-c/impl",
     "repr-c/tests",
 ]
+exclude = [
+    "vendored/pdb",
+    "vendored/object",
+]

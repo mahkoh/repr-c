@@ -5,4 +5,4 @@ authors = ["Julian Orth <ju.orth@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-repr-c-impl = { path = "../impl" }
+repr-c-impl = { path = "../impl", version = "=0.1.0" }

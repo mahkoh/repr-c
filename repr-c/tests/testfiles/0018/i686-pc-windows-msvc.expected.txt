@@ -1,4 +1,0 @@
-// tc-0018
-Char = { size: 8, alignment: 32, required_alignment: 32 }@align(4) typedef { size: 8, alignment: 8 }char
-X = { size: 24, alignment: 32, required_alignment: 32 }[3]{ size: 8, alignment: 32, required_alignment: 32 }Char
-// hash: e04b2395027b594e

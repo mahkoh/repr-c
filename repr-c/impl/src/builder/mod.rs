@@ -1,3 +1,5 @@
+use std::ops::Not;
+
 use crate::layout::{Annotation, Array, BuiltinType, Record, RecordField, Type, TypeLayout};
 use crate::result::{Error, Result};
 use crate::target::Target;
@@ -5,7 +7,6 @@ use crate::util::BITS_PER_BYTE;
 use crate::visitor::{
     visit_array, visit_builtin_type, visit_opaque_type, visit_record_field, visit_typedef, Visitor,
 };
-use std::ops::Not;
 
 pub mod common;
 mod msvc;
@@ -15,31 +16,20 @@ pub fn compute_layout(target: Target, ty: &Type<()>) -> Result<Type<TypeLayout>>
     pre_validate(ty)?;
     use Target::*;
     let ty = match target {
-        Aarch64PcWindowsMsvc
+        | I686PcWindowsGnu | X86_64PcWindowsGnu => sysv::mingw::compute_layout(target, ty),
+        | Aarch64PcWindowsMsvc
         | I586PcWindowsMsvc
         | I686PcWindowsMsvc
+        | I686UnknownWindows
         | Thumbv7aPcWindowsMsvc
+        | X86_64UnknownWindows
         | X86_64PcWindowsMsvc => msvc::compute_layout(target, ty),
-        X86_64AppleIos
-        | X86_64AppleIos13_0Macabi
-        | X86_64AppleTvos
-        | X86_64Elf
-        | X86_64Fuchsia
-        | X86_64LinuxAndroid
-        | X86_64PcSolaris
-        | X86_64RumprunNetbsd
-        | X86_64UnknownDragonfly
-        | X86_64UnknownFreebsd
-        | X86_64UnknownHaiku
-        | X86_64UnknownHermit
-        | X86_64UnknownL4reUclibc
-        | X86_64UnknownNetbsd
-        | X86_64UnknownOpenbsd
-        | X86_64UnknownRedox
         | Aarch64Fuchsia
         | Aarch64LinuxAndroid
         | Aarch64UnknownFreebsd
         | Aarch64UnknownHermit
+        | Aarch64UnknownLinuxGnu
+        | Aarch64UnknownLinuxMusl
         | Aarch64UnknownNetbsd
         | Aarch64UnknownNone
         | Aarch64UnknownOpenbsd
@@ -47,18 +37,74 @@ pub fn compute_layout(target: Target, ty: &Type<()>) -> Result<Type<TypeLayout>>
         | Arm64AppleIos
         | Arm64AppleIosMacabi
         | Arm64AppleTvos
+        | Armebv7rUnknownNoneEabi
+        | Armebv7rUnknownNoneEabihf
+        | ArmLinuxAndroideabi
+        | ArmUnknownLinuxGnueabi
+        | ArmUnknownLinuxGnueabihf
+        | Armv4tUnknownLinuxGnueabi
+        | Armv5teUnknownLinuxGnueabi
+        | Armv5teUnknownLinuxUclibcgnueabi
+        | Armv6UnknownFreebsdGnueabihf
+        | Armv6UnknownNetbsdelfEabihf
+        | Armv7aNoneEabi
+        | Armv7aNoneEabihf
+        | Armv7AppleIos
+        | Armv7NoneLinuxAndroid
+        | Armv7rUnknownNoneEabi
+        | Armv7rUnknownNoneEabihf
+        | Armv7sAppleIos
+        | Armv7UnknownFreebsdGnueabihf
+        | Armv7UnknownLinuxGnueabi
+        | Armv7UnknownLinuxGnueabihf
+        | Armv7UnknownNetbsdelfEabihf
         | AvrUnknownUnknown
+        | HexagonUnknownLinuxMusl
         | I386AppleIos
+        | I586UnknownLinuxGnu
+        | I586UnknownLinuxMusl
         | I686LinuxAndroid
         | I686UnknownFreebsd
         | I686UnknownHaiku
+        | I686UnknownLinuxGnu
+        | I686UnknownLinuxMusl
         | I686UnknownNetbsdelf
         | I686UnknownOpenbsd
+        | Mips64elUnknownLinuxGnuabi64
+        | Mips64elUnknownLinuxMusl
+        | Mips64UnknownLinuxGnuabi64
+        | Mips64UnknownLinuxMusl
         | MipselSonyPsp
+        | MipselUnknownLinuxGnu
+        | MipselUnknownLinuxMusl
+        | MipselUnknownLinuxUclibc
         | MipselUnknownNone
+        | Mipsisa32r6elUnknownLinuxGnu
+        | Mipsisa32r6UnknownLinuxGnu
+        | Mipsisa64r6elUnknownLinuxGnuabi64
+        | Mipsisa64r6UnknownLinuxGnuabi64
+        | MipsUnknownLinuxGnu
+        | MipsUnknownLinuxMusl
+        | MipsUnknownLinuxUclibc
         | Msp430NoneElf
+        | Powerpc64leUnknownLinuxGnu
+        | Powerpc64leUnknownLinuxMusl
+        | Powerpc64UnknownFreebsd
+        | Powerpc64UnknownLinuxGnu
+        | Powerpc64UnknownLinuxMusl
+        | PowerpcUnknownLinuxGnu
+        | PowerpcUnknownLinuxGnuspe
+        | PowerpcUnknownLinuxMusl
         | PowerpcUnknownNetbsd
         | Riscv32
+        | Riscv32UnknownLinuxGnu
+        | Riscv64
+        | Riscv64UnknownLinuxGnu
+        | S390xUnknownLinuxGnu
+        | Sparc64UnknownLinuxGnu
+        | Sparc64UnknownNetbsd
+        | Sparc64UnknownOpenbsd
+        | SparcUnknownLinuxGnu
         | Sparcv9SunSolaris
         | Thumbv4tNoneEabi
         | Thumbv6mNoneEabi
@@ -71,7 +117,25 @@ pub fn compute_layout(target: Target, ty: &Type<()>) -> Result<Type<TypeLayout>>
         | Wasm32UnknownEmscripten
         | Wasm32UnknownUnknown
         | Wasm32Wasi
-        | X86_64UnknownLinuxGnu => sysv::compute_layout(target, ty),
+        | X86_64AppleIos
+        | X86_64AppleIos13_0Macabi
+        | X86_64AppleTvos
+        | X86_64Elf
+        | X86_64Fuchsia
+        | X86_64LinuxAndroid
+        | X86_64PcSolaris
+        | X86_64RumprunNetbsd
+        | X86_64UnknownDragonfly
+        | X86_64UnknownFreebsd
+        | X86_64UnknownHaiku
+        | X86_64UnknownHermit
+        | X86_64UnknownL4reUclibc
+        | X86_64UnknownLinuxGnu
+        | X86_64UnknownLinuxGnux32
+        | X86_64UnknownLinuxMusl
+        | X86_64UnknownNetbsd
+        | X86_64UnknownOpenbsd
+        | X86_64UnknownRedox => sysv::sysv::compute_layout(target, ty),
     }?;
     post_validate(&ty)?;
     Ok(ty)
