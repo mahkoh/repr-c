@@ -29,13 +29,6 @@ pub fn apply_alignment_override(layout: TypeLayout, alignment: Option<u64>) -> T
     }
 }
 
-pub fn resolve_typedefs(mut ty: &Type<()>) -> &Type<()> {
-    while let TypeVariant::Typedef(t) = &ty.variant {
-        ty = t;
-    }
-    ty
-}
-
 pub fn unnamed_field_affects_record_alignment(target: Target) -> bool {
     use Target::*;
     match target {
@@ -313,19 +306,19 @@ pub fn msp430_builtin_type_layout(b: BuiltinType) -> TypeLayout {
     }
 }
 
-pub fn always_consider_bitfield_type_alignment(target: Target) -> bool {
+pub fn ignore_non_zero_sized_bitfield_type_alignment(target: Target) -> bool {
     use Target::*;
     match target {
-        AvrUnknownUnknown | Armv7AppleIos | Armv7sAppleIos => false,
-        _ => true,
+        AvrUnknownUnknown | Armv7AppleIos | Armv7sAppleIos => true,
+        _ => false,
     }
 }
 
-pub fn consider_zero_sized_bitfield_type_alignment(target: Target) -> bool {
+pub fn ignore_zero_sized_bitfield_type_alignmont(target: Target) -> bool {
     use Target::*;
     match target {
-        AvrUnknownUnknown => false,
-        _ => true,
+        AvrUnknownUnknown => true,
+        _ => false,
     }
 }
 

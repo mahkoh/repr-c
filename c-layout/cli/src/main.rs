@@ -28,10 +28,9 @@ fn args() -> (Target, Option<String>) {
     }
     let target = matches.value_of("target").unwrap_or(env!("TARGET"));
     let target = TARGETS
-        .into_iter()
+        .iter()
         .copied()
-        .filter(|t| t.name() == target)
-        .next();
+        .find(|t| t.name() == target);
     let target = match target {
         None => {
             eprintln!("The target {} is not available.", env!("TARGET"));

@@ -17,7 +17,4 @@ impl Display for ParseError {
 
 impl Error for ParseError {}
 
-pub struct CustomError {
-    pub span: Span,
-    pub msg: String,
-}
+pub type ParseResult<T> = std::result::Result<T, ParseError>;

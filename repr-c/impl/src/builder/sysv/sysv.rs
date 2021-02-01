@@ -1,11 +1,10 @@
 use crate::builder::common::{
-    always_consider_bitfield_type_alignment, consider_zero_sized_bitfield_type_alignment,
-    min_zero_width_bitfield_alignment, resolve_typedefs, unnamed_field_affects_record_alignment,
+    ignore_non_zero_sized_bitfield_type_alignment, ignore_zero_sized_bitfield_type_alignmont,
+    min_zero_width_bitfield_alignment, unnamed_field_affects_record_alignment,
 };
 use crate::builder::sysv::Dialect;
 use crate::layout::{
-    Annotation, BuiltinType, FieldLayout, Record, RecordField, RecordKind, Type, TypeLayout,
-    TypeVariant,
+    Annotation, FieldLayout, Record, RecordField, RecordKind, Type, TypeLayout, TypeVariant,
 };
 use crate::result::{Error, Result};
 use crate::target::{system_compiler, Compiler, Target};
@@ -164,22 +163,17 @@ impl<'a> RecordLayoutBuilder<'a> {
         field: &RecordField<()>,
         size_bits: u64,
     ) -> Result<Option<FieldLayout>> {
-        // Bit-fields cannot have a width larger than the size of the underlying type.
-        if size_bits > ty_size_bits {
-            return Err(Error::OversizedBitfield);
-        }
-        // Bit-fields of type _Bool must have width 0 or 1.
-        if size_bits > 1
-            && resolve_typedefs(&field.ty).variant == TypeVariant::Builtin(BuiltinType::Bool)
-        {
-            return Err(Error::OversizedBitfield);
-        }
-        if !always_consider_bitfield_type_alignment(self.target) {
-            if size_bits > 0 || !consider_zero_sized_bitfield_type_alignment(self.target) {
+        if size_bits > 0 {
+            if size_bits > ty_size_bits {
+                return Err(Error::OversizedBitfield);
+            }
+            if ignore_non_zero_sized_bitfield_type_alignment(self.target) {
                 ty_field_alignment_bits = BITS_PER_BYTE;
             }
-        }
-        if size_bits == 0 {
+        } else {
+            if ignore_zero_sized_bitfield_type_alignmont(self.target) {
+                ty_field_alignment_bits = BITS_PER_BYTE;
+            }
             ty_field_alignment_bits.assign_max(min_zero_width_bitfield_alignment(self.target));
         }
         // In the following, `annotation_alignment == 0` means that there was no

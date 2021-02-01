@@ -364,7 +364,7 @@ impl<'a, C: Convert> Computer<'a, C> {
             }
             ExprType::Name(n) => match self.declarations.get(&**n) {
                 None => {
-                    return Err(anyhow!(
+                    Err(anyhow!(
                         "At {}: The referenced constant {} is not declared",
                         self.span(e.span),
                         n
@@ -396,8 +396,7 @@ impl<'a, C: Convert> Computer<'a, C> {
                 let af = match ar
                     .fields
                     .iter()
-                    .filter(|f| f.name.as_ref() == Some(name))
-                    .next()
+                    .find(|f| f.name.as_ref() == Some(name))
                 {
                     Some(f) => f,
                     None => {

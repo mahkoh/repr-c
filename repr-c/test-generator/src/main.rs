@@ -28,10 +28,8 @@ fn main_() -> Result<()> {
     let mut dirs = vec![];
     for dir in std::fs::read_dir("testfiles")? {
         let dir = dir?;
-        if dir.file_type()?.is_dir() {
-            if userconfig.test_test(dir.file_name().to_str().unwrap()) {
-                dirs.push(dir.path());
-            }
+        if dir.file_type()?.is_dir() && userconfig.test_test(dir.file_name().to_str().unwrap()) {
+            dirs.push(dir.path());
         }
     }
     dirs.sort();
@@ -79,7 +77,7 @@ fn up_to_date(hash: u64, expected: &Path) -> Result<bool> {
     };
     match u64::from_str_radix(suffix, 16) {
         Ok(n) if n == hash => Ok(true),
-        _ => return Ok(false),
+        _ => Ok(false),
     }
 }
 
