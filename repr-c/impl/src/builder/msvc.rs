@@ -5,11 +5,11 @@ use crate::layout::{
     Annotation, Array, BuiltinType, FieldLayout, Record, RecordField, RecordKind, Type, TypeLayout,
     TypeVariant,
 };
-use crate::result::{Error, Result};
+use crate::result::{err, ErrorKind, Result};
 use crate::target::Target;
 use crate::util::{
-    align_to, annotation_alignment, is_attr_packed, size_add, size_mul, MaxAssign, MaxExt,
-    MinAssign, MinExt, BITS_PER_BYTE,
+    align_to, annotation_alignment, is_attr_packed, pragma_pack_value, size_add, size_mul,
+    MaxAssign, MaxExt, MinAssign, MinExt, BITS_PER_BYTE,
 };
 
 pub fn compute_layout(target: Target, ty: &Type<()>) -> Result<Type<TypeLayout>> {
@@ -20,38 +20,11 @@ pub fn compute_layout(target: Target, ty: &Type<()>) -> Result<Type<TypeLayout>>
         TypeVariant::Typedef(dst) => {
             // Pre-validation ensures that typedefs do not have packing annotations.
             let dst_ty = compute_layout(target, dst)?;
-            let max_alignment = annotation_alignment(&ty.annotations).unwrap_or(BITS_PER_BYTE);
+            let max_alignment =
+                annotation_alignment(target, &ty.annotations).unwrap_or(BITS_PER_BYTE);
             // __declspec(align) increases both the required and the field alignment but
             // never decreases them. It does not affect the size or the pointer alignment.
-            //
-            // ```c,msvc,tc-0014
-            // __declspec(align(2)) typedef int A;
-            // __declspec(align(8)) typedef int B;
-            //
-            // #pragma pack(1)
-            //
-            // struct X {
-            //         A a;
-            // };
-            //
-            // struct Y {
-            //         B b;
-            // };
-            //
-            // static void f(void) {
-            //         static_assert(sizeof(A) == 4, "");
-            //         static_assert(_Alignof(A) == 4, "");
-            //
-            //         static_assert(sizeof(struct X) == 4, "");
-            //         static_assert(_Alignof(struct X) == 2, "");
-            //
-            //         static_assert(sizeof(B) == 4, "");
-            //         static_assert(_Alignof(B) == 8, "");
-            //
-            //         static_assert(sizeof(struct Y) == 8, "");
-            //         static_assert(_Alignof(struct Y) == 8, "");
-            // }
-            // ```
+            // See test case 0014.
             Ok(Type {
                 layout: TypeLayout {
                     field_alignment_bits: dst_ty.layout.field_alignment_bits.max(max_alignment),
@@ -72,19 +45,8 @@ pub fn compute_layout(target: Target, ty: &Type<()>) -> Result<Type<TypeLayout>>
                     // The size of an array is the size of the underlying type multiplied by the
                     // number of elements. Since the size might not be a multiple of the field
                     // alignment, the address of the second element might not be properly aligned
-                    // for the field alignment.
-                    //
-                    // ```c,msvc,tc-0018
-                    // __declspec(align(4)) typedef char Char;
-                    //
-                    // typedef Char X[3];
-                    //
-                    // static void f(void) {
-                    //         static_assert(sizeof(X) == 3, "");
-                    //         static_assert(_Alignof(X) == 4, "");
-                    // }
-                    // ```
-                    size_bits: size_mul(ety.layout.size_bits, a.num_elements)?,
+                    // for the field alignment. See test case 0018.
+                    size_bits: size_mul(ety.layout.size_bits, a.num_elements.unwrap_or(0))?,
                     // The alignments are inherited from the underlying type.
                     ..ety.layout
                 },
@@ -98,27 +60,17 @@ pub fn compute_layout(target: Target, ty: &Type<()>) -> Result<Type<TypeLayout>>
         }
         TypeVariant::Enum(v) => {
             // #pragma pack is ignored on enums.
-            let alignment = annotation_alignment(&ty.annotations).unwrap_or(BITS_PER_BYTE);
+            let requested_alignment =
+                annotation_alignment(target, &ty.annotations).unwrap_or(BITS_PER_BYTE);
             // Enums always have the base type int even if the values do not fit into int. The
-            // values are silently truncated if necessary.
-            //
-            // ```c,msvc,tc-0019
-            // #pragma pack(1)
-            //
-            // __declspec(align(8)) enum E {
-            //         A = 1,
-            //         B = 0xffff0fffffff,
-            // };
-            //
-            // static void f(void) {
-            //         static_assert(sizeof(enum E) == 4, "");
-            //         static_assert(_Alignof(enum E) == 8, "");
-            //         static_assert(B == 0x0fffffff, "");
-            // }
-            // ```
+            // values are silently truncated if necessary. See test case 0019.
             let mut layout = builtin_type_layout(target, BuiltinType::Int);
-            layout.required_alignment_bits.assign_max(alignment);
-            layout.field_alignment_bits.assign_max(alignment);
+            // The alignment requested by __declspec(align)) does not affect the size and therefore
+            // also not the pointer alignment. See test case 0051.
+            layout
+                .required_alignment_bits
+                .assign_max(requested_alignment);
+            layout.field_alignment_bits.assign_max(requested_alignment);
             Ok(Type {
                 layout,
                 annotations: ty.annotations.clone(),
@@ -179,28 +131,11 @@ impl<'a> RecordLayoutBuilder<'a> {
         kind: RecordKind,
         annotations: &'a [Annotation],
     ) -> Result<Self> {
-        let min_pack_value = annotations
-            .iter()
-            .flat_map(|a| {
-                match a {
-                    Annotation::PragmaPack(n) => Some(*n),
-                    // __attribute__((packed)) behaves like #pragma pack(1) in clang.
-                    //
-                    // ```c,clang
-                    // struct __attribute__((packed)) Y {
-                    //         int i;
-                    // };
-                    //
-                    // static void f(void) {
-                    //         _Static_assert(_Alignof(struct Y) == 1, "");
-                    // }
-                    // ```
-                    Annotation::AttrPacked => Some(1),
-                    _ => None,
-                }
-                .into_iter()
-            })
-            .min();
+        // __attribute__((packed)) behaves like #pragma pack(1) in clang.
+        let pack_value = match is_attr_packed(annotations) {
+            true => Some(1),
+            false => pragma_pack_value(annotations),
+        };
         // The effect of #pragma pack(N) depends on the target.
         //
         // x86: By default, there is no maximum field alignment. N={1,2,4} set the maximum field
@@ -213,100 +148,23 @@ impl<'a> RecordLayoutBuilder<'a> {
         //        alignment to that value. N=16 disables the maximum field alignment. All other N
         //        activate the default.
         //
-        // ```c,msvc,tc-0020
-        // struct A {
-        //         __declspec(align(128)) int i:1;
-        // };
-        //
-        // struct B {
-        //         struct A x;
-        // };
-        //
-        // #pragma pack(4)
-        // struct C {
-        //         struct A x;
-        // };
-        // #pragma pack()
-        //
-        // #pragma pack(8)
-        // struct D {
-        //         struct A x;
-        // };
-        // #pragma pack()
-        //
-        // #pragma pack(16)
-        // struct E {
-        //         struct A x;
-        // };
-        // #pragma pack()
-        //
-        // #pragma pack(32)
-        // struct F {
-        //         struct A x;
-        // };
-        // #pragma pack()
-        //
-        // static void f(void) {
-        // #if defined(_M_IX86)
-        //         static_assert(_Alignof(struct B) == 128, "");
-        //         static_assert(_Alignof(struct C) == 4, "");
-        //         static_assert(_Alignof(struct D) == 128, "");
-        //         static_assert(_Alignof(struct E) == 128, "");
-        //         static_assert(_Alignof(struct F) == 128, "");
-        // #elif defined(_M_X64)
-        //         static_assert(_Alignof(struct B) == 128, "");
-        //         static_assert(_Alignof(struct C) == 4, "");
-        //         static_assert(_Alignof(struct D) == 8, "");
-        //         static_assert(_Alignof(struct E) == 128, "");
-        //         static_assert(_Alignof(struct F) == 128, "");
-        // #elif defined(_M_ARM)
-        //         static_assert(_Alignof(struct B) == 8, "");
-        //         static_assert(_Alignof(struct C) == 4, "");
-        //         static_assert(_Alignof(struct D) == 8, "");
-        //         static_assert(_Alignof(struct E) == 16, "");
-        //         static_assert(_Alignof(struct F) == 8, "");
-        // #elif defined(_M_ARM64)
-        //         static_assert(_Alignof(struct B) == 8, "");
-        //         static_assert(_Alignof(struct C) == 4, "");
-        //         static_assert(_Alignof(struct D) == 8, "");
-        //         static_assert(_Alignof(struct E) == 128, "");
-        //         static_assert(_Alignof(struct F) == 8, "");
-        // #else
-        //         static_assert(0, "unknown target");
-        // #endif
-        // }
-        // ```
+        // See test case 0020.
         use Target::*;
-        let max_field_alignment_bits = match (min_pack_value, target) {
-            (Some(8), _) | (Some(16), _) | (Some(32), _) => min_pack_value,
+        let max_field_alignment_bits = match (pack_value, target) {
+            (Some(8), _) | (Some(16), _) | (Some(32), _) => pack_value,
             (Some(64), I586PcWindowsMsvc)
             | (Some(64), I686PcWindowsMsvc)
             | (Some(64), I686UnknownWindows) => None,
-            (Some(64), _) => min_pack_value,
-            (Some(128), Thumbv7aPcWindowsMsvc) => min_pack_value,
+            (Some(64), _) => pack_value,
+            (Some(128), Thumbv7aPcWindowsMsvc) => pack_value,
             (Some(128), _) => None,
             (_, Thumbv7aPcWindowsMsvc) | (_, Aarch64PcWindowsMsvc) => Some(64),
             _ => None,
         };
         // The required alignment can be increased by adding a __declspec(align)
-        // annotation.
-        //
-        // ```c,msvc,tc-0023
-        // __declspec(align(8)) struct X {
-        //         char c;
-        // };
-        //
-        // #pragma pack(1)
-        //
-        // struct Y {
-        //         struct X x;
-        // };
-        //
-        // static void f(void) {
-        //         static_assert(_Alignof(struct Y) == 8, "");
-        // }
-        // ```
-        let required_alignment_bits = annotation_alignment(annotations).unwrap_or(BITS_PER_BYTE);
+        // annotation. See test case 0023.
+        let required_alignment_bits =
+            annotation_alignment(target, annotations).unwrap_or(BITS_PER_BYTE);
         Ok(Self {
             target,
             annotations,
@@ -356,64 +214,17 @@ impl<'a> RecordLayoutBuilder<'a> {
             RecordKind::Union => {
                 // If all fields in a union have size 0, the size of the whole enum is set to ...
                 if self.contains_non_bitfield {
-                    // ... its alignment if it contains at least one non-bitfield.
-                    //
-                    // ```c,msvc,tc-0024
-                    // union X {
-                    //         long long b[];
-                    // };
-                    //
-                    // union Y {
-                    //         long long :0;
-                    //         char b[];
-                    // };
-                    //
-                    // static void f(void) {
-                    //         static_assert(sizeof(union X) == 8, "");
-                    //         static_assert(sizeof(union Y) == 1, "");
-                    // }
-                    // ```
+                    // ... its alignment if it contains at least one non-bitfield. See test case
+                    // 0024.
                     self.size_bits = self.field_alignment_bits;
                 } else {
-                    // ... 4 bytes if it contains only bitfields.
-                    //
-                    // ```c,msvc,tc-0025
-                    // union X {
-                    //         long long :0;
-                    // };
-                    //
-                    // union Y {
-                    //         char :0;
-                    // };
-                    //
-                    // static void f(void) {
-                    //         static_assert(sizeof(union X) == 4, "");
-                    //         static_assert(sizeof(union Y) == 4, "");
-                    // }
-                    // ```
+                    // ... 4 bytes if it contains only bitfields or is empty. See test case 0025.
                     self.size_bits = 4 * BITS_PER_BYTE;
                 }
             }
             RecordKind::Struct => {
                 // If all fields in a struct have size 0, its size is set to its required alignment
-                // but at least to 4 bytes.
-                //
-                // ```c,msvc,tc-0026
-                // struct X {
-                //         __declspec(align(2)) long long b[];
-                // };
-                //
-                // struct Y {
-                //         __declspec(align(8)) long long b[];
-                // };
-                //
-                // static void f(void) {
-                //         static_assert(sizeof(struct X) == 4, "");
-                //         static_assert(_Alignof(struct X) == 8, "");
-                //
-                //         static_assert(sizeof(struct Y) == 8, "");
-                // }
-                // ```
+                // but at least to 4 bytes. See test case 0026.
                 self.size_bits = self.required_alignment_bits.max(4 * BITS_PER_BYTE);
                 self.pointer_alignment_bits.assign_min(self.size_bits);
             }
@@ -425,132 +236,31 @@ impl<'a> RecordLayoutBuilder<'a> {
         let field_ty = compute_layout(self.target, &field.ty)?;
         let (ty_size_bits, field_alignment_bits) = {
             let layout = field_ty.layout;
-            // The offset of the field is based on the alignment of the underlying type.
-            //
-            // ```c,msvc,tc-0027
-            // #include <stdlib.h>
-            //
-            // struct Y {
-            //         char c;
-            //         int i;
-            // };
-            //
-            // static void f(void) {
-            //         static_assert(offsetof(struct Y, i) == 4, "");
-            // }
-            // ```
-            let mut field_alignment_bits = layout.field_alignment_bits;
             // The required alignment of the field is the maximum of the required alignment of the
             // underlying type and the __declspec(align) annotation on the field itself.
-            //
-            // ```c,msvc,tc-0028
-            // __declspec(align(4)) typedef char Char;
-            //
-            // #pragma pack(1)
-            //
-            // struct A {
-            //         Char a;
-            // };
-            //
-            // struct B {
-            //         __declspec(align(4)) char a;
-            // };
-            //
-            // struct C {
-            //         __declspec(align(8)) Char a;
-            // };
-            //
-            // struct D {
-            //         __declspec(align(2)) Char a;
-            // };
-            //
-            // static void f(void) {
-            //         static_assert(_Alignof(struct A) == 4, "");
-            //         static_assert(_Alignof(struct B) == 4, "");
-            //         static_assert(_Alignof(struct C) == 8, "");
-            //         static_assert(_Alignof(struct D) == 4, "");
-            // }
-            // ```
-            let required_alignment_bits =
-                annotation_alignment(&field.annotations).max2(layout.required_alignment_bits);
+            // See test case 0028.
+            let required_alignment_bits = annotation_alignment(self.target, &field.annotations)
+                .max2(layout.required_alignment_bits);
             // The required alignment of a record is the maximum of the required alignments of its
             // fields except that the required alignment of bitfields is ignored.
-            //
-            // ```c,msvc,tc-0029
-            // __declspec(align(4)) typedef char Char;
-            //
-            // struct A {
-            //         Char a;
-            // };
-            //
-            // struct B {
-            //         Char a:1;
-            // };
-            //
-            // #pragma pack(1)
-            //
-            // struct C {
-            //         struct A a;
-            // };
-            //
-            // struct D {
-            //         struct B a;
-            // };
-            //
-            // static void f(void) {
-            //         static_assert(_Alignof(struct C) == 4, "");
-            //         static_assert(_Alignof(struct D) == 1, "");
-            // }
-            // ```
+            // See test case 0029.
             if field.bit_width.is_none() {
                 self.required_alignment_bits
                     .assign_max(required_alignment_bits);
             }
-            // If the field or struct is packed, reduce the alignment of the field ...
+            // The offset of the field is based on the field alignment of the underlying type.
+            // See test case 0027.
+            let mut field_alignment_bits = layout.field_alignment_bits;
+            // The effect of the field alignment of the underlying type is limited by #pragma pack.
+            // See test case 0030.
+            field_alignment_bits.assign_min(self.max_field_alignment_bits);
             if is_attr_packed(&field.annotations) {
                 // __attribute__((packed)) on a field is a clang extension. It behaves as if #pragma
                 // pack(1) had been applied only to this field.
-                //
-                // ```c,clang
-                // struct A {
-                //         int a __attribute__((packed));
-                //         short b;
-                // };
-                //
-                // static void f(void) {
-                //         _Static_assert(_Alignof(struct A) == 2, "");
-                // }
-                // ```
                 field_alignment_bits = BITS_PER_BYTE;
-            } else {
-                // ```c,msvc,tc-0030
-                // #pragma pack(2)
-                //
-                // struct A {
-                //         int a;
-                // };
-                //
-                // static void f(void) {
-                //         static_assert(_Alignof(struct A) == 2, "");
-                // }
-                // ```
-                field_alignment_bits.assign_min(self.max_field_alignment_bits);
             }
-            // ... but the required alignment still takes precedence.
-            //
-            // ```c,msvc,tc-0031
-            // __declspec(align(4)) typedef char Char;
-            //
-            // #pragma pack(2)
-            //
-            // struct A {
-            //         Char a;
-            // };
-            //
-            // static void f(void) {
-            //         static_assert(_Alignof(struct A) == 4, "");
-            // }
-            // ```
+            // The required alignment of the field takes precedence over #pragma pack.
+            // See test case 0031.
             field_alignment_bits.assign_max(required_alignment_bits);
             (layout.size_bits, field_alignment_bits)
         };
@@ -577,54 +287,18 @@ impl<'a> RecordLayoutBuilder<'a> {
         self.contains_non_bitfield = true;
         self.ongoing_bitfield = None;
         // The alignment of the field affects both the pointer alignment and the field
-        // alignment of the record.
-        //
-        // ```c,msvc,tc-0032
-        // struct A {
-        //         long a;
-        //         char c;
-        // };
-        //
-        // static void f(void) {
-        //         static_assert(_Alignof(struct A) == 4, "");
-        //         static_assert(sizeof(struct A) == 8, "");
-        // }
-        // ```
+        // alignment of the record. See test case 0032.
         self.pointer_alignment_bits.assign_max(field_alignment_bits);
         self.field_alignment_bits.assign_max(field_alignment_bits);
         let offset_bits = match self.kind {
             // A struct field starts at the next offset in the struct that is properly
-            // aligned with respect to the start of the struct.
-            //
-            // ```c,msvc,tc-0033
-            // #include <stdlib.h>
-            //
-            // struct A {
-            //         char c;
-            //         long a;
-            // };
-            //
-            // static void f(void) {
-            //         static_assert(offsetof(struct A, a) == 4, "");
-            // }
-            // ```
+            // aligned with respect to the start of the struct. See test case 0033.
             RecordKind::Struct => align_to(self.size_bits, field_alignment_bits)?,
             // A union field always starts at offset 0.
             RecordKind::Union => 0,
         };
         // Set the size of the record to the maximum of the current size and the end of
-        // the field.
-        //
-        // ```c,msvc,tc-0034
-        // union U {
-        //         int l;
-        //         char c;
-        // };
-        //
-        // static void f(void) {
-        //         static_assert(sizeof(union U) == 4, "");
-        // }
-        // ```
+        // the field. See test case 0034.
         self.size_bits.assign_max(size_add(offset_bits, size_bits)?);
         Ok(Some(FieldLayout {
             offset_bits,
@@ -642,59 +316,20 @@ impl<'a> RecordLayoutBuilder<'a> {
         if width == 0 {
             // A zero-sized bit-field that does not follow a non-zero-sized bit-field does not affect
             // the overall layout of the record. Even in a union where the order would otherwise
-            // not matter.
-            //
-            // ```c,msvc,tc-0035
-            // union X {
-            //         int :0;
-            //         char :1;
-            // };
-            //
-            // union Y {
-            //         char :1;
-            //         int :0;
-            // };
-            //
-            // static void f(void) {
-            //         static_assert(sizeof(union X) == 1, "");
-            //         static_assert(sizeof(union Y) == 4, "");
-            // }
-            // ```
+            // not matter. See test case 0035.
             if self.ongoing_bitfield.is_none() {
                 return Ok(None);
             }
             self.ongoing_bitfield = None;
         } else {
-            // Even _Bool allows bitfields up to its type size.
-            //
-            // ```c,msvc,tc-0036
-            // struct S {
-            //         _Bool v:8;
-            // };
-            //
-            // static void f(void) {
-            //         static_assert(sizeof(struct S) == 1, "");
-            // }
-            // ```
+            // Even _Bool allows bitfields up to its type size. See test case 0036.
             if width > ty_size_bits {
-                return Err(Error::OversizedBitfield);
+                return Err(err(ErrorKind::OversizedBitfield));
             }
             // If there is an ongoing bit-field in a struct whose underlying type has the same size and
             // if there is enough space left to place this bit-field, then this bit-field is placed in
             // the ongoing bit-field and the overall layout of the struct is not affected by this
-            // bit-field.
-            //
-            // ```c,msvc,tc-0037
-            // struct S {
-            //         unsigned int i:1;
-            //         __declspec(align(128)) long j:1;
-            // };
-            //
-            // static void f(void) {
-            //         static_assert(sizeof(struct S) == 4, "");
-            //         static_assert(_Alignof(struct S) == 4, "");
-            // }
-            // ```
+            // bit-field. See test case 0037.
             if let (RecordKind::Struct, Some(ref mut p)) = (self.kind, &mut self.ongoing_bitfield) {
                 if p.ty_size_bits == ty_size_bits && p.unused_size_bits >= width {
                     let offset_bits = self.size_bits - p.unused_size_bits;
@@ -719,75 +354,25 @@ impl<'a> RecordLayoutBuilder<'a> {
                 // get assigned a smaller value than the field alignment. This can only happen if
                 // the field or the type of the field has a required alignment. Otherwise the value
                 // of field_alignment_bits is already bound by max_field_alignment_bits.
-                //
-                // ```c,msvc,tc-0038
-                // #pragma pack(1)
-                //
-                // struct S {
-                //         __declspec(align(4)) char c:1;
-                // };
-                //
-                // typedef struct S X[3];
-                //
-                // static void f(void) {
-                //         static_assert(sizeof(X) == 3, "");
-                //         static_assert(_Alignof(X) == 4, "");
-                // }
-                // ```
+                // See test case 0038.
                 self.pointer_alignment_bits
                     .assign_max(field_alignment_bits.min2(self.max_field_alignment_bits));
                 self.field_alignment_bits.assign_max(field_alignment_bits);
                 let offset_bits = align_to(self.size_bits, field_alignment_bits)?;
                 self.size_bits = match width {
-                    // A zero-width bitfield only increases to size of the struct to the
+                    // A zero-width bitfield only increases the size of the struct to the
                     // offset a non-zero-width bitfield with the same alignment would
-                    // start.
-                    //
-                    // ```c,msvc,tc-0039
-                    // #include <stdlib.h>
-                    //
-                    // struct S {
-                    //         char c:1;
-                    //         int :0;
-                    //         char d;
-                    // };
-                    //
-                    // static void f(void) {
-                    //         static_assert(offsetof(struct S, d) == 4, "");
-                    // }
-                    // ```
+                    // start. See test case 0039.
                     0 => offset_bits,
                     // A non-zero-width bitfield always increases the size by the full
                     // size of the underlying type. Even if we are in a packed context.
-                    //
-                    // ```c,msvc,tc-0040
-                    // #pragma pack(1)
-                    //
-                    // struct S {
-                    //         char c;
-                    //         int :1;
-                    // };
-                    //
-                    // static void f(void) {
-                    //         static_assert(sizeof(struct S) == 5, "");
-                    // }
-                    // ```
+                    // See test case 0040.
                     _ => size_add(offset_bits, ty_size_bits)?,
                 };
                 offset_bits
             }
             RecordKind::Union => {
-                // Bit-fields do not affect the alignment of a union.
-                //
-                // ```c,msvc,tc-0041
-                // union U {
-                //         int a:1;
-                // };
-                //
-                // static void f(void) {
-                //         static_assert(_Alignof(union U) == 1, "");
-                // }
-                // ```
+                // Bit-fields do not affect the alignment of a union. See test case 0041.
                 self.size_bits.assign_max(ty_size_bits);
                 0
             }

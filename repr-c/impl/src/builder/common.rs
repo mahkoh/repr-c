@@ -1,3 +1,5 @@
+#![allow(clippy::match_like_matches_macro)]
+
 use crate::layout::{BuiltinType, Type, TypeLayout, TypeVariant};
 use crate::result::Result;
 use crate::target::Target;
@@ -103,7 +105,7 @@ pub fn builtin_type_layout(target: Target, b: BuiltinType) -> TypeLayout {
             I386AppleIos | I686LinuxAndroid | I686UnknownFreebsd | I686UnknownHaiku
             | I686UnknownNetbsdelf | I686UnknownOpenbsd | Armv7AppleIos | Armv7sAppleIos
             | I586UnknownLinuxGnu | I586UnknownLinuxMusl | I686UnknownLinuxGnu
-            | I686UnknownLinuxMusl => (8, 4),
+            | I686UnknownLinuxMusl | I686AppleMacosx => (8, 4),
             _ => (8, 8),
         },
         U128 | I128 => match target {
@@ -139,6 +141,7 @@ pub fn builtin_type_layout(target: Target, b: BuiltinType) -> TypeLayout {
             | I586PcWindowsMsvc
             | I586UnknownLinuxGnu
             | I586UnknownLinuxMusl
+            | I686AppleMacosx
             | I686LinuxAndroid
             | I686PcWindowsGnu
             | I686PcWindowsMsvc
@@ -212,6 +215,7 @@ pub fn builtin_type_layout(target: Target, b: BuiltinType) -> TypeLayout {
             | I586PcWindowsMsvc
             | I586UnknownLinuxGnu
             | I586UnknownLinuxMusl
+            | I686AppleMacosx
             | I686LinuxAndroid
             | I686PcWindowsGnu
             | I686PcWindowsMsvc
@@ -327,5 +331,49 @@ pub fn short_enums(target: Target) -> bool {
     match target {
         HexagonUnknownLinuxMusl => true,
         _ => false,
+    }
+}
+
+pub fn default_aligned_alignment(target: Target) -> u64 {
+    use Target::*;
+    match target {
+        | AvrUnknownUnknown => 8,
+        | ArmUnknownLinuxGnueabi
+        | ArmUnknownLinuxGnueabihf
+        | Armebv7rUnknownNoneEabi
+        | Armebv7rUnknownNoneEabihf
+        | Armv4tUnknownLinuxGnueabi
+        | Armv5teUnknownLinuxGnueabi
+        | Armv5teUnknownLinuxUclibcgnueabi
+        | Armv6UnknownFreebsdGnueabihf
+        | Armv6UnknownNetbsdelfEabihf
+        | Armv7UnknownFreebsdGnueabihf
+        | Armv7UnknownLinuxGnueabi
+        | Armv7UnknownLinuxGnueabihf
+        | Armv7UnknownNetbsdelfEabihf
+        | Armv7aNoneEabi
+        | Armv7aNoneEabihf
+        | Armv7rUnknownNoneEabi
+        | Armv7rUnknownNoneEabihf
+        | MipsUnknownLinuxGnu
+        | MipsUnknownLinuxMusl
+        | MipsUnknownLinuxUclibc
+        | MipselUnknownLinuxGnu
+        | MipselUnknownLinuxMusl
+        | MipselUnknownLinuxUclibc
+        | Mipsisa32r6UnknownLinuxGnu
+        | Mipsisa32r6elUnknownLinuxGnu
+        | S390xUnknownLinuxGnu
+        | SparcUnknownLinuxGnu
+        | Thumbv4tNoneEabi
+        | Thumbv6mNoneEabi
+        | Thumbv7aPcWindowsMsvc
+        | Thumbv7emNoneEabi
+        | Thumbv7emNoneEabihf
+        | Thumbv7mNoneEabi
+        | Thumbv8mBaseNoneEabi
+        | Thumbv8mMainNoneEabi
+        | Thumbv8mMainNoneEabihf => 64,
+        _ => 128,
     }
 }

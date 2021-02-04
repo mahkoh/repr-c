@@ -1,8 +1,7 @@
-// tc-0025
 X = { size: 0, alignment: 8 }union {
     _ { size: 64, alignment: 8 }long long:0,
 }
 Y = { size: 0, alignment: 8 }union {
     _ { size: 8, alignment: 8 }char:0,
 }
-// hash: 63f6d033524e9f53
+// hash: 537aa5eccd663a8e

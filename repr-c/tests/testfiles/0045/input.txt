@@ -1,4 +1,3 @@
-// tc-0045
 Char = @align(2) typedef [3]char
 
 X = typedef [3]char

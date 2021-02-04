@@ -1,5 +1,4 @@
-// tc-0041
 U = { size: 32, alignment: 8 }union {
     { offset: 0, size: 1 }a { size: 32, alignment: 32 }int:1,
 }
-// hash: 6741a5638a56a0b3
+// hash: f3005024bc6c7535

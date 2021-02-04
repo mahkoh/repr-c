@@ -98,8 +98,7 @@ fn process_target(
     }
     let expected_file = dir
         .join("output")
-        .join(target.name())
-        .with_extension("expected.txt");
+        .join(format!("{}.expected.txt", target.name()));
     if up_to_date(hash, &expected_file)? {
         return Ok(());
     }

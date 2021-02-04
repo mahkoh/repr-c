@@ -1,4 +1,3 @@
-// tc-0040
 S = @pragma_pack(1) struct {
     c char,
     _ int:1,

@@ -1,2 +1,1 @@
-// tc-0046
 Int = @align(1) typedef int

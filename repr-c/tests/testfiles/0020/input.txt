@@ -1,4 +1,3 @@
-// tc-0020
 A = struct {
     @align(128) i int:1,
 }

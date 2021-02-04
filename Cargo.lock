@@ -50,7 +50,6 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "c-layout-impl",
- "cfg-if",
  "clap",
  "repr-c-impl",
 ]

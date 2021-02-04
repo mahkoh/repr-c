@@ -26,19 +26,23 @@ fn args() -> (Target, Option<String>) {
         }
         process::exit(0);
     }
-    let target = matches.value_of("target").unwrap_or(env!("TARGET"));
-    let target = TARGETS
-        .iter()
-        .copied()
-        .find(|t| t.name() == target);
-    let target = match target {
-        None => {
-            eprintln!("The target {} is not available.", env!("TARGET"));
-            eprintln!("Specify a different target with the --target option.");
-            eprintln!("Print all available targets with the --print-targets flag.");
-            process::exit(1);
-        }
-        Some(t) => t,
+    let target = match matches.value_of("target") {
+        None => match repr_c_impl::target::HOST_TARGET {
+            Some(t) => t,
+            _ => {
+                eprintln!("The host target {} is not implemented.", env!("TARGET"));
+                eprintln!("Specify a different target with the --target option.");
+                eprintln!("Print all available targets with the --print-targets flag.");
+                process::exit(1);
+            }
+        },
+        Some(target) => match TARGETS.iter().copied().find(|t| t.name() == target) {
+            Some(t) => t,
+            _ => {
+                eprintln!("Invalid target {}.", target);
+                process::exit(1);
+            }
+        },
     };
     (target, matches.value_of("input").map(|s| s.to_owned()))
 }
@@ -46,6 +50,7 @@ fn args() -> (Target, Option<String>) {
 fn main() {
     if let Err(e) = main_() {
         eprintln!("{:#}", e);
+        process::exit(1);
     }
 }
 

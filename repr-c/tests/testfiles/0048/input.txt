@@ -1,4 +1,3 @@
-// tc-0048
 X = struct {
     c char,
     @align(128) _ int:0,

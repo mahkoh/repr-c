@@ -1,4 +1,3 @@
-// tc-0047
 X = { size: 24, alignment: 8 }struct {
     { offset: 0, size: 8 }a { size: 8, alignment: 8 }char,
     _ { size: 32, alignment: 32 }int:1,
@@ -10,4 +9,4 @@ Y = { size: 16, alignment: 8 }struct {
     _ { size: 8, alignment: 8 }char:0,
     { offset: 8, size: 8 }c { size: 8, alignment: 8 }char,
 }
-// hash: 20e17a6ed3409ff2
+// hash: 3272ce9832031694

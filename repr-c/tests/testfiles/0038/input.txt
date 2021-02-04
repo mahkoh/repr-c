@@ -1,4 +1,3 @@
-// tc-0038
 S = @pragma_pack(1) struct {
     @align(4) c char:1,
 }

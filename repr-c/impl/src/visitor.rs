@@ -1,8 +1,8 @@
 use crate::layout::{
-    Annotation, Array, BuiltinType, LayoutInfo, Record, RecordField, Type, TypeVariant,
+    Annotation, Array, BuiltinType, Layout, Record, RecordField, Type, TypeVariant,
 };
 
-pub trait Visitor<I: LayoutInfo> {
+pub trait Visitor<I: Layout> {
     fn visit_type(&mut self, ty: &Type<I>) {
         visit_type(self, ty);
     }
@@ -40,7 +40,7 @@ pub trait Visitor<I: LayoutInfo> {
     }
 }
 
-pub fn visit_type<I: LayoutInfo>(visitor: &mut (impl Visitor<I> + ?Sized), ty: &Type<I>) {
+pub fn visit_type<I: Layout>(visitor: &mut (impl Visitor<I> + ?Sized), ty: &Type<I>) {
     visitor.visit_annotations(&ty.annotations);
     match &ty.variant {
         TypeVariant::Builtin(bi) => visitor.visit_builtin_type(*bi, ty),
@@ -52,7 +52,7 @@ pub fn visit_type<I: LayoutInfo>(visitor: &mut (impl Visitor<I> + ?Sized), ty: &
     }
 }
 
-pub fn visit_record<I: LayoutInfo>(
+pub fn visit_record<I: Layout>(
     visitor: &mut (impl Visitor<I> + ?Sized),
     rt: &Record<I>,
     ty: &Type<I>,
@@ -62,16 +62,13 @@ pub fn visit_record<I: LayoutInfo>(
     }
 }
 
-pub fn visit_annotations<I: LayoutInfo>(
-    visitor: &mut (impl Visitor<I> + ?Sized),
-    a: &[Annotation],
-) {
+pub fn visit_annotations<I: Layout>(visitor: &mut (impl Visitor<I> + ?Sized), a: &[Annotation]) {
     let _ = visitor;
     let _ = a;
     // nothing
 }
 
-pub fn visit_builtin_type<I: LayoutInfo>(
+pub fn visit_builtin_type<I: Layout>(
     visitor: &mut (impl Visitor<I> + ?Sized),
     bi: BuiltinType,
     ty: &Type<I>,
@@ -82,7 +79,7 @@ pub fn visit_builtin_type<I: LayoutInfo>(
     // nothing
 }
 
-pub fn visit_typedef<I: LayoutInfo>(
+pub fn visit_typedef<I: Layout>(
     visitor: &mut (impl Visitor<I> + ?Sized),
     dst: &Type<I>,
     ty: &Type<I>,
@@ -92,7 +89,7 @@ pub fn visit_typedef<I: LayoutInfo>(
     visitor.visit_type(dst);
 }
 
-pub fn visit_record_field<I: LayoutInfo>(
+pub fn visit_record_field<I: Layout>(
     visitor: &mut (impl Visitor<I> + ?Sized),
     field: &RecordField<I>,
     record: &Record<I>,
@@ -104,7 +101,7 @@ pub fn visit_record_field<I: LayoutInfo>(
     visitor.visit_type(&field.ty);
 }
 
-pub fn visit_array<I: LayoutInfo>(
+pub fn visit_array<I: Layout>(
     visitor: &mut (impl Visitor<I> + ?Sized),
     array: &Array<I>,
     ty: &Type<I>,
@@ -113,7 +110,7 @@ pub fn visit_array<I: LayoutInfo>(
     visitor.visit_type(&array.element_type);
 }
 
-pub fn visit_opaque_type<I: LayoutInfo>(
+pub fn visit_opaque_type<I: Layout>(
     visitor: &mut (impl Visitor<I> + ?Sized),
     layout: I::OpaqueLayout,
     ty: &Type<I>,
@@ -124,11 +121,7 @@ pub fn visit_opaque_type<I: LayoutInfo>(
     // nothing
 }
 
-pub fn visit_enum<I: LayoutInfo>(
-    visitor: &mut (impl Visitor<I> + ?Sized),
-    v: &[i128],
-    ty: &Type<I>,
-) {
+pub fn visit_enum<I: Layout>(visitor: &mut (impl Visitor<I> + ?Sized), v: &[i128], ty: &Type<I>) {
     let _ = visitor;
     let _ = v;
     let _ = ty;

@@ -79,7 +79,10 @@ impl Generator {
         }
         if self.dialect == Dialect::Msvc {
             if let Some(p) = annotations.align {
-                self.emit_declspec_align(p)?;
+                match p {
+                    Some(p) => self.emit_declspec_align(p)?,
+                    _ => bail!("MSVC does not support @align without a value"),
+                }
             }
         }
         match &t.variant {
@@ -190,10 +193,14 @@ impl Generator {
 
     fn emit_gcc_attributes(&mut self, a: &Annotations) -> Result<()> {
         if self.dialect == Dialect::Gcc {
-            if let Some(a) = a.align {
-                write!(&mut self.current, " __attribute__((aligned(")?;
-                self.emit_expr(a)?;
-                write!(&mut self.current, ")))")?;
+            match a.align {
+                Some(Some(a)) => {
+                    write!(&mut self.current, " __attribute__((aligned(")?;
+                    self.emit_expr(a)?;
+                    write!(&mut self.current, ")))")?;
+                }
+                Some(None) => write!(&mut self.current, " __attribute__((aligned))")?,
+                _ => {}
             }
         }
         if a.attr_packed {
@@ -238,7 +245,10 @@ impl Generator {
         write!(&mut self.current, "    ")?;
         if self.dialect == Dialect::Msvc {
             if let Some(a) = annotations.align {
-                self.emit_declspec_align(a)?;
+                match a {
+                    Some(a) => self.emit_declspec_align(a)?,
+                    _ => bail!("MSVC doesn't support @align without a value"),
+                }
             }
         }
         self.emit_type_name(&f.ty)?;
@@ -326,7 +336,7 @@ impl Generator {
 }
 
 struct Annotations<'a> {
-    align: Option<&'a Expr>,
+    align: Option<Option<&'a Expr>>,
     attr_packed: bool,
     pragma_pack: Option<&'a Expr>,
 }
@@ -348,7 +358,7 @@ fn get_unique_annotations(a: &[Annotation]) -> Result<Annotations> {
                 if align.is_some() {
                     bail!("cannot used multiple align annotations");
                 }
-                align = Some(&**n);
+                align = Some(n.as_ref().map(|n| &**n));
             }
         }
     }

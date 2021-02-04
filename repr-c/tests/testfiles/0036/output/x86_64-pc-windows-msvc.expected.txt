@@ -1,5 +1,4 @@
-// tc-0036
 S = { size: 8, alignment: 8 }struct {
     { offset: 0, size: 8 }v { size: 8, alignment: 8 }bool:8,
 }
-// hash: 3b4267dce5f06c8
+// hash: 64a70ab057e59d18

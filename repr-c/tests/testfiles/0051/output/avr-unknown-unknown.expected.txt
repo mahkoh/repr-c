@@ -1,0 +1,4 @@
+A = { size: 16, alignment: 8 }@align(128) enum {
+    1
+}
+// hash: c173d97a0fc640ba

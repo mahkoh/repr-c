@@ -94,7 +94,8 @@ impl<'a, 'b> Printer_<'a, 'b> {
         match a {
             Annotation::PragmaPack(e) => self.print_top_level_expr(e),
             Annotation::AttrPacked => Ok(()),
-            Annotation::Aligned(e) => self.print_top_level_expr(e),
+            Annotation::Aligned(None) => Ok(()),
+            Annotation::Aligned(Some(e)) => self.print_top_level_expr(e),
         }
     }
 

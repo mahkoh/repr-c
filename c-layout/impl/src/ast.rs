@@ -26,7 +26,7 @@ pub enum DeclarationType {
 pub enum Annotation {
     PragmaPack(Box<Expr>),
     AttrPacked,
-    Aligned(Box<Expr>),
+    Aligned(Option<Box<Expr>>),
 }
 
 /// A type.

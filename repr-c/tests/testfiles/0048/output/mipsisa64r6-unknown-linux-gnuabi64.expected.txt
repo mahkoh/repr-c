@@ -1,6 +1,5 @@
-// tc-0048
 X = { size: 1024, alignment: 8 }struct {
     { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
     @align(128) _ { size: 32, alignment: 32 }int:0,
 }
-// hash: dddf9f413985da4d
+// hash: 66e30daa6ae62292

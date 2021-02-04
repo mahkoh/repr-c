@@ -5,7 +5,7 @@ use crate::ast::{
 use crate::{ast, to_span, S};
 use anyhow::{anyhow, Result};
 use repr_c_impl::layout::{
-    Annotation, Array, FieldLayout, LayoutInfo, Record, RecordField, Type, TypeLayout, TypeVariant,
+    Annotation, Array, FieldLayout, Layout, Record, RecordField, Type, TypeLayout, TypeVariant,
 };
 use repr_c_impl::target::Target;
 use repr_c_impl::util::BITS_PER_BYTE;
@@ -76,15 +76,15 @@ pub fn compute_layouts(
 }
 
 pub trait Convert {
-    type Src: LayoutInfo<OpaqueLayout = TypeLayout>;
+    type Src: Layout<OpaqueLayout = TypeLayout>;
 
     fn convert(&self, ty: Type<Self::Src>) -> Result<Type<TypeLayout>>;
-    fn extract_type(&self, ty: &ast::Type) -> Result<Self::Src>;
+    fn extract_type(&self, ty: &ast::Type) -> Result<<Self::Src as Layout>::TypeLayout>;
     fn extract_field(
         &self,
         field: &ast::RecordField,
         pos: usize,
-    ) -> Result<<Self::Src as LayoutInfo>::FieldLayout>;
+    ) -> Result<<Self::Src as Layout>::FieldLayout>;
 }
 
 pub struct Computer<'a, C> {
@@ -283,8 +283,9 @@ impl<'a, C: Convert> Computer<'a, C> {
                     Annotation::PragmaPack(BITS_PER_BYTE * self.eval_u64_expr(e)?)
                 }
                 ast::Annotation::AttrPacked => Annotation::AttrPacked,
-                ast::Annotation::Aligned(e) => {
-                    Annotation::Aligned(BITS_PER_BYTE * self.eval_u64_expr(e)?)
+                ast::Annotation::Aligned(None) => Annotation::Aligned(None),
+                ast::Annotation::Aligned(Some(e)) => {
+                    Annotation::Aligned(Some(BITS_PER_BYTE * self.eval_u64_expr(e)?))
                 }
             });
         }
@@ -363,13 +364,11 @@ impl<'a, C: Convert> Computer<'a, C> {
                 })
             }
             ExprType::Name(n) => match self.declarations.get(&**n) {
-                None => {
-                    Err(anyhow!(
-                        "At {}: The referenced constant {} is not declared",
-                        self.span(e.span),
-                        n
-                    ))
-                }
+                None => Err(anyhow!(
+                    "At {}: The referenced constant {} is not declared",
+                    self.span(e.span),
+                    n
+                )),
                 Some(&d) => self.compute_decl_const(d, e.span),
             },
             ExprType::Offsetof(k, aty, p) => {
@@ -393,11 +392,7 @@ impl<'a, C: Convert> Computer<'a, C> {
     ) -> Result<u64> {
         let (aty, ty, base) = match (&aty.variant, &ty.variant, &head.ty) {
             (ast::TypeVariant::Record(ar), TypeVariant::Record(r), IndexType::Field(name)) => {
-                let af = match ar
-                    .fields
-                    .iter()
-                    .find(|f| f.name.as_ref() == Some(name))
-                {
+                let af = match ar.fields.iter().find(|f| f.name.as_ref() == Some(name)) {
                     Some(f) => f,
                     None => {
                         return Err(anyhow!(
@@ -423,8 +418,11 @@ impl<'a, C: Convert> Computer<'a, C> {
             }
             (ast::TypeVariant::Array(aa), TypeVariant::Array(a), IndexType::Array(pos)) => {
                 let pos = self.eval_u64_expr(pos)?;
-                if pos >= a.num_elements && aa.num_elements.is_some() {
-                    return Err(anyhow!("At {}: Out of bounds", self.span(head.span)));
+                match a.num_elements {
+                    Some(n) if pos > n => {
+                        return Err(anyhow!("At {}: Out of bounds", self.span(head.span)));
+                    }
+                    _ => {}
                 }
                 match a.element_type.layout.size_bits.checked_mul(pos) {
                     None => {
@@ -470,8 +468,8 @@ impl<'a, C: Convert> Computer<'a, C> {
         Ok(Array {
             element_type: Box::new(self.convert_type(&a.element_type)?),
             num_elements: match &a.num_elements {
-                None => 0,
-                Some(n) => self.eval_u64_expr(n)?,
+                None => None,
+                Some(n) => Some(self.eval_u64_expr(n)?),
             },
         })
     }

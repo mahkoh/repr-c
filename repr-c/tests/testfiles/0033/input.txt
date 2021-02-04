@@ -1,4 +1,3 @@
-// tc-0033
 A = struct {
     c char,
     a long,

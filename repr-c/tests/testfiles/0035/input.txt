@@ -1,4 +1,3 @@
-// tc-0035
 X = union {
     _ int:0,
     _ char:1,

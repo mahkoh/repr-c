@@ -1,4 +1,3 @@
-// tc-0047
 X = struct {
     a char,
     _ int:1,

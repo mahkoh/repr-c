@@ -4,7 +4,7 @@ use c_layout_impl::ast::Declaration;
 use isnt::std_1::vec::IsntVecExt;
 use rayon::iter::IntoParallelRefIterator;
 use rayon::iter::ParallelIterator;
-use repr_c_impl::layout::{FieldLayout, LayoutInfo, Type, TypeLayout};
+use repr_c_impl::layout::{FieldLayout, Layout, Type, TypeLayout};
 use repr_c_impl::target::{Target, TARGETS};
 use std::path::Path;
 use std::sync::Mutex;
@@ -84,9 +84,7 @@ fn process_target(
         .collect();
 
     let output_dir = dir.join("output");
-    let expected_file = output_dir
-        .join(target.name())
-        .with_extension("expected.txt");
+    let expected_file = output_dir.join(format!("{}.expected.txt", target.name()));
     let expected = std::fs::read_to_string(&expected_file)
         .with_context(|| anyhow!("cannot read {}", expected_file.display()))?;
     let expected_declarations = c_layout_impl::parse(&expected)
@@ -98,7 +96,7 @@ fn process_target(
         return Ok(true);
     }
 
-    let actual_file = output_dir.join(target.name()).with_extension("actual.txt");
+    let actual_file = output_dir.join(format!("{}.actual.txt", target.name()));
     let enhanced = c_layout_impl::enhance_declarations(declarations, &actual_conversion_result);
     std::fs::write(
         actual_file,
@@ -135,7 +133,8 @@ impl Into<TypeLayout> for TypeLayoutWithoutPointerAlignment {
     }
 }
 
-impl LayoutInfo for TypeLayoutWithoutPointerAlignment {
+impl Layout for TypeLayoutWithoutPointerAlignment {
+    type TypeLayout = TypeLayoutWithoutPointerAlignment;
     type FieldLayout = FieldLayout;
     type OpaqueLayout = TypeLayoutWithoutPointerAlignment;
 }

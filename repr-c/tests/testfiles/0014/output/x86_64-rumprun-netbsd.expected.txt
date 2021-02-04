@@ -1,4 +1,3 @@
-// tc-0014
 A = { size: 32, alignment: 16 }@align(2) typedef { size: 32, alignment: 32 }int
 B = { size: 32, alignment: 64 }@align(8) typedef { size: 32, alignment: 32 }int
 X = { size: 32, alignment: 8 }@pragma_pack(1) struct {
@@ -7,4 +6,4 @@ X = { size: 32, alignment: 8 }@pragma_pack(1) struct {
 Y = { size: 32, alignment: 8 }@pragma_pack(1) struct {
     { offset: 0, size: 32 }b { size: 32, alignment: 64 }B,
 }
-// hash: 94e57218b347431b
+// hash: f079b08fece9d625

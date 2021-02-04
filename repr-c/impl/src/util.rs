@@ -1,6 +1,9 @@
+use crate::builder::common::default_aligned_alignment;
 use crate::layout::Annotation;
-use crate::result::{Error, Result};
+use crate::result::{err, ErrorKind, Result};
+use crate::target::Target;
 
+/// The number of bits in a byte.
 pub const BITS_PER_BYTE: u64 = 8;
 
 pub(crate) trait MinAssign<T> {
@@ -26,6 +29,12 @@ pub(crate) trait MaxAssign<T> {
 impl MaxAssign<Option<u64>> for Option<u64> {
     fn assign_max(&mut self, other: Option<u64>) {
         *self = (*self).max2(other);
+    }
+}
+
+impl MaxAssign<u64> for Option<u64> {
+    fn assign_max(&mut self, other: u64) {
+        *self = Some((*self).max2(other));
     }
 }
 
@@ -126,7 +135,7 @@ pub(crate) fn align_to(n: u64, m: u64) -> Result<u64> {
     let mask = m - 1;
     match n.checked_add(mask) {
         Some(n) => Ok(n & !mask),
-        _ => Err(Error::SizeOverflow),
+        _ => Err(err(ErrorKind::SizeOverflow)),
     }
 }
 
@@ -134,13 +143,14 @@ pub(crate) fn is_attr_packed(a: &[Annotation]) -> bool {
     a.iter().any(|a| matches!(a, Annotation::AttrPacked))
 }
 
-pub(crate) fn annotation_alignment(a: &[Annotation]) -> Option<u64> {
+pub(crate) fn annotation_alignment(target: Target, a: &[Annotation]) -> Option<u64> {
+    let mut max = None;
     for a in a {
         if let Annotation::Aligned(n) = a {
-            return Some(*n);
+            max.assign_max(n.unwrap_or_else(|| default_aligned_alignment(target)));
         }
     }
-    None
+    max
 }
 
 pub(crate) fn pragma_pack_value(a: &[Annotation]) -> Option<u64> {
@@ -155,20 +165,13 @@ pub(crate) fn pragma_pack_value(a: &[Annotation]) -> Option<u64> {
 pub(crate) fn size_mul(a: u64, b: u64) -> Result<u64> {
     match a.checked_mul(b) {
         Some(v) => Ok(v),
-        None => Err(Error::SizeOverflow),
+        None => Err(err(ErrorKind::SizeOverflow)),
     }
 }
 
 pub(crate) fn size_add(a: u64, b: u64) -> Result<u64> {
     match a.checked_add(b) {
         Some(v) => Ok(v),
-        None => Err(Error::SizeOverflow),
+        None => Err(err(ErrorKind::SizeOverflow)),
     }
 }
-
-// pub(crate) fn align_mul(a: u64, b: u64) -> Result<u64> {
-//     match a.checked_mul(b) {
-//         Some(v) => Ok(v),
-//         None => Err(Error::AlignmentOverflow),
-//     }
-// }

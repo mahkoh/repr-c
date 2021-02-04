@@ -8,6 +8,33 @@ use std::path::Path;
 #[cfg(test)]
 mod tests;
 
+macro_rules! test_target {
+    ($slf:expr, $target:expr) => {{
+        if let Some(c) = &$slf.include_compilers {
+            if !c.contains(&system_compiler($target)) {
+                return false;
+            }
+        }
+        if let Some(c) = &$slf.exclude_compilers {
+            if c.contains(&system_compiler($target)) {
+                return false;
+            }
+        }
+        let name = $target.name();
+        if let Some(i) = &$slf.include_targets {
+            if !i.iter().any(|n| n == name) {
+                return false;
+            }
+        }
+        if let Some(i) = &$slf.exclude_targets {
+            if i.iter().any(|n| n == name) {
+                return false;
+            }
+        }
+        true
+    }};
+}
+
 #[derive(Clone, Deserialize, Debug, Default)]
 #[serde(default)]
 pub struct InputConfig {
@@ -45,28 +72,7 @@ where
 
 impl InputConfig {
     pub fn test_target(&self, target: Target) -> bool {
-        if let Some(c) = &self.include_compilers {
-            if !c.contains(&system_compiler(target)) {
-                return false;
-            }
-        }
-        if let Some(c) = &self.exclude_compilers {
-            if c.contains(&system_compiler(target)) {
-                return false;
-            }
-        }
-        let name = target.name();
-        if let Some(i) = &self.include_targets {
-            if !i.iter().any(|n| n == name) {
-                return false;
-            }
-        }
-        if let Some(i) = &self.exclude_targets {
-            if i.iter().any(|n| n == name) {
-                return false;
-            }
-        }
-        true
+        test_target!(self, target)
     }
 }
 
@@ -84,6 +90,10 @@ pub fn read_input_config(dir: &Path) -> Result<(String, InputConfig)> {
 #[serde(default)]
 pub struct GlobalConfig {
     pub compiler: String,
+    #[serde(deserialize_with = "deserialize_compilers")]
+    pub include_compilers: Option<Vec<Compiler>>,
+    #[serde(deserialize_with = "deserialize_compilers")]
+    pub exclude_compilers: Option<Vec<Compiler>>,
     pub include_tests: Option<Vec<String>>,
     pub exclude_tests: Option<Vec<String>>,
     pub include_targets: Option<Vec<String>>,
@@ -106,17 +116,6 @@ impl GlobalConfig {
     }
 
     pub fn test_target(&self, target: Target) -> bool {
-        let name = target.name();
-        if let Some(i) = &self.include_targets {
-            if !i.iter().any(|n| n == name) {
-                return false;
-            }
-        }
-        if let Some(i) = &self.exclude_targets {
-            if i.iter().any(|n| n == name) {
-                return false;
-            }
-        }
-        true
+        test_target!(self, target)
     }
 }

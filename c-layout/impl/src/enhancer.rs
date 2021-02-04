@@ -83,9 +83,9 @@ fn enhance_record_field(f: &ast::RecordField, fc: &RecordField<TypeLayout>) -> a
 fn enhance_array(a: &ast::Array, ar: &Array<TypeLayout>) -> ast::Array {
     ast::Array {
         element_type: Box::new(enhance_type(&a.element_type, &ar.element_type)),
-        num_elements: match &a.num_elements {
-            None => None,
-            Some(n) => Some(Box::new(enhance_top_level_expr(n, ar.num_elements as i128))),
+        num_elements: match (&a.num_elements, ar.num_elements) {
+            (Some(n), Some(ne)) => Some(Box::new(enhance_top_level_expr(n, ne as i128))),
+            _ => None,
         },
     }
 }
@@ -106,10 +106,10 @@ fn enhance_annotations(a: &[ast::Annotation], an: &[Annotation]) -> Vec<ast::Ann
 
 fn enhance_annotation(a: &ast::Annotation, an: &Annotation) -> ast::Annotation {
     match (a, an) {
-        (ast::Annotation::Aligned(l), Annotation::Aligned(r)) => {
+        (ast::Annotation::Aligned(Some(l)), Annotation::Aligned(Some(r))) => {
             let mut a = l.clone();
             a.value = Some((*r / BITS_PER_BYTE) as i128);
-            ast::Annotation::Aligned(a)
+            ast::Annotation::Aligned(Some(a))
         }
         (ast::Annotation::PragmaPack(l), Annotation::PragmaPack(r)) => {
             let mut a = l.clone();

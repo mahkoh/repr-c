@@ -70,6 +70,7 @@ case "$1" in
     cd "$HOME/bin/gcc-cross/$1/bin"
     PATH=$(pwd) gcc -mabi=64 -gdwarf-5 -c -o "$3" "$2"
     ;;
+  aarch64-apple-macosx | \
   aarch64-fuchsia | \
   aarch64-linux-android | \
   aarch64-unknown-freebsd | \
@@ -96,6 +97,7 @@ case "$1" in
   armv7-unknown-freebsd-gnueabihf | \
   armv7-unknown-netbsdelf-eabihf | \
   i386-apple-ios | \
+  i686-apple-macosx | \
   i686-linux-android | \
   i686-unknown-freebsd | \
   i686-unknown-haiku | \
@@ -123,7 +125,8 @@ case "$1" in
   wasm32-unknown-unknown | \
   wasm32-wasi | \
   x86_64-apple-ios | \
-  x86_64-apple-ios13.0-macabi | \
+  x86_64-apple-ios-macabi | \
+  x86_64-apple-macosx | \
   x86_64-apple-tvos | \
   x86_64-elf | \
   x86_64-fuchsia | \

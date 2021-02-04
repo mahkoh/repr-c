@@ -1,4 +1,3 @@
-// tc-0034
 U = union {
     l int,
     c char,

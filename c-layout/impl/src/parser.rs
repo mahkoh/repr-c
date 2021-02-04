@@ -441,10 +441,16 @@ impl Parser {
             }
             Token::AttrPacked => Annotation::AttrPacked,
             Token::Align => {
-                self.parse_token(Token::LeftParen)?;
-                let val = self.parse_top_level_expr()?;
-                self.parse_token(Token::RightParen)?;
-                Annotation::Aligned(Box::new(val))
+                let val = match self.peek()?.val {
+                    Token::LeftParen => {
+                        self.parse_token(Token::LeftParen)?;
+                        let val = self.parse_top_level_expr()?;
+                        self.parse_token(Token::RightParen)?;
+                        Some(Box::new(val))
+                    }
+                    _ => None,
+                };
+                Annotation::Aligned(val)
             }
             _ => {
                 return Err(ParseError {

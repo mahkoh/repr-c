@@ -1,4 +1,3 @@
-// tc-0020
 A = { size: 1024, alignment: 1024 }struct {
     { offset: 0, size: 1 }@align(128) i { size: 16, alignment: 8 }int:1,
 }
@@ -22,4 +21,4 @@ E = { size: 1024, alignment: 128 }@pragma_pack(16) struct {
 F = { size: 1024, alignment: 1024 }@pragma_pack(32) struct {
     { offset: 0, size: 1024 }a { size: 1024, alignment: 1024 }A,
 }
-// hash: 6be86fbb8afe3116
+// hash: 6baebe941c6dca21
