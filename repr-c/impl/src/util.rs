@@ -143,9 +143,9 @@ pub(crate) fn is_attr_packed(a: &[Annotation]) -> bool {
     a.iter().any(|a| matches!(a, Annotation::AttrPacked))
 }
 
-pub(crate) fn annotation_alignment(target: Target, a: &[Annotation]) -> Option<u64> {
+pub(crate) fn annotation_alignment(target: Target, annotations: &[Annotation]) -> Option<u64> {
     let mut max = None;
-    for a in a {
+    for a in annotations {
         if let Annotation::Aligned(n) = a {
             max.assign_max(n.unwrap_or_else(|| default_aligned_alignment(target)));
         }

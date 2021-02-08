@@ -1,5 +1,9 @@
-U = { size: 16, alignment: 16 }union {
+A = { size: 16, alignment: 16 }union {
     { offset: 0, size: 16 }l { size: 16, alignment: 16 }int,
     { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
 }
-// hash: 2ccb0d98a45b0fcb
+B = { size: 48, alignment: 16 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 16, size: 32 }l { size: 32, alignment: 16 }long,
+}
+// hash: 84b44463a80134de

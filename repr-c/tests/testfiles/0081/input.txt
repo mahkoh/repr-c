@@ -1,0 +1,6 @@
+F = @align(2) typedef long long
+
+G = struct {
+    c F:15,
+    d F:64,
+}

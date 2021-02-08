@@ -1,0 +1,12 @@
+A = { size: 16, alignment: 8 }@pragma_pack(1) enum {
+    1,
+}
+
+B = { size: 16, alignment: 8 }@pragma_pack(1) enum {
+    1111,
+}
+
+C = { size: 64, alignment: 8 }@pragma_pack(1) enum {
+    0x1111_0000_1111,
+}
+// hash: 2dbddb4f49f9a024

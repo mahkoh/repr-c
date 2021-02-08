@@ -2,3 +2,11 @@ A = struct {
     c char,
     a long,
 }
+B = @pragma_pack(1) struct {
+    c char,
+    @align(2) a long,
+}
+C = @pragma_pack(1) struct {
+    c char,
+    a long,
+}

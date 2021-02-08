@@ -1,8 +1,8 @@
-X = { size: 64, alignment: 64 }@align(8) struct {
+A = { size: 64, alignment: 64 }@align(8) struct {
     { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
 }
 
-Y = { size: 64, alignment: 8 }@pragma_pack(1) struct {
-    { offset: 0, size: 64 }x { size: 64, alignment: 64 }X,
+B = { size: 64, alignment: 64 }@pragma_pack(1) @align(8) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
 }
-// hash: da0b5f72d52d6b4a
+// hash: b37b5367f52c6126

@@ -1,5 +1,15 @@
-S = { size: 16, alignment: 8 }@pragma_pack(1) struct {
+A = { size: 16, alignment: 8 }struct {
     { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
     _ { size: 16, alignment: 16 }int:1,
 }
-// hash: a596d5a3e65e973f
+
+B = { size: 16, alignment: 8 }@pragma_pack(1) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    _ { size: 16, alignment: 16 }int:1,
+}
+
+C = { size: 16, alignment: 8 }@pragma_pack(1) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    @align(8) _ { size: 16, alignment: 16 }int:1,
+}
+// hash: f482cf6704e928fb

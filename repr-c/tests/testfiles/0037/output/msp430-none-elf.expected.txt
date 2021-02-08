@@ -1,5 +1,23 @@
-S = { size: 2048, alignment: 1024 }struct {
+A = { size: 2048, alignment: 1024 }struct {
     { offset: 0, size: 1 }i { size: 16, alignment: 16 }unsigned int:1,
     { offset: 1024, size: 1 }@align(128) j { size: 32, alignment: 16 }long:1,
 }
-// hash: bceb33a9194068e
+
+B = { size: 2048, alignment: 1024 }struct {
+    { offset: 0, size: 1 }i { size: 16, alignment: 16 }unsigned int:1,
+    { offset: 1, size: 1 }k { size: 16, alignment: 16 }int:1,
+    { offset: 1024, size: 1 }@align(128) j { size: 32, alignment: 16 }long:1,
+}
+
+C = { size: 2048, alignment: 1024 }struct {
+    { offset: 0, size: 1 }i { size: 16, alignment: 16 }unsigned int:1,
+    { offset: 1024, size: 1 }@align(128) j { size: 32, alignment: 16 }long:1,
+    { offset: 1025, size: 1 }k { size: 16, alignment: 16 }int:1,
+}
+
+D = { size: 2048, alignment: 1024 }struct {
+    { offset: 0, size: 1 }@align(64) i { size: 16, alignment: 16 }unsigned int:1,
+    { offset: 1024, size: 1 }@align(128) j { size: 32, alignment: 16 }long:1,
+    { offset: 1025, size: 1 }k { size: 16, alignment: 16 }int:1,
+}
+// hash: 145d6eb94c555fc6

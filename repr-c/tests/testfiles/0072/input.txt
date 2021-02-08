@@ -1,0 +1,21 @@
+A = struct {
+    c char,
+    a int:1,
+}
+
+B = union {
+    c char,
+    a int:1,
+}
+
+C = @align(16) typedef int
+
+D = struct {
+    c char,
+    a C:1,
+}
+
+E = union {
+    c char,
+    a C:1,
+}

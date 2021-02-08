@@ -1,5 +1,11 @@
 Char = @align(4) typedef char
 
 A = @pragma_pack(2) struct {
+    c char,
     a Char,
+}
+
+B = @pragma_pack(2) struct {
+    c char,
+    @align(4) a char,
 }

@@ -1,5 +1,5 @@
 compiler = "./compiler.sh"
 
 #include_compilers = ["msvc"]
-#include_targets = [ "hexagon-unknown-linux-musl", "powerpc-unknown-linux-gnuspe", ]
-#include_tests = ["0013"]
+#include_targets = [ "x86_64-pc-windows-gnu", ]
+#include_tests = ["0035"]

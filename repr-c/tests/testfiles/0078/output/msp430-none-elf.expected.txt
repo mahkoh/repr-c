@@ -1,0 +1,8 @@
+A = { size: 8, alignment: 8 }struct {
+    _ { size: 16, alignment: 16 }int:1,
+}
+
+B = { size: 8, alignment: 8 }union {
+    _ { size: 16, alignment: 16 }int:1,
+}
+// hash: e8b245107cabcc5a

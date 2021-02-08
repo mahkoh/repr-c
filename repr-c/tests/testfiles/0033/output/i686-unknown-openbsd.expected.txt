@@ -2,4 +2,12 @@ A = { size: 64, alignment: 32 }struct {
     { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
     { offset: 32, size: 32 }a { size: 32, alignment: 32 }long,
 }
-// hash: f3086b448b28b081
+B = { size: 40, alignment: 8 }@pragma_pack(1) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 8, size: 32 }@align(2) a { size: 32, alignment: 32 }long,
+}
+C = { size: 40, alignment: 8 }@pragma_pack(1) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 8, size: 32 }a { size: 32, alignment: 32 }long,
+}
+// hash: a5becdb11e7f3de7

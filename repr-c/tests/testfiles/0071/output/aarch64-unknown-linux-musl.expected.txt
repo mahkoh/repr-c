@@ -1,0 +1,16 @@
+B = { size: 16, alignment: 8 }@attr_packed struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    _ { size: 32, alignment: 32 }int:1,
+}
+
+C = { size: 128, alignment: 64 }@attr_packed struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    @align(8) _ { size: 32, alignment: 32 }int:1,
+}
+
+D = { size: 24, alignment: 8 }@attr_packed struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    _ { size: 32, alignment: 32 }int:1,
+    { offset: 16, size: 8 }d { size: 8, alignment: 8 }char,
+}
+// hash: 9ee574a02c7b6b14

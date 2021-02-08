@@ -94,8 +94,13 @@ impl Parser {
             return Ok((None, None));
         }
         self.pos += 1;
+        let negative = self.peek()?.val == Token::Minus;
+        if negative {
+            self.pos += 1;
+        }
         let cur = self.parse_token(Token::Number(0))?;
         let val = match cur.val {
+            Token::Number(n) if negative => -n,
             Token::Number(n) => n,
             _ => unreachable!(),
         };

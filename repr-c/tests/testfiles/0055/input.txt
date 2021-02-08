@@ -1,0 +1,2 @@
+A = @attr_packed enum { 1 }
+B = @attr_packed enum { 0xffff_ffff_ffff }

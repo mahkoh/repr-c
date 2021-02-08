@@ -1,9 +1,36 @@
-A = { size: 32, alignment: 32, required_alignment: 16 }@align(2) typedef { size: 32, alignment: 32 }int
-B = { size: 32, alignment: 64, required_alignment: 64 }@align(8) typedef { size: 32, alignment: 32 }int
-X = { size: 32, alignment: 16, required_alignment: 16 }@pragma_pack(1) struct {
-    { offset: 0, size: 32 }a { size: 32, alignment: 32, required_alignment: 16 }A,
-}
-Y = { size: 64, alignment: 64, required_alignment: 64 }@pragma_pack(1) struct {
-    { offset: 0, size: 32 }b { size: 32, alignment: 64, required_alignment: 64 }B,
-}
-// hash: f079b08fece9d625
+A = { size: 32, alignment: 32 }@align(001) typedef { size: 32, alignment: 32 }int
+B = { size: 32, alignment: 32, required_alignment: 16 }@align(002) typedef { size: 32, alignment: 32 }int
+C = { size: 32, alignment: 32, required_alignment: 32 }@align(004) typedef { size: 32, alignment: 32 }int
+D = { size: 32, alignment: 64, required_alignment: 64 }@align(008) typedef { size: 32, alignment: 32 }int
+E = { size: 32, alignment: 128, required_alignment: 128 }@align(016) typedef { size: 32, alignment: 32 }int
+F = { size: 32, alignment: 256, required_alignment: 256 }@align(032) typedef { size: 32, alignment: 32 }int
+G = { size: 32, alignment: 512, required_alignment: 512 }@align(064) typedef { size: 32, alignment: 32 }int
+H = { size: 32, alignment: 1024, required_alignment: 1024 }@align(128) typedef { size: 32, alignment: 32 }int
+
+AA = { size: 32, alignment: 32 }@align(001) typedef { size: 32, alignment: 32 }A
+AB = { size: 32, alignment: 32, required_alignment: 16 }@align(002) typedef { size: 32, alignment: 32 }A
+AC = { size: 32, alignment: 32, required_alignment: 32 }@align(004) typedef { size: 32, alignment: 32 }A
+AD = { size: 32, alignment: 64, required_alignment: 64 }@align(008) typedef { size: 32, alignment: 32 }A
+AE = { size: 32, alignment: 128, required_alignment: 128 }@align(016) typedef { size: 32, alignment: 32 }A
+AF = { size: 32, alignment: 256, required_alignment: 256 }@align(032) typedef { size: 32, alignment: 32 }A
+AG = { size: 32, alignment: 512, required_alignment: 512 }@align(064) typedef { size: 32, alignment: 32 }A
+AH = { size: 32, alignment: 1024, required_alignment: 1024 }@align(128) typedef { size: 32, alignment: 32 }A
+
+BA = { size: 32, alignment: 32, required_alignment: 16 }@align(001) typedef { size: 32, alignment: 32, required_alignment: 16 }B
+BB = { size: 32, alignment: 32, required_alignment: 16 }@align(002) typedef { size: 32, alignment: 32, required_alignment: 16 }B
+BC = { size: 32, alignment: 32, required_alignment: 32 }@align(004) typedef { size: 32, alignment: 32, required_alignment: 16 }B
+BD = { size: 32, alignment: 64, required_alignment: 64 }@align(008) typedef { size: 32, alignment: 32, required_alignment: 16 }B
+BE = { size: 32, alignment: 128, required_alignment: 128 }@align(016) typedef { size: 32, alignment: 32, required_alignment: 16 }B
+BF = { size: 32, alignment: 256, required_alignment: 256 }@align(032) typedef { size: 32, alignment: 32, required_alignment: 16 }B
+BG = { size: 32, alignment: 512, required_alignment: 512 }@align(064) typedef { size: 32, alignment: 32, required_alignment: 16 }B
+BH = { size: 32, alignment: 1024, required_alignment: 1024 }@align(128) typedef { size: 32, alignment: 32, required_alignment: 16 }B
+
+DA = { size: 32, alignment: 64, required_alignment: 64 }@align(001) typedef { size: 32, alignment: 64, required_alignment: 64 }D
+DB = { size: 32, alignment: 64, required_alignment: 64 }@align(002) typedef { size: 32, alignment: 64, required_alignment: 64 }D
+DC = { size: 32, alignment: 64, required_alignment: 64 }@align(004) typedef { size: 32, alignment: 64, required_alignment: 64 }D
+DD = { size: 32, alignment: 64, required_alignment: 64 }@align(008) typedef { size: 32, alignment: 64, required_alignment: 64 }D
+DE = { size: 32, alignment: 128, required_alignment: 128 }@align(016) typedef { size: 32, alignment: 64, required_alignment: 64 }D
+DF = { size: 32, alignment: 256, required_alignment: 256 }@align(032) typedef { size: 32, alignment: 64, required_alignment: 64 }D
+DG = { size: 32, alignment: 512, required_alignment: 512 }@align(064) typedef { size: 32, alignment: 64, required_alignment: 64 }D
+DH = { size: 32, alignment: 1024, required_alignment: 1024 }@align(128) typedef { size: 32, alignment: 64, required_alignment: 64 }D
+// hash: 5ad487b450b08182

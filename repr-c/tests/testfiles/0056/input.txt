@@ -1,0 +1,6 @@
+A = @attr_packed struct {
+    i int,
+}
+B = @attr_packed union {
+    i int,
+}

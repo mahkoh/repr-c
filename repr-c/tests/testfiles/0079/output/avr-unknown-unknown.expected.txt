@@ -1,0 +1,24 @@
+A = { size: 32, alignment: 16 }@attr_packed struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 16, size: 1 }@align(2) i { size: 16, alignment: 8 }int:1,
+    { offset: 24, size: 8 }d { size: 8, alignment: 8 }char,
+}
+
+B = { size: 32, alignment: 16 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 16, size: 1 }@align(2) @attr_packed i { size: 16, alignment: 8 }int:1,
+    { offset: 24, size: 8 }d { size: 8, alignment: 8 }char,
+}
+
+C = { size: 16, alignment: 16 }@attr_packed union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 1 }@align(2) i { size: 16, alignment: 8 }int:1,
+    { offset: 0, size: 8 }d { size: 8, alignment: 8 }char,
+}
+
+D = { size: 16, alignment: 16 }union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 1 }@align(2) @attr_packed i { size: 16, alignment: 8 }int:1,
+    { offset: 0, size: 8 }d { size: 8, alignment: 8 }char,
+}
+// hash: 9aef8209bcb778cc

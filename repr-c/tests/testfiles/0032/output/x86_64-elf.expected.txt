@@ -1,5 +1,13 @@
-A = { size: 128, alignment: 64 }struct {
+A = { size: 64, alignment: 64 }struct {
     { offset: 0, size: 64 }a { size: 64, alignment: 64 }long,
-    { offset: 64, size: 8 }c { size: 8, alignment: 8 }char,
 }
-// hash: 55df71be08ba56a0
+B = { size: 64, alignment: 64 }union {
+    { offset: 0, size: 64 }a { size: 64, alignment: 64 }long,
+}
+C = { size: 64, alignment: 64 }struct {
+    { offset: 0, size: 64 }@align(2) a { size: 64, alignment: 64 }long,
+}
+D = { size: 64, alignment: 64 }union {
+    { offset: 0, size: 64 }@align(2) a { size: 64, alignment: 64 }long,
+}
+// hash: d53b4ef8ac98cf2b

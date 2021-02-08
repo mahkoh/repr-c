@@ -1,3 +1,22 @@
-U = union {
+A = union {
     a int:1,
+}
+
+B = union {
+    @align(8) a int:1,
+}
+
+C = union {
+    @align(8) _ int:0,
+}
+
+D = union {
+    c char,
+    @align(8) _ int:0,
+}
+
+E = union {
+    c char,
+    @align(8) _ int:0,
+    @align(8) _ int:0,
 }

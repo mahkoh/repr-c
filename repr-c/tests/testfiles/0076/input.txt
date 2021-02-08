@@ -1,0 +1,23 @@
+A = @pragma_pack(16) @attr_packed struct {
+    c char,
+    @attr_packed i int:1,
+    d char,
+}
+
+B = @pragma_pack(16) struct {
+    c char,
+    @align(8) i int:1,
+    d char,
+}
+
+C = @pragma_pack(16) @attr_packed union {
+    c char,
+    @attr_packed i int:1,
+    d char,
+}
+
+D = @pragma_pack(16) union {
+    c char,
+    @align(8) i int:1,
+    d char,
+}

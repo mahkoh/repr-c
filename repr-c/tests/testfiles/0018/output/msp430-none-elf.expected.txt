@@ -1,3 +1,14 @@
-Char = { size: 8, alignment: 32 }@align(4) typedef { size: 8, alignment: 8 }char
-X = { size: 32, alignment: 32 }[3]{ size: 8, alignment: 32 }Char
-// hash: cd8ff4311c4ef3a
+A = { size: 24, alignment: 8 }[3]{ size: 8, alignment: 8 }char
+B = { size: 32, alignment: 32 }[3]{ size: 8, alignment: 32 }@align(4) typedef { size: 8, alignment: 8 }char
+C = { size: 96, alignment: 32 }[3]{ size: 32, alignment: 32 }[3]{ size: 8, alignment: 32 }@align(4) typedef { size: 8, alignment: 8 }char
+
+D = { size: 48, alignment: 16 }[3]{ size: 16, alignment: 16 }short
+E = { size: 64, alignment: 32 }[3]{ size: 16, alignment: 32 }@align(4) typedef { size: 16, alignment: 16 }short
+F = { size: 192, alignment: 32 }[3]{ size: 64, alignment: 32 }[3]{ size: 16, alignment: 32 }@align(4) typedef { size: 16, alignment: 16 }short
+
+G = { size: 192, alignment: 16 }[3]{ size: 64, alignment: 16 }long long
+H = { size: 1024, alignment: 1024 }[3]{ size: 64, alignment: 1024 }@align(128) typedef { size: 64, alignment: 16 }long long
+I = { size: 3072, alignment: 1024 }[3]{ size: 1024, alignment: 1024 }[3]{ size: 64, alignment: 1024 }@align(128) typedef { size: 64, alignment: 16 }long long
+
+J = { size: 0, alignment: 16 }[]{ size: 16, alignment: 16 }int
+// hash: 2f49240c1fce2321

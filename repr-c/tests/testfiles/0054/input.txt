@@ -1,0 +1,2 @@
+A = @pragma_pack(2) enum { 1 }
+B = @pragma_pack(2) enum { 0xffff_ffff_ffff }

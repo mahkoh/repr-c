@@ -1,6 +1,17 @@
-S = { size: 64, alignment: 32 }struct {
+A = { size: 64, alignment: 32 }struct {
     { offset: 0, size: 1 }c { size: 8, alignment: 8 }char:1,
     _ { size: 32, alignment: 32 }int:0,
     { offset: 32, size: 8 }d { size: 8, alignment: 8 }char,
 }
-// hash: 812112c764ffc4ca
+
+B = { size: 32, alignment: 32 }struct {
+    { offset: 0, size: 1 }c { size: 8, alignment: 8 }char:1,
+    _ { size: 32, alignment: 32 }int:0,
+}
+
+C = { size: 1088, alignment: 1024 }struct {
+    { offset: 0, size: 1 }c { size: 8, alignment: 8 }char:1,
+    @align(128) _ { size: 32, alignment: 32 }int:0,
+    { offset: 1024, size: 8 }d { size: 8, alignment: 8 }char,
+}
+// hash: eec31e9c7ec7e7f5

@@ -1,8 +1,17 @@
-Char = { size: 24, alignment: 16 }@align(2) typedef { size: 24, alignment: 8 }[3]{ size: 8, alignment: 8 }char
+A = { size: 24, alignment: 16 }@align(2) typedef { size: 24, alignment: 8 }[3]{ size: 8, alignment: 8 }char
+B = { size: 80, alignment: 16 }[3]{ size: 24, alignment: 16 }A
 
-X = { size: 24, alignment: 8 }typedef { size: 24, alignment: 8 }[3]{ size: 8, alignment: 8 }char
+C = { size: 24, alignment: 8 }[3]{ size: 8, alignment: 8 }char
 
-Y = { size: 24, alignment: 8 }struct {
-    { offset: 0, size: 24 }x { size: 24, alignment: 8 }X,
+D = { size: 0, alignment: 16 }[]{ size: 80, alignment: 16 }B
+
+E = { size: 16, alignment: 16 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 16, size: 0 }d { size: 0, alignment: 16 }D,
 }
-// hash: d2147f3c817d2c73
+
+F = { size: 16, alignment: 16 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 16, size: 0 }d { size: 0, alignment: 16 }[]{ size: 80, alignment: 16 }B,
+}
+// hash: b9b828a62854c97c

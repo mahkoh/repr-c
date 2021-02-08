@@ -1,9 +1,16 @@
-X = union {
+A = union {
     _ int:0,
     _ char:1,
 }
-
-Y = union {
+B = union {
     _ char:1,
     _ int:0,
+}
+C = struct {
+    a char,
+    _ long:0,
+}
+D = struct {
+    _ char:0,
+    _ long:0,
 }

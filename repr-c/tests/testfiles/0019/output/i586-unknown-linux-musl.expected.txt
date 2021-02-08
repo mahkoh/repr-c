@@ -1,5 +1,8 @@
+A = { size: 32, alignment: 32 }enum {
+    1,
+}
 E = { size: 64, alignment: 32 }@align(8) enum {
     1,
-    0xffff0fffffff,
+    0xffff_0fff_ffff,
 }
-// hash: 892c5a7df50417bf
+// hash: 832664d3c6ca310c

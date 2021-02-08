@@ -81,6 +81,7 @@ pub fn unnamed_field_affects_record_alignment(target: Target) -> bool {
 pub fn min_zero_width_bitfield_alignment(target: Target) -> Option<u64> {
     use Target::*;
     match target {
+        AvrUnknownUnknown => Some(8),
         Armv7AppleIos | Armv7sAppleIos => Some(32),
         _ => None,
     }
@@ -96,6 +97,7 @@ pub fn builtin_type_layout(target: Target, b: BuiltinType) -> TypeLayout {
         _ => {}
     }
 
+    // See test case 0013.
     let (size_bytes, alignment_bytes) = match b {
         Unit => (0, 1),
         Char | SignedChar | UnsignedChar | Bool | U8 | I8 => (1, 1),
@@ -108,6 +110,7 @@ pub fn builtin_type_layout(target: Target, b: BuiltinType) -> TypeLayout {
             | I686UnknownLinuxMusl | I686AppleMacosx => (8, 4),
             _ => (8, 8),
         },
+        // See test case 0050.
         U128 | I128 => match target {
             S390xUnknownLinuxGnu => (16, 8),
             _ => (16, 16),
@@ -326,7 +329,7 @@ pub fn ignore_zero_sized_bitfield_type_alignmont(target: Target) -> bool {
     }
 }
 
-pub fn short_enums(target: Target) -> bool {
+pub fn pack_all_enums(target: Target) -> bool {
     use Target::*;
     match target {
         HexagonUnknownLinuxMusl => true,

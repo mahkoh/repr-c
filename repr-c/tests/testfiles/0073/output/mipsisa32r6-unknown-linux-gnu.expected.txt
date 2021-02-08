@@ -1,0 +1,26 @@
+A = { size: 40, alignment: 8 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    _ { size: 32, alignment: 32 }int:0,
+    { offset: 32, size: 8 }d { size: 8, alignment: 8 }char,
+}
+
+B = { size: 8, alignment: 8 }union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    _ { size: 32, alignment: 32 }int:0,
+    { offset: 0, size: 8 }d { size: 8, alignment: 8 }char,
+}
+
+C = { size: 32, alignment: 128 }@align(16) typedef { size: 32, alignment: 32 }int
+
+D = { size: 136, alignment: 8 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    _ { size: 32, alignment: 128 }C:0,
+    { offset: 128, size: 8 }d { size: 8, alignment: 8 }char,
+}
+
+E = { size: 8, alignment: 8 }union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    _ { size: 32, alignment: 128 }C:0,
+    { offset: 0, size: 8 }d { size: 8, alignment: 8 }char,
+}
+// hash: bf0edcd597488b81

@@ -1,7 +1,16 @@
-Char = @align(2) typedef [3]char
+A = @align(2) typedef [3]char
+B = [3]A
 
-X = typedef [3]char
+C = [3]char
 
-Y = struct {
-    x X,
+D = []B
+
+E = struct {
+    c char,
+    d D,
+}
+
+F = struct {
+    c char,
+    d []B,
 }

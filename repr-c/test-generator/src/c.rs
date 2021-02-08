@@ -5,19 +5,14 @@ use c_layout_impl::ast::{
     Record, RecordField, Type, TypeExprType, TypeVariant, UnaryExprType,
 };
 use repr_c_impl::layout::{BuiltinType, RecordKind};
+use repr_c_impl::target::Compiler;
 use std::collections::HashMap;
 use std::fmt::Write;
 use std::mem;
 
-#[derive(Copy, Clone, Eq, PartialEq, Debug)]
-pub enum Dialect {
-    Msvc,
-    Gcc,
-}
-
 pub(crate) fn generate(
     i: &[Declaration],
-    dialect: Dialect,
+    compiler: Compiler,
 ) -> Result<(String, HashMap<usize, String>)> {
     let mut g = Generator {
         next: 1,
@@ -25,7 +20,7 @@ pub(crate) fn generate(
         output: "".to_string(),
         current: "".to_string(),
         stack: vec![],
-        dialect,
+        compiler,
     };
     g.generate(i)?;
     Ok((g.output, g.ids))
@@ -37,7 +32,7 @@ struct Generator {
     output: String,
     current: String,
     stack: Vec<String>,
-    dialect: Dialect,
+    compiler: Compiler,
 }
 
 impl Generator {
@@ -77,7 +72,7 @@ impl Generator {
             self.emit_expr(p)?;
             writeln!(&mut self.current, ")")?;
         }
-        if self.dialect == Dialect::Msvc {
+        if self.compiler == Compiler::Msvc {
             if let Some(p) = annotations.align {
                 match p {
                     Some(p) => self.emit_declspec_align(p)?,
@@ -101,8 +96,13 @@ impl Generator {
         }
 
         writeln!(&mut self.current, "struct {}_alignment {{", name)?;
-        writeln!(&mut self.current, "    char a[_Alignof({})];", name)?;
-        writeln!(&mut self.current, "    char b;")?;
+        if self.compiler == Compiler::Msvc {
+            writeln!(&mut self.current, "    char a[_Alignof({})];", name)?;
+            writeln!(&mut self.current, "    char b;")?;
+        } else {
+            writeln!(&mut self.current, "    char a;")?;
+            writeln!(&mut self.current, "    {} b;", name)?;
+        }
         writeln!(&mut self.current, "}};")?;
         let id = self.generate_id();
         writeln!(&mut self.current, "struct {}_alignment var{};", name, id)?;
@@ -113,12 +113,17 @@ impl Generator {
         writeln!(&mut self.current, "}};")?;
         writeln!(&mut self.current, "#pragma pack()")?;
         writeln!(&mut self.current, "struct {}_required_alignment {{", name)?;
-        writeln!(
-            &mut self.current,
-            "    char a[_Alignof(struct {}_packed)];",
-            name
-        )?;
-        writeln!(&mut self.current, "    char b;")?;
+        if self.compiler == Compiler::Msvc {
+            writeln!(
+                &mut self.current,
+                "    char a[_Alignof(struct {}_packed)];",
+                name
+            )?;
+            writeln!(&mut self.current, "    char b;")?;
+        } else {
+            writeln!(&mut self.current, "    char a;")?;
+            writeln!(&mut self.current, "    struct {}_packed b;", name)?;
+        }
         writeln!(&mut self.current, "}};")?;
         let id = self.generate_id();
         writeln!(
@@ -156,7 +161,8 @@ impl Generator {
 
     fn emit_enum(&mut self, n: &str, a: &Annotations, e: &[Expr]) -> Result<()> {
         writeln!(&mut self.current, "typedef enum {{")?;
-        for (idx, e) in e.iter().enumerate() {
+        for e in e.iter() {
+            let idx = self.generate_id();
             write!(&mut self.current, "    F{} = ", idx)?;
             self.emit_expr(e)?;
             writeln!(&mut self.current, ",")?;
@@ -173,7 +179,7 @@ impl Generator {
         write!(&mut self.current, " {}[", n)?;
         if let Some(v) = &a.num_elements {
             self.emit_expr(v)?;
-        } else if self.dialect != Dialect::Msvc {
+        } else if self.compiler != Compiler::Msvc {
             write!(self.current, "0")?;
         }
         write!(&mut self.current, "]")?;
@@ -192,7 +198,7 @@ impl Generator {
     }
 
     fn emit_gcc_attributes(&mut self, a: &Annotations) -> Result<()> {
-        if self.dialect == Dialect::Gcc {
+        if self.compiler != Compiler::Msvc {
             match a.align {
                 Some(Some(a)) => {
                     write!(&mut self.current, " __attribute__((aligned(")?;
@@ -243,7 +249,7 @@ impl Generator {
             bail!("pragma pack cannot be used on fields");
         }
         write!(&mut self.current, "    ")?;
-        if self.dialect == Dialect::Msvc {
+        if self.compiler == Compiler::Msvc {
             if let Some(a) = annotations.align {
                 match a {
                     Some(a) => self.emit_declspec_align(a)?,

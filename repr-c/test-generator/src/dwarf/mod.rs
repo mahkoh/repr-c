@@ -73,6 +73,7 @@ impl<'a> Convert for Converter<'a> {
             Builtin(bi) => return Ok(builtin_type_layout(self.target, *bi)),
             Opaque(_) => unreachable!(),
         };
+        let required_alignment = self.get_second_field_offset(name, "required_alignment");
         let alignment = self.get_second_field_offset(name, "alignment");
         let size_bits = self.get_second_field_offset(name, "size") - 8;
         Ok(TypeLayout {
@@ -81,16 +82,16 @@ impl<'a> Convert for Converter<'a> {
             // as the field alignment so that it does not get printed.
             pointer_alignment_bits: alignment,
             field_alignment_bits: alignment,
-            required_alignment_bits: BITS_PER_BYTE,
+            required_alignment_bits: required_alignment,
         })
     }
 
     fn extract_field(&self, field: &ast::RecordField, fpos: usize) -> Result<FieldLayout> {
         let name = self.type_id_names.get(&field.parent_id).unwrap();
         let dwarf_field = &self.get_record_fields(name)[fpos];
-        let size_bits = match field.bit_width {
-            Some(_) => dwarf_field.size_bits.unwrap(),
-            None => {
+        let size_bits = match (&field.bit_width, dwarf_field.size_bits) {
+            (Some(_), Some(b)) => b,
+            _ => {
                 let offset = self.traverse_typedefs(dwarf_field.type_offset);
                 match self.offset_sizes.get(&offset) {
                     Some(v) => *v,

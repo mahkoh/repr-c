@@ -1,4 +1,12 @@
 A = struct {
     a long,
-    c char,
+}
+B = union {
+    a long,
+}
+C = struct {
+    @align(2) a long,
+}
+D = union {
+    @align(2) a long,
 }

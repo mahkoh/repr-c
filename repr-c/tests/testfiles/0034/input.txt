@@ -1,4 +1,8 @@
-U = union {
+A = union {
     l int,
     c char,
+}
+B = struct {
+    c char,
+    l long,
 }

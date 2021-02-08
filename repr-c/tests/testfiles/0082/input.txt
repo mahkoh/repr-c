@@ -1,0 +1,109 @@
+A = struct {
+    a long long:1,
+    _ long long:0,
+    b long long:1,
+}
+
+A_ = union {
+    a long long:1,
+    _ long long:0,
+    b long long:1,
+}
+
+B = struct {
+    a long long:1,
+    @attr_packed _ long long:0,
+    b long long:1,
+}
+
+B_ = union {
+    a long long:1,
+    @attr_packed _ long long:0,
+    b long long:1,
+}
+
+C = @attr_packed struct {
+    a long long:1,
+    _ long long:0,
+    b long long:1,
+}
+
+C_ = @attr_packed union {
+    a long long:1,
+    _ long long:0,
+    b long long:1,
+}
+
+D = @pragma_pack(1) @attr_packed struct {
+    a long long:1,
+    _ long long:0,
+    b long long:1,
+}
+
+D_ = @pragma_pack(1) @attr_packed union {
+    a long long:1,
+    _ long long:0,
+    b long long:1,
+}
+
+E = @pragma_pack(1) @attr_packed struct {
+    a long long:1,
+    @align(128) _ long long:0,
+    b long long:1,
+}
+
+E_ = @pragma_pack(1) @attr_packed union {
+    a long long:1,
+    @align(128) _ long long:0,
+    b long long:1,
+}
+
+F = @attr_packed struct {
+    a long long:1,
+    @align(128) _ long long:0,
+    b long long:1,
+}
+
+F_ = @attr_packed union {
+    a long long:1,
+    @align(128) _ long long:0,
+    b long long:1,
+}
+
+G = struct {
+    a long long:1,
+    @attr_packed @align(128) _ long long:0,
+    b long long:1,
+}
+
+G_ = union {
+    a long long:1,
+    @attr_packed @align(128) _ long long:0,
+    b long long:1,
+}
+
+H = @pragma_pack(1) struct {
+    a long long:1,
+    @attr_packed @align(128) _ long long:0,
+    b long long:1,
+}
+
+H_ = @pragma_pack(1) union {
+    a long long:1,
+    @attr_packed @align(128) _ long long:0,
+    b long long:1,
+}
+
+I = @align(128) typedef long long
+
+J = struct {
+    a long long:1,
+    @attr_packed _ I:0,
+    b long long:1,
+}
+
+J_ = union {
+    a long long:1,
+    @attr_packed _ I:0,
+    b long long:1,
+}

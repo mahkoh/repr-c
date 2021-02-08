@@ -1,0 +1,31 @@
+A = @align(16) typedef int
+
+B = struct {
+    a A:1,
+    b A:1,
+    c A:1,
+}
+
+C = struct {
+    i int,
+    a A:1,
+}
+
+D = struct {
+    i short:15,
+    j short:2,
+}
+
+E = struct {
+    i [3]char,
+    j int:9,
+}
+
+F = @align(2) typedef long long
+
+G = struct {
+    a char,
+    b F:16,
+    c F:15,
+    d F:63,
+}

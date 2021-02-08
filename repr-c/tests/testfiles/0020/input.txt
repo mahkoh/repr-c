@@ -2,6 +2,11 @@ A = struct {
     @align(128) i int:1,
 }
 
+A_ = struct {
+    c char,
+    a A,
+}
+
 B = struct {
     a A,
 }
@@ -19,5 +24,25 @@ E = @pragma_pack(16) struct {
 }
 
 F = @pragma_pack(32) struct {
+    a A,
+}
+
+G = union {
+    a A,
+}
+
+H = @pragma_pack(4) union {
+    a A,
+}
+
+I = @pragma_pack(8) union {
+    a A,
+}
+
+J = @pragma_pack(16) union {
+    a A,
+}
+
+K = @pragma_pack(32) union {
     a A,
 }

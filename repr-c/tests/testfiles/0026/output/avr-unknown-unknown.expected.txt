@@ -1,7 +1,0 @@
-X = { size: 0, alignment: 16 }struct {
-    { offset: 0, size: 0 }@align(2) b { size: 0, alignment: 8 }[]{ size: 64, alignment: 8 }long long,
-}
-Y = { size: 0, alignment: 64 }struct {
-    { offset: 0, size: 0 }@align(8) b { size: 0, alignment: 8 }[]{ size: 64, alignment: 8 }long long,
-}
-// hash: 2405b7365dc4b752

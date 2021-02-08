@@ -1,0 +1,97 @@
+A = struct {
+    a short:15,
+    b short:2,
+}
+
+A_ = union {
+    a short:15,
+    b short:2,
+}
+
+B = @align(4) typedef short
+
+C = struct {
+    a char,
+    c B:1,
+}
+
+C_ = union {
+    a char,
+    c B:1,
+}
+
+D = struct {
+    a [3]char,
+    c B:1,
+}
+
+D_ = union {
+    a [3]char,
+    c B:1,
+}
+
+E = struct {
+    a char,
+    @align(4) c short:1,
+}
+
+E_ = union {
+    a char,
+    @align(4) c short:1,
+}
+
+F = struct {
+    a [3]char,
+    @align(4) c short:1,
+}
+
+F_ = union {
+    a [3]char,
+    @align(4) c short:1,
+}
+
+G = struct {
+    a short:15,
+    b B:2,
+}
+
+G_ = union {
+    a short:15,
+    b B:2,
+}
+
+H = struct {
+    a short,
+    b short:1,
+    c B:1,
+}
+
+H_ = union {
+    a short,
+    b short:1,
+    c B:1,
+}
+
+I = @align(1) typedef short
+
+J = struct {
+    a char,
+    b I:15,
+}
+
+J_ = union {
+    a char,
+    b I:15,
+}
+
+K = struct {
+    a char,
+    b I:1,
+    c I:15,
+}
+
+K_ = union {
+    a char,
+    b I:1,
+    c I:15,
+}

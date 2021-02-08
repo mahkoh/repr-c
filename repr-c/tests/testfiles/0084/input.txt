@@ -1,0 +1,9 @@
+A = struct {
+    a char,
+    @align(2) b long long:56,
+}
+
+B = struct {
+    a char,
+    @align(1) @attr_packed b long long:64,
+}

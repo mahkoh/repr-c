@@ -1,0 +1,11 @@
+A = struct {
+    c char:1,
+    _ char:0,
+    d char:1,
+}
+
+B = union {
+    c char:1,
+    _ char:0,
+    d char:1,
+}

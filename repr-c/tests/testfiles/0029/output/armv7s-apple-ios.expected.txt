@@ -15,4 +15,20 @@ C = { size: 32, alignment: 8 }@pragma_pack(1) struct {
 D = { size: 8, alignment: 8 }@pragma_pack(1) struct {
     { offset: 0, size: 8 }a { size: 8, alignment: 8 }B,
 }
-// hash: 7f67626f6d6a2698
+
+E = { size: 64, alignment: 64 }struct {
+    { offset: 0, size: 8 }@align(8) a { size: 8, alignment: 32 }Char,
+}
+
+F = { size: 64, alignment: 64 }struct {
+    { offset: 0, size: 1 }@align(8) a { size: 8, alignment: 32 }Char:1,
+}
+
+G = { size: 32, alignment: 32 }struct {
+    { offset: 0, size: 8 }@align(2) a { size: 8, alignment: 32 }Char,
+}
+
+H = { size: 16, alignment: 16 }struct {
+    { offset: 0, size: 1 }@align(2) a { size: 8, alignment: 32 }Char:1,
+}
+// hash: 20f5482544d49652

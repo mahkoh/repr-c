@@ -45,7 +45,7 @@ pub fn compute_layout(target: Target, ty: &Type<()>) -> Result<Type<TypeLayout>>
                     // The size of an array is the size of the underlying type multiplied by the
                     // number of elements. Since the size might not be a multiple of the field
                     // alignment, the address of the second element might not be properly aligned
-                    // for the field alignment. See test case 0018.
+                    // for the field alignment. A flexible array has size 0. See test case 0018.
                     size_bits: size_mul(ety.layout.size_bits, a.num_elements.unwrap_or(0))?,
                     // The alignments are inherited from the underlying type.
                     ..ety.layout
@@ -59,7 +59,8 @@ pub fn compute_layout(target: Target, ty: &Type<()>) -> Result<Type<TypeLayout>>
             })
         }
         TypeVariant::Enum(v) => {
-            // #pragma pack is ignored on enums.
+            // #pragma pack is ignored. See test case 0054.
+            // __attribute__((aligned)) is ignored by clang. See test case 0055.
             let requested_alignment =
                 annotation_alignment(target, &ty.annotations).unwrap_or(BITS_PER_BYTE);
             // Enums always have the base type int even if the values do not fit into int. The
@@ -111,6 +112,7 @@ pub(crate) struct RecordLayoutBuilder<'a> {
     // The kind of this record. Struct or Union.
     kind: RecordKind,
     // Set to `Some` if and only if the previous field was a non-zero-sized bitfield.
+    // This is used even in unions. In particular, the order of fields in unions is significant.
     ongoing_bitfield: Option<OngoingBitfield>,
     // Set to `true` if and only if the record contains at least on non-bitfield field.
     contains_non_bitfield: bool,
@@ -131,9 +133,9 @@ impl<'a> RecordLayoutBuilder<'a> {
         kind: RecordKind,
         annotations: &'a [Annotation],
     ) -> Result<Self> {
-        // __attribute__((packed)) behaves like #pragma pack(1) in clang.
+        // __attribute__((packed)) behaves like #pragma pack(1) in clang. See test case 0056.
         let pack_value = match is_attr_packed(annotations) {
-            true => Some(1),
+            true => Some(BITS_PER_BYTE),
             false => pragma_pack_value(annotations),
         };
         // The effect of #pragma pack(N) depends on the target.
@@ -212,13 +214,14 @@ impl<'a> RecordLayoutBuilder<'a> {
     fn handle_zero_sized_record(&mut self) {
         match self.kind {
             RecordKind::Union => {
-                // If all fields in a union have size 0, the size of the whole enum is set to ...
+                // MSVC does not allow unions without fields.
+                // If all fields in a union have size 0, the size of the union is set to
+                // - its field alignment if it contains at least one non-bitfield
+                // - 4 bytes if it contains only bitfields
+                // See test case 0025.
                 if self.contains_non_bitfield {
-                    // ... its alignment if it contains at least one non-bitfield. See test case
-                    // 0024.
                     self.size_bits = self.field_alignment_bits;
                 } else {
-                    // ... 4 bytes if it contains only bitfields or is empty. See test case 0025.
                     self.size_bits = 4 * BITS_PER_BYTE;
                 }
             }
@@ -256,11 +259,11 @@ impl<'a> RecordLayoutBuilder<'a> {
             field_alignment_bits.assign_min(self.max_field_alignment_bits);
             if is_attr_packed(&field.annotations) {
                 // __attribute__((packed)) on a field is a clang extension. It behaves as if #pragma
-                // pack(1) had been applied only to this field.
+                // pack(1) had been applied only to this field. See test case 0057.
                 field_alignment_bits = BITS_PER_BYTE;
             }
             // The required alignment of the field takes precedence over #pragma pack.
-            // See test case 0031.
+            // See test cases 0031 and 0058.
             field_alignment_bits.assign_max(required_alignment_bits);
             (layout.size_bits, field_alignment_bits)
         };
@@ -313,6 +316,17 @@ impl<'a> RecordLayoutBuilder<'a> {
         named: bool,
         width: u64,
     ) -> Result<Option<FieldLayout>> {
+        macro_rules! ok {
+            ($offset:expr) => {
+                Ok(match named {
+                    true => Some(FieldLayout {
+                        offset_bits: $offset,
+                        size_bits: width,
+                    }),
+                    false => None,
+                })
+            };
+        }
         if width == 0 {
             // A zero-sized bit-field that does not follow a non-zero-sized bit-field does not affect
             // the overall layout of the record. Even in a union where the order would otherwise
@@ -322,7 +336,6 @@ impl<'a> RecordLayoutBuilder<'a> {
             }
             self.ongoing_bitfield = None;
         } else {
-            // Even _Bool allows bitfields up to its type size. See test case 0036.
             if width > ty_size_bits {
                 return Err(err(ErrorKind::OversizedBitfield));
             }
@@ -330,19 +343,16 @@ impl<'a> RecordLayoutBuilder<'a> {
             // if there is enough space left to place this bit-field, then this bit-field is placed in
             // the ongoing bit-field and the overall layout of the struct is not affected by this
             // bit-field. See test case 0037.
-            if let (RecordKind::Struct, Some(ref mut p)) = (self.kind, &mut self.ongoing_bitfield) {
-                if p.ty_size_bits == ty_size_bits && p.unused_size_bits >= width {
-                    let offset_bits = self.size_bits - p.unused_size_bits;
-                    p.unused_size_bits -= width;
-                    return Ok(match named {
-                        true => Some(FieldLayout {
-                            offset_bits,
-                            size_bits: width,
-                        }),
-                        false => None,
-                    });
+            if self.kind == RecordKind::Struct {
+                if let Some(ref mut p) = &mut self.ongoing_bitfield {
+                    if p.ty_size_bits == ty_size_bits && p.unused_size_bits >= width {
+                        let offset_bits = self.size_bits - p.unused_size_bits;
+                        p.unused_size_bits -= width;
+                        return ok!(offset_bits);
+                    }
                 }
             }
+            // Otherwise this field is part of a new ongoing bit-field.
             self.ongoing_bitfield = Some(OngoingBitfield {
                 ty_size_bits,
                 unused_size_bits: ty_size_bits - width,
@@ -377,12 +387,6 @@ impl<'a> RecordLayoutBuilder<'a> {
                 0
             }
         };
-        Ok(match named {
-            true => Some(FieldLayout {
-                offset_bits,
-                size_bits: width,
-            }),
-            false => None,
-        })
+        ok!(offset_bits)
     }
 }

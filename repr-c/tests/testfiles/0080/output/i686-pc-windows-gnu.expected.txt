@@ -1,0 +1,32 @@
+A = { size: 32, alignment: 128 }@align(16) typedef { size: 32, alignment: 32 }int
+
+B = { size: 128, alignment: 128 }struct {
+    { offset: 0, size: 1 }a { size: 32, alignment: 128 }A:1,
+    { offset: 1, size: 1 }b { size: 32, alignment: 128 }A:1,
+    { offset: 2, size: 1 }c { size: 32, alignment: 128 }A:1,
+}
+
+C = { size: 256, alignment: 128 }struct {
+    { offset: 0, size: 32 }i { size: 32, alignment: 32 }int,
+    { offset: 128, size: 1 }a { size: 32, alignment: 128 }A:1,
+}
+
+D = { size: 32, alignment: 16 }struct {
+    { offset: 0, size: 15 }i { size: 16, alignment: 16 }short:15,
+    { offset: 16, size: 2 }j { size: 16, alignment: 16 }short:2,
+}
+
+E = { size: 64, alignment: 32 }struct {
+    { offset: 0, size: 24 }i { size: 24, alignment: 8 }[3]{ size: 8, alignment: 8 }char,
+    { offset: 32, size: 9 }j { size: 32, alignment: 32 }int:9,
+}
+
+F = { size: 64, alignment: 16 }@align(2) typedef { size: 64, alignment: 64 }long long
+
+G = { size: 144, alignment: 16 }struct {
+    { offset: 0, size: 8 }a { size: 8, alignment: 8 }char,
+    { offset: 16, size: 16 }b { size: 64, alignment: 16 }F:16,
+    { offset: 32, size: 15 }c { size: 64, alignment: 16 }F:15,
+    { offset: 80, size: 63 }d { size: 64, alignment: 16 }F:63,
+}
+// hash: 24df1e8d359a74b7

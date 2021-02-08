@@ -1,0 +1,7 @@
+A = struct {
+    _ int:1,
+}
+
+B = union {
+    _ int:1,
+}

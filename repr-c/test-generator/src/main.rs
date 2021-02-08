@@ -1,4 +1,3 @@
-use crate::c::Dialect;
 use anyhow::{anyhow, bail, Context, Result};
 use c_layout_impl::ast::Declaration;
 use rayon::iter::IntoParallelRefIterator;
@@ -103,20 +102,17 @@ fn process_target(
         return Ok(());
     }
     eprintln!("generating {}", expected_file.display());
-    let dialect = match system_compiler(target) {
-        Compiler::Msvc => Dialect::Msvc,
-        _ => Dialect::Gcc,
-    };
-    let (code, ids) = c::generate(&declarations, dialect)?;
+    let (code, ids) = c::generate(&declarations, system_compiler(target))?;
     let tmpdir = tempdir::TempDir::new("")?;
     let c_file = tmpdir.path().join("test.c");
     let output_file = tmpdir.path().join("test.output");
     std::fs::write(&c_file, code)?;
-    let output = Command::new(&userconfig.compiler)
-        .arg(target.name())
-        .arg(&c_file)
-        .arg(&output_file)
-        .output()?;
+    let mut cmd = Command::new(&userconfig.compiler);
+    cmd.arg(target.name()).arg(&c_file).arg(&output_file);
+    if config.use_clang_for_msvc_targets {
+        cmd.env("USE_CLANG_FOR_MSVC", "");
+    }
+    let output = cmd.output()?;
     if output.status.code() != Some(0) {
         bail!(
             "{} did not exit successfully:\nstdout: {}\nstderr: {}",
@@ -127,7 +123,9 @@ fn process_target(
     }
     let output = std::fs::read(output_file)?;
     let conversion_result = match system_compiler(target) {
-        Compiler::Msvc => pdb::convert(target, &input, &declarations, &output, &ids),
+        Compiler::Msvc if !config.use_clang_for_msvc_targets => {
+            pdb::convert(target, &input, &declarations, &output, &ids)
+        }
         _ => dwarf::convert(target, &input, &declarations, &output, &ids),
     }?;
     let decls = c_layout_impl::enhance_declarations(&declarations, &conversion_result);

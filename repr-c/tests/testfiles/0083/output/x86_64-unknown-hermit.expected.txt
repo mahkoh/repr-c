@@ -1,0 +1,98 @@
+A = { size: 32, alignment: 16 }struct {
+    { offset: 0, size: 15 }a { size: 16, alignment: 16 }short:15,
+    { offset: 16, size: 2 }b { size: 16, alignment: 16 }short:2,
+}
+
+A_ = { size: 16, alignment: 16 }union {
+    { offset: 0, size: 15 }a { size: 16, alignment: 16 }short:15,
+    { offset: 0, size: 2 }b { size: 16, alignment: 16 }short:2,
+}
+
+B = { size: 16, alignment: 32 }@align(4) typedef { size: 16, alignment: 16 }short
+
+C = { size: 32, alignment: 32 }struct {
+    { offset: 0, size: 8 }a { size: 8, alignment: 8 }char,
+    { offset: 8, size: 1 }c { size: 16, alignment: 32 }B:1,
+}
+
+C_ = { size: 32, alignment: 32 }union {
+    { offset: 0, size: 8 }a { size: 8, alignment: 8 }char,
+    { offset: 0, size: 1 }c { size: 16, alignment: 32 }B:1,
+}
+
+D = { size: 64, alignment: 32 }struct {
+    { offset: 0, size: 24 }a { size: 24, alignment: 8 }[3]{ size: 8, alignment: 8 }char,
+    { offset: 32, size: 1 }c { size: 16, alignment: 32 }B:1,
+}
+
+D_ = { size: 32, alignment: 32 }union {
+    { offset: 0, size: 24 }a { size: 24, alignment: 8 }[3]{ size: 8, alignment: 8 }char,
+    { offset: 0, size: 1 }c { size: 16, alignment: 32 }B:1,
+}
+
+E = { size: 64, alignment: 32 }struct {
+    { offset: 0, size: 8 }a { size: 8, alignment: 8 }char,
+    { offset: 32, size: 1 }@align(4) c { size: 16, alignment: 16 }short:1,
+}
+
+E_ = { size: 32, alignment: 32 }union {
+    { offset: 0, size: 8 }a { size: 8, alignment: 8 }char,
+    { offset: 0, size: 1 }@align(4) c { size: 16, alignment: 16 }short:1,
+}
+
+F = { size: 64, alignment: 32 }struct {
+    { offset: 0, size: 24 }a { size: 24, alignment: 8 }[3]{ size: 8, alignment: 8 }char,
+    { offset: 32, size: 1 }@align(4) c { size: 16, alignment: 16 }short:1,
+}
+
+F_ = { size: 32, alignment: 32 }union {
+    { offset: 0, size: 24 }a { size: 24, alignment: 8 }[3]{ size: 8, alignment: 8 }char,
+    { offset: 0, size: 1 }@align(4) c { size: 16, alignment: 16 }short:1,
+}
+
+G = { size: 64, alignment: 32 }struct {
+    { offset: 0, size: 15 }a { size: 16, alignment: 16 }short:15,
+    { offset: 32, size: 2 }b { size: 16, alignment: 32 }B:2,
+}
+
+G_ = { size: 32, alignment: 32 }union {
+    { offset: 0, size: 15 }a { size: 16, alignment: 16 }short:15,
+    { offset: 0, size: 2 }b { size: 16, alignment: 32 }B:2,
+}
+
+H = { size: 64, alignment: 32 }struct {
+    { offset: 0, size: 16 }a { size: 16, alignment: 16 }short,
+    { offset: 16, size: 1 }b { size: 16, alignment: 16 }short:1,
+    { offset: 32, size: 1 }c { size: 16, alignment: 32 }B:1,
+}
+
+H_ = { size: 32, alignment: 32 }union {
+    { offset: 0, size: 16 }a { size: 16, alignment: 16 }short,
+    { offset: 0, size: 1 }b { size: 16, alignment: 16 }short:1,
+    { offset: 0, size: 1 }c { size: 16, alignment: 32 }B:1,
+}
+
+I = { size: 16, alignment: 8 }@align(1) typedef { size: 16, alignment: 16 }short
+
+J = { size: 24, alignment: 8 }struct {
+    { offset: 0, size: 8 }a { size: 8, alignment: 8 }char,
+    { offset: 8, size: 15 }b { size: 16, alignment: 8 }I:15,
+}
+
+J_ = { size: 16, alignment: 8 }union {
+    { offset: 0, size: 8 }a { size: 8, alignment: 8 }char,
+    { offset: 0, size: 15 }b { size: 16, alignment: 8 }I:15,
+}
+
+K = { size: 24, alignment: 8 }struct {
+    { offset: 0, size: 8 }a { size: 8, alignment: 8 }char,
+    { offset: 8, size: 1 }b { size: 16, alignment: 8 }I:1,
+    { offset: 9, size: 15 }c { size: 16, alignment: 8 }I:15,
+}
+
+K_ = { size: 16, alignment: 8 }union {
+    { offset: 0, size: 8 }a { size: 8, alignment: 8 }char,
+    { offset: 0, size: 1 }b { size: 16, alignment: 8 }I:1,
+    { offset: 0, size: 15 }c { size: 16, alignment: 8 }I:15,
+}
+// hash: 457a2497218f2423

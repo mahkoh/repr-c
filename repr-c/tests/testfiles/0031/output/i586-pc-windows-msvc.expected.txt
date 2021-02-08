@@ -1,6 +1,12 @@
 Char = { size: 8, alignment: 32, required_alignment: 32 }@align(4) typedef { size: 8, alignment: 8 }char
 
-A = { size: 32, alignment: 32, required_alignment: 32 }@pragma_pack(2) struct {
-    { offset: 0, size: 8 }a { size: 8, alignment: 32, required_alignment: 32 }Char,
+A = { size: 64, alignment: 32, required_alignment: 32 }@pragma_pack(2) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 32, size: 8 }a { size: 8, alignment: 32, required_alignment: 32 }Char,
 }
-// hash: 442937f47ffbbdfc
+
+B = { size: 64, alignment: 32, required_alignment: 32 }@pragma_pack(2) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 32, size: 8 }@align(4) a { size: 8, alignment: 8 }char,
+}
+// hash: c662ebd6e957828f

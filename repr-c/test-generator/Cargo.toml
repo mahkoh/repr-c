@@ -14,5 +14,5 @@ serde = { version = "1.0.120", features = ["derive"] }
 toml = "0.5.8"
 rayon = "1.5.0"
 gimli = "0.23.0"
-object = { path = "../../vendored/object" }
+object = { path = "../../vendored/object", features = ["coff"] }
 pdb = { path = "../../vendored/pdb" }

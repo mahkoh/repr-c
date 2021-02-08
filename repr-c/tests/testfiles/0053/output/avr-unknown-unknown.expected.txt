@@ -1,2 +1,2 @@
 A = { size: 0, alignment: 8 }[]{ size: 16, alignment: 8 }int
-// hash: 381f7bf7b30a310c
+// hash: 79a1a269d13c11d8

@@ -1,18 +1,37 @@
 Char = { size: 8, alignment: 32, required_alignment: 32 }@align(4) typedef { size: 8, alignment: 8 }char
 
-A = { size: 32, alignment: 32, required_alignment: 32 }@pragma_pack(1) struct {
-    { offset: 0, size: 8 }a { size: 8, alignment: 32, required_alignment: 32 }Char,
+A = { size: 64, alignment: 32, required_alignment: 32 }@pragma_pack(1) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 32, size: 8 }a { size: 8, alignment: 32, required_alignment: 32 }Char,
 }
 
-B = { size: 32, alignment: 32, required_alignment: 32 }struct {
-    { offset: 0, size: 8 }@align(4) a { size: 8, alignment: 8 }char,
+B = { size: 64, alignment: 32, required_alignment: 32 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 32, size: 8 }@align(4) a { size: 8, alignment: 8 }char,
 }
 
-C = { size: 64, alignment: 64, required_alignment: 64 }struct {
-    { offset: 0, size: 8 }@align(8) a { size: 8, alignment: 32, required_alignment: 32 }Char,
+C = { size: 128, alignment: 64, required_alignment: 64 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 64, size: 8 }@align(8) a { size: 8, alignment: 32, required_alignment: 32 }Char,
 }
 
-D = { size: 32, alignment: 32, required_alignment: 32 }struct {
-    { offset: 0, size: 8 }@align(2) a { size: 8, alignment: 32, required_alignment: 32 }Char,
+D = { size: 64, alignment: 32, required_alignment: 32 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 32, size: 8 }@align(2) a { size: 8, alignment: 32, required_alignment: 32 }Char,
 }
-// hash: 1324e164a5fb7535
+
+E = { size: 128, alignment: 64, required_alignment: 64 }@pragma_pack(1) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 64, size: 8 }@align(8) a { size: 8, alignment: 32, required_alignment: 32 }Char,
+}
+
+F = { size: 40, alignment: 32 }@pragma_pack(1) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 32, size: 1 }a { size: 8, alignment: 32, required_alignment: 32 }Char:1,
+}
+
+G = { size: 72, alignment: 64 }@pragma_pack(1) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 64, size: 1 }@align(8) a { size: 8, alignment: 32, required_alignment: 32 }Char:1,
+}
+// hash: ac784a48be38de49

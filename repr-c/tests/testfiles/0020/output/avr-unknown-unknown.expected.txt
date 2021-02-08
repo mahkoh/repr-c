@@ -2,6 +2,11 @@ A = { size: 1024, alignment: 1024 }struct {
     { offset: 0, size: 1 }@align(128) i { size: 16, alignment: 8 }int:1,
 }
 
+A_ = { size: 2048, alignment: 1024 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 1024, size: 1024 }a { size: 1024, alignment: 1024 }A,
+}
+
 B = { size: 1024, alignment: 1024 }struct {
     { offset: 0, size: 1024 }a { size: 1024, alignment: 1024 }A,
 }
@@ -21,4 +26,24 @@ E = { size: 1024, alignment: 128 }@pragma_pack(16) struct {
 F = { size: 1024, alignment: 1024 }@pragma_pack(32) struct {
     { offset: 0, size: 1024 }a { size: 1024, alignment: 1024 }A,
 }
-// hash: 6baebe941c6dca21
+
+G = { size: 1024, alignment: 1024 }union {
+    { offset: 0, size: 1024 }a { size: 1024, alignment: 1024 }A,
+}
+
+H = { size: 1024, alignment: 32 }@pragma_pack(4) union {
+    { offset: 0, size: 1024 }a { size: 1024, alignment: 1024 }A,
+}
+
+I = { size: 1024, alignment: 64 }@pragma_pack(8) union {
+    { offset: 0, size: 1024 }a { size: 1024, alignment: 1024 }A,
+}
+
+J = { size: 1024, alignment: 128 }@pragma_pack(16) union {
+    { offset: 0, size: 1024 }a { size: 1024, alignment: 1024 }A,
+}
+
+K = { size: 1024, alignment: 1024 }@pragma_pack(32) union {
+    { offset: 0, size: 1024 }a { size: 1024, alignment: 1024 }A,
+}
+// hash: 4fffb9c7a728595b

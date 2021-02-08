@@ -1,4 +1,29 @@
-Y = struct {
+A = struct {
     c char,
-    i int,
+    s short,
+}
+
+B = @align(4) typedef short
+
+C = struct {
+    c char,
+    s B,
+}
+
+D = struct {
+    @align(8) c char:1,
+}
+
+E = struct {
+    c char,
+    s D,
+}
+
+F = @pragma_pack(4) struct {
+    @align(8) c char:1,
+}
+
+G = struct {
+    c char,
+    s D,
 }

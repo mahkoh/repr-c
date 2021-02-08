@@ -1,11 +1,16 @@
 use crate::builder::common::{
     apply_alignment_override, builtin_type_layout, compute_builtin_type_layout,
-    compute_opaque_type_layout, short_enums,
+    compute_opaque_type_layout, pack_all_enums,
 };
-use crate::layout::{Annotation, Array, BuiltinType, Type, TypeLayout, TypeVariant};
+use crate::builder::sysv_like::mingw::OngoingBitfield;
+use crate::layout::{
+    Annotation, Array, BuiltinType, Record, RecordField, RecordKind, Type, TypeLayout, TypeVariant,
+};
 use crate::result::{err, ErrorKind, Result};
 use crate::target::{system_compiler, Compiler, Target};
-use crate::util::{align_to, annotation_alignment, is_attr_packed, size_mul, BITS_PER_BYTE};
+use crate::util::{
+    align_to, annotation_alignment, is_attr_packed, pragma_pack_value, size_mul, BITS_PER_BYTE,
+};
 
 pub mod mingw;
 pub mod sysv;
@@ -21,11 +26,7 @@ fn compute_layout(target: Target, ty: &Type<()>, dialect: Dialect) -> Result<Typ
         TypeVariant::Builtin(bi) => compute_builtin_type_layout(target, *bi),
         TypeVariant::Opaque(layout) => compute_opaque_type_layout(*layout),
         TypeVariant::Record(r) => {
-            if dialect == Dialect::Mingw && !is_attr_packed(&ty.annotations) {
-                mingw::compute_record_layout(target, r.kind, &ty.annotations, &r.fields)
-            } else {
-                sysv::compute_record_layout(target, r.kind, &ty.annotations, &r.fields, dialect)
-            }
+            compute_record_layout(dialect, target, r.kind, &ty.annotations, &r.fields)
         }
         TypeVariant::Enum(v) => compute_enum_layout(target, v, &ty.annotations),
         TypeVariant::Typedef(dst) => {
@@ -33,16 +34,7 @@ fn compute_layout(target: Target, ty: &Type<()>, dialect: Dialect) -> Result<Typ
             let dst_ty = compute_layout(target, dst, dialect)?;
             let max_alignment = annotation_alignment(target, &ty.annotations);
             // __attribute__((aligned(N))) sets the field alignment to N even if N is smaller
-            // than the alignment of the underlying type.
-            //
-            // ```c,gcc,sysv-tc-0046
-            // typedef int Int __attribute__((aligned(1)));
-            //
-            // static void f(void) {
-            //         _Static_assert(sizeof(Int) == 4, "");
-            //         _Static_assert(_Alignof(Int) == 1, "");
-            // }
-            // ```
+            // than the alignment of the underlying type. See test case 0046.
             Ok(Type {
                 layout: apply_alignment_override(dst_ty.layout, max_alignment),
                 annotations: ty.annotations.clone(),
@@ -56,23 +48,7 @@ fn compute_layout(target: Target, ty: &Type<()>, dialect: Dialect) -> Result<Typ
                     // The size of an array is the size of the underlying type multiplied by the
                     // number of elements rounded up to the alignment. Since the element size might
                     // not be a multiple of the field alignment, the address of the second element
-                    // might not be properly aligned for the field alignment.
-                    //
-                    // ```c,gcc,sysv-tc-0045
-                    // typedef char Char[3] __attribute__((aligned(2)));
-                    //
-                    // typedef Char X[3];
-                    //
-                    // struct Y {
-                    //         X x;
-                    // };
-                    //
-                    // static void f(void) {
-                    //         _Static_assert(sizeof(X) == 10, "");
-                    //         _Static_assert(_Alignof(X) == 2, "");
-                    //         _Static_assert(__builtin_offsetof(struct Y, x[1]) == 3, "");
-                    // }
-                    // ```
+                    // might not be properly aligned for the field alignment. See test case 0045.
                     size_bits: align_to(
                         size_mul(ety.layout.size_bits, a.num_elements.unwrap_or(0))?,
                         ety.layout.field_alignment_bits,
@@ -94,43 +70,92 @@ fn compute_layout(target: Target, ty: &Type<()>, dialect: Dialect) -> Result<Typ
     }
 }
 
+struct RecordLayoutBuilder {
+    target: Target,
+    // The system compiler of this target.
+    compiler: Compiler,
+    // The alignment of this record.
+    alignment_bits: u64,
+    // The size of the record. This might not be a multiple of 8 if the record contains bit-fields.
+    // For structs, this is also the offset of the first bit after the last field.
+    size_bits: u64,
+    // Whether the record has an __attribute__((packed)) annotation.
+    attr_packed: bool,
+    // The value of #pragma pack(N) at the type level if any.
+    max_field_alignment_bits: Option<u64>,
+    // The fields in this record.
+    record_fields: Vec<RecordField<TypeLayout>>,
+    // The kind of this record. Struct or Union.
+    kind: RecordKind,
+    // `Some` if the previous field was a non-zero-sized bit-field. Only used by MinGW.
+    ongoing_bitfield: Option<OngoingBitfield>,
+}
+
+fn compute_record_layout(
+    dialect: Dialect,
+    target: Target,
+    kind: RecordKind,
+    annotations: &[Annotation],
+    fields: &[RecordField<()>],
+) -> Result<Type<TypeLayout>> {
+    let attr_packed = is_attr_packed(annotations);
+    // Pre-validation ensures that there is at most one #pragma pack annotation.
+    let pragma_pack_value = pragma_pack_value(annotations);
+    // #pragma pack(N) is ignored if N is not one of {1,2,4,8,16}. See test case 0064.
+    let max_field_alignment_bits = match pragma_pack_value {
+        Some(8) | Some(16) | Some(32) | Some(64) | Some(128) => pragma_pack_value,
+        _ => None,
+    };
+    // An alignment annotation on the record increases the overall alignment of the record.
+    // See test case 0065.
+    let alignment_bits = annotation_alignment(target, annotations).unwrap_or(BITS_PER_BYTE);
+    let mut rlb = RecordLayoutBuilder {
+        target,
+        compiler: system_compiler(target),
+        alignment_bits,
+        size_bits: 0,
+        attr_packed,
+        max_field_alignment_bits,
+        record_fields: vec![],
+        kind,
+        ongoing_bitfield: None,
+    };
+    match dialect {
+        Dialect::Mingw => mingw::layout_fields(&mut rlb, fields)?,
+        Dialect::Sysv => sysv::layout_fields(&mut rlb, fields)?,
+    }
+    // The size of a record is always a multiple of its alignment. See test case 0066.
+    rlb.size_bits = align_to(rlb.size_bits, rlb.alignment_bits)?;
+    Ok(Type {
+        layout: TypeLayout {
+            size_bits: rlb.size_bits,
+            field_alignment_bits: rlb.alignment_bits,
+            pointer_alignment_bits: rlb.alignment_bits,
+            required_alignment_bits: BITS_PER_BYTE,
+        },
+        annotations: annotations.to_vec(),
+        variant: TypeVariant::Record(Record {
+            kind,
+            fields: rlb.record_fields,
+        }),
+    })
+}
+
 fn compute_enum_layout(
     target: Target,
     v: &[i128],
     annotations: &[Annotation],
 ) -> Result<Type<TypeLayout>> {
-    // A packed enum has minimum size 1 byte. An unpacked enum is as least as large as `int`. Given
-    // this minimum size, the size of the enum is the size of the smallest integer type that fits
-    // all enum constants.
-    //
-    // ```c,gcc
-    // enum __attribute__((packed)) E {
-    //         E = 1,
-    // };
-    //
-    // enum __attribute__((packed)) F {
-    //         F = 1111,
-    // };
-    //
-    // enum G {
-    //         G = 1,
-    // };
-    //
-    // enum H {
-    //         H = 11111111111111111,
-    // };
-    //
-    // static void f(void) {
-    //         _Static_assert(sizeof(enum E) == 1, "");
-    //         _Static_assert(sizeof(enum F) == 2, "");
-    //         _Static_assert(sizeof(enum G) == 4, "");
-    //         _Static_assert(sizeof(enum H) == 8, "");
-    // }
-    // ```
-    let mut required_size = match is_attr_packed(annotations) || short_enums(target) {
+    // #pragma pack is ignored on enums. See test case 0061.
+
+    // A packed enum has minimum size 1 byte. On some targets, all enums have an implicit
+    // packed attribute. Otherwise the minimum size is the size of `int`. See test case 0060.
+    let mut required_size = match is_attr_packed(annotations) || pack_all_enums(target) {
         true => BITS_PER_BYTE,
         false => builtin_type_layout(target, BuiltinType::Int).size_bits,
     };
+    // The size of the enum is the size of the smallest integer type whose size is at least
+    // as large as the minimum size and which can represent all variants. See test case 0062.
     for &v in v {
         let (v, offset) = if v < 0 { (!v, 1) } else { (v, 0) };
         let required = 128 - v.leading_zeros() as u64 + offset;
@@ -149,25 +174,7 @@ fn compute_enum_layout(
         let layout = builtin_type_layout(target, candidate);
         if layout.size_bits >= required_size {
             // Clang respects __attribute__((aligned)) on enums. The behavior is the same
-            // as the behavior on typedefs.
-            //
-            // ```c,clang
-            // enum __attribute__((aligned(8))) E {
-            //         E = 1,
-            // };
-            //
-            // enum __attribute__((aligned(1))) F {
-            //         F = 1,
-            // };
-            //
-            // static void f(void) {
-            //         _Static_assert(sizeof(enum E) == 4, "");
-            //         _Static_assert(_Alignof(enum E) == 8, "");
-            //
-            //         _Static_assert(sizeof(enum F) == 4, "");
-            //         _Static_assert(_Alignof(enum F) == 1, "");
-            // }
-            // ```
+            // as the behavior on typedefs. See test case 0063.
             let max_alignment = match system_compiler(target) {
                 Compiler::Clang => annotation_alignment(target, annotations),
                 _ => None,

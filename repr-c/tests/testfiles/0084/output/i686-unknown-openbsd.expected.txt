@@ -1,0 +1,10 @@
+A = { size: 96, alignment: 32 }struct {
+    { offset: 0, size: 8 }a { size: 8, alignment: 8 }char,
+    { offset: 16, size: 56 }@align(2) b { size: 64, alignment: 32 }long long:56,
+}
+
+B = { size: 72, alignment: 8 }struct {
+    { offset: 0, size: 8 }a { size: 8, alignment: 8 }char,
+    { offset: 8, size: 64 }@align(1) @attr_packed b { size: 64, alignment: 32 }long long:64,
+}
+// hash: a70814db8adbd4ba

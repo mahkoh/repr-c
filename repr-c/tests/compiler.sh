@@ -8,17 +8,27 @@ function error() {
 }
 
 case "$1" in
-  i[56]86-pc-windows-msvc| i686-unknown-windows)
-    cl x86 "$2" "$3"
-    ;;
-  x86_64-pc-windows-msvc | x86_64-unknown-windows)
-    cl x64 "$2" "$3"
-    ;;
-  thumbv7a-pc-windows-msvc)
-    cl arm "$2" "$3"
-    ;;
-  aarch64-pc-windows-msvc)
-    cl arm64 "$2" "$3"
+  *-msvc | *-windows)
+    if [[ -v USE_CLANG_FOR_MSVC ]]; then
+      clang -gdwarf-5 -glldb -target "$1" -c -o "$3" "$2"
+    else
+      case "$1" in
+        i[56]86-pc-windows-msvc| i686-unknown-windows)
+          cl x86 "$2" "$3"
+          ;;
+        x86_64-pc-windows-msvc | x86_64-unknown-windows)
+          cl x64 "$2" "$3"
+          ;;
+        thumbv7a-pc-windows-msvc)
+          cl arm "$2" "$3"
+          ;;
+        aarch64-pc-windows-msvc)
+          cl arm64 "$2" "$3"
+          ;;
+        *)
+          error "Unknown msvc target %s" "$1"
+      esac
+    fi
     ;;
   x86_64-pc-windows-gnu | \
   i686-pc-windows-gnu | \

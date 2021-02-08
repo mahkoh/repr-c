@@ -1,0 +1,15 @@
+B = @attr_packed struct {
+    c char,
+    _ int:1,
+}
+
+C = @attr_packed struct {
+    c char,
+    @align(8) _ int:1,
+}
+
+D = @attr_packed struct {
+    c char,
+    _ int:1,
+    d char,
+}

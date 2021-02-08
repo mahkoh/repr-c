@@ -1,2 +1,5 @@
-Int = { size: 16, alignment: 8 }@align(1) typedef { size: 16, alignment: 16 }int
-// hash: 83035284bc302974
+A = { size: 16, alignment: 8 }@align(1) typedef { size: 16, alignment: 16 }int
+B = { size: 8, alignment: 64 }@align(8) typedef { size: 8, alignment: 8 }char
+C = { size: 16, alignment: 32 }@align(4) typedef { size: 16, alignment: 16 }int
+D = { size: 8, alignment: 32 }@align(4) typedef { size: 8, alignment: 128 }@align(16) typedef { size: 8, alignment: 8 }char
+// hash: abba1a6a40cd5b1d

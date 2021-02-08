@@ -1,1 +1,4 @@
-Int = @align(1) typedef int
+A = @align(1) typedef int
+B = @align(8) typedef char
+C = @align(4) typedef int
+D = @align(4) typedef @align(16) typedef char

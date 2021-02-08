@@ -1,7 +1,7 @@
-X = @align(8) struct {
+A = @align(8) struct {
     c char,
 }
 
-Y = @pragma_pack(1) struct {
-    x X,
+B = @pragma_pack(1) @align(8) struct {
+    c char,
 }

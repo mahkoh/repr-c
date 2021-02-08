@@ -1,0 +1,396 @@
+A = struct {
+    @align(4) _ char:0,
+    d char,
+}
+
+A_ = struct {
+    c char,
+    @align(4) _ char:0,
+    d char,
+}
+
+B = struct {
+    @align(4) _ long long:0,
+    d char,
+}
+
+B_ = struct {
+    c char,
+    @align(4) _ long long:0,
+    d char,
+}
+
+C = struct {
+    _ long long:0,
+    d char,
+}
+
+C_ = struct {
+    c char,
+    _ long long:0,
+    d char,
+}
+
+D = struct {
+    c char,
+    d long long,
+    e char,
+}
+
+F = struct {
+    c char,
+    @align(16) d long long,
+    e char,
+}
+
+G = struct {
+    c char,
+    @align(2) @attr_packed d long long,
+    e char,
+}
+
+H = @pragma_pack(2) struct {
+    c char,
+    @align(4) @attr_packed d long long,
+    e char,
+}
+
+I = struct {
+    c char,
+    @attr_packed d long long,
+    e char,
+}
+
+J = @pragma_pack(2) struct {
+    c char,
+    d long long,
+    e char,
+}
+
+K = struct {
+    c char,
+    d long long:1,
+    e char,
+}
+
+L = struct {
+    c char,
+    @align(16) d long long:1,
+    e char,
+}
+
+M = struct {
+    c char,
+    @align(2) @attr_packed d long long:1,
+    e char,
+}
+
+N = @pragma_pack(2) struct {
+    c char,
+    @align(4) @attr_packed d long long:1,
+    e char,
+}
+
+O = struct {
+    c char,
+    @attr_packed d long long:1,
+    e char,
+}
+
+P = @pragma_pack(2) struct {
+    c char,
+    d long long:1,
+    e char,
+}
+
+Q = struct {
+    c char,
+    x char:1,
+    d long long:1,
+    e char,
+}
+
+R = struct {
+    c char,
+    x char:1,
+    @align(16) _ long long:0,
+    e char,
+}
+
+S = struct {
+    c char,
+    x char:1,
+    @align(2) @attr_packed _ long long:0,
+    e char,
+}
+
+T = @pragma_pack(2) struct {
+    c char,
+    x char:1,
+    @align(4) @attr_packed _ long long:0,
+    e char,
+}
+
+U = struct {
+    c char,
+    x char:1,
+    @attr_packed _ long long:0,
+    e char,
+}
+
+V = @pragma_pack(2) struct {
+    c char,
+    x char:1,
+    _ long long:0,
+    e char,
+}
+
+W = struct {
+    c char,
+    x char:1,
+    @align(16) @attr_packed _ long long:0,
+    e char,
+}
+
+W_ = @pragma_pack(1) struct {
+    c char,
+    @align(16) _ long long:0,
+    e char,
+}
+
+X = @pragma_pack(2) struct {
+    c char,
+    x char:1,
+    @align(16) @attr_packed _ long long:0,
+    e char,
+}
+
+A2 = union {
+    @align(4) _ char:0,
+    d char,
+}
+
+A_2 = union {
+    c char,
+    @align(4) _ char:0,
+    d char,
+}
+
+B2 = union {
+    @align(4) _ long long:0,
+    d char,
+}
+
+B_2 = union {
+    c char,
+    @align(4) _ long long:0,
+    d char,
+}
+
+C2 = union {
+    _ long long:0,
+    d char,
+}
+
+C22 = union {
+    c char,
+    _ long long:0,
+    d char,
+}
+
+D2 = union {
+    c char,
+    d long long,
+    e char,
+}
+
+F2 = union {
+    c char,
+    @align(16) d long long,
+    e char,
+}
+
+G2 = union {
+    c char,
+    @align(2) @attr_packed d long long,
+    e char,
+}
+
+H2 = @pragma_pack(2) union {
+    c char,
+    @align(4) @attr_packed d long long,
+    e char,
+}
+
+I2 = union {
+    c char,
+    @attr_packed d long long,
+    e char,
+}
+
+J2 = @pragma_pack(2) union {
+    c char,
+    d long long,
+    e char,
+}
+
+K2 = union {
+    c char,
+    d long long:1,
+    e char,
+}
+
+L2 = union {
+    c char,
+    @align(16) d long long:1,
+    e char,
+}
+
+M2 = union {
+    c char,
+    @align(2) @attr_packed d long long:1,
+    e char,
+}
+
+N2 = @pragma_pack(2) union {
+    c char,
+    @align(4) @attr_packed d long long:1,
+    e char,
+}
+
+O2 = union {
+    c char,
+    @attr_packed d long long:1,
+    e char,
+}
+
+P2 = @pragma_pack(2) union {
+    c char,
+    d long long:1,
+    e char,
+}
+
+Q2 = union {
+    c char,
+    x char:1,
+    d long long:1,
+    e char,
+}
+
+R2 = union {
+    c char,
+    x char:1,
+    @align(16) _ long long:0,
+    e char,
+}
+
+S2 = union {
+    c char,
+    x char:1,
+    @align(2) @attr_packed _ long long:0,
+    e char,
+}
+
+T2 = @pragma_pack(2) union {
+    c char,
+    x char:1,
+    @align(4) @attr_packed _ long long:0,
+    e char,
+}
+
+U2 = union {
+    c char,
+    x char:1,
+    @attr_packed _ long long:0,
+    e char,
+}
+
+V2 = @pragma_pack(2) union {
+    c char,
+    x char:1,
+    _ long long:0,
+    e char,
+}
+
+W2 = union {
+    c char,
+    x char:1,
+    @align(16) @attr_packed _ long long:0,
+    e char,
+}
+
+W_2 = @pragma_pack(1) union {
+    c char,
+    @align(16) _ long long:0,
+    e char,
+}
+
+X2 = @pragma_pack(2) union {
+    c char,
+    x char:1,
+    @align(16) @attr_packed _ long long:0,
+    e char,
+}
+
+Y = struct {
+    c char:1,
+    @attr_packed _ long long:0,
+    d char,
+}
+
+Y2 = union {
+    c char:1,
+    @attr_packed _ long long:0,
+    d char,
+}
+
+A3 = struct {
+    c char:1,
+    @align(32) _ long long:0,
+    d char:1,
+}
+
+A4 = @align(32) typedef char
+
+A5 = struct {
+    c char:1,
+    _ A4:0,
+    d char:1,
+}
+
+A7 = struct {
+    a A4,
+}
+
+A8 = struct {
+    c char,
+    @attr_packed i long:31,
+    j long:2,
+}
+
+A9 = struct {
+    c char,
+    @attr_packed i long:31,
+    j long,
+}
+
+A10 = @align(16) typedef long
+
+A11 = struct {
+    c char,
+    @attr_packed i long:31,
+    j A10:2,
+}
+
+A12 = struct {
+    c char,
+    @attr_packed i long:31,
+    j A10,
+}
+
+A13 = struct {
+    c char,
+    i long:1,
+    @align(16) j long:1,
+    d char,
+}

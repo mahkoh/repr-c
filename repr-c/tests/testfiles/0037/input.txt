@@ -1,4 +1,22 @@
-S = struct {
+A = struct {
     i unsigned int:1,
     @align(128) j long:1,
+}
+
+B = struct {
+    i unsigned int:1,
+    k int:1,
+    @align(128) j long:1,
+}
+
+C = struct {
+    i unsigned int:1,
+    @align(128) j long:1,
+    k int:1,
+}
+
+D = struct {
+    @align(64) i unsigned int:1,
+    @align(128) j long:1,
+    k int:1,
 }

@@ -1,0 +1,33 @@
+A1 = struct {
+    @align(128) x int,
+}
+
+A2 = union {
+    @align(128) x int,
+}
+
+B = @align(128) typedef int
+
+C1 = struct {
+    x B,
+}
+
+C2 = union {
+    x B,
+}
+
+D1 = struct {
+    @align(256) x B,
+}
+
+D2 = union {
+    @align(256) x B,
+}
+
+E1 = @align(256) struct {
+    x B,
+}
+
+E2 = @align(256) union {
+    x B,
+}

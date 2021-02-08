@@ -1,0 +1,11 @@
+Char = @align(4) typedef char
+
+A = @attr_packed struct {
+    c char,
+    a Char,
+}
+
+B = @attr_packed struct {
+    c char,
+    @align(4) a char,
+}

@@ -1,0 +1,7 @@
+A = @align(128) struct {
+    x int,
+}
+
+B = @align(128) union {
+    x int,
+}

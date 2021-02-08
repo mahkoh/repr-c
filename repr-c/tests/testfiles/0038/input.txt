@@ -1,5 +1,3 @@
-S = @pragma_pack(1) struct {
-    @align(4) c char:1,
+A = @pragma_pack(1) struct {
+    @align(2) c char:1,
 }
-
-X = [3]S

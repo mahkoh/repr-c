@@ -44,6 +44,7 @@ pub struct InputConfig {
     pub exclude_compilers: Option<Vec<Compiler>>,
     pub include_targets: Option<Vec<String>>,
     pub exclude_targets: Option<Vec<String>>,
+    pub use_clang_for_msvc_targets: bool,
 }
 
 fn deserialize_compilers<'de, D>(d: D) -> Result<Option<Vec<Compiler>>, D::Error>

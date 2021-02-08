@@ -4,8 +4,9 @@ use c_layout_impl::ast::Declaration;
 use isnt::std_1::vec::IsntVecExt;
 use rayon::iter::IntoParallelRefIterator;
 use rayon::iter::ParallelIterator;
-use repr_c_impl::layout::{FieldLayout, Layout, Type, TypeLayout};
+use repr_c_impl::layout::{FieldLayout, Layout, Record, Type, TypeLayout};
 use repr_c_impl::target::{Target, TARGETS};
+use repr_c_impl::visitor::{visit_record, visit_type, Visitor};
 use std::path::Path;
 use std::sync::Mutex;
 
@@ -74,6 +75,9 @@ fn process_target(
         return Ok(true);
     }
     let mut actual_conversion_result = c_layout_impl::compute_layouts(input, declarations, target)?;
+    for ty in actual_conversion_result.types.values() {
+        TypeValidator.visit_type(ty);
+    }
     actual_conversion_result.types = actual_conversion_result
         .types
         .into_iter()
@@ -103,6 +107,23 @@ fn process_target(
         c_layout_impl::printer(input, &enhanced).to_string(),
     )?;
     Ok(false)
+}
+
+struct TypeValidator;
+
+impl Visitor<TypeLayout> for TypeValidator {
+    fn visit_type(&mut self, ty: &Type<TypeLayout>) {
+        assert!(0 < ty.layout.required_alignment_bits);
+        assert!(ty.layout.required_alignment_bits <= ty.layout.field_alignment_bits);
+        // assert!(ty.layout.pointer_alignment_bits <= ty.layout.field_alignment_bits);
+        assert_eq!(ty.layout.size_bits % ty.layout.pointer_alignment_bits, 0);
+        visit_type(self, ty)
+    }
+
+    fn visit_record(&mut self, rt: &Record<TypeLayout>, ty: &Type<TypeLayout>) {
+        assert!(ty.layout.required_alignment_bits <= ty.layout.pointer_alignment_bits);
+        visit_record(self, rt, ty);
+    }
 }
 
 #[derive(Copy, Clone, Debug, Default, Eq, PartialEq)]
