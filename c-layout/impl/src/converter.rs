@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 use crate::ast::{
     BinaryExprType, BuiltinExpr, DeclarationType, ExprType, Index, IndexType, OffsetofType, Span,
     TypeExprType, UnaryExprType,
@@ -23,6 +24,7 @@ pub fn extract_layouts(input: &str, d: &[ast::Declaration]) -> Result<Conversion
     struct Converter<'a>(&'a str);
     impl<'a> Convert for Converter<'a> {
         type Src = TypeLayout;
+        const USE_EVALUATED_EXPR: bool = true;
 
         fn convert(&self, ty: Type<Self::Src>) -> Result<Type<TypeLayout>> {
             Ok(ty)
@@ -77,6 +79,7 @@ pub fn compute_layouts(
 
 pub trait Convert {
     type Src: Layout<OpaqueLayout = TypeLayout>;
+    const USE_EVALUATED_EXPR: bool = false;
 
     fn convert(&self, ty: Type<Self::Src>) -> Result<Type<TypeLayout>>;
     fn extract_type(&self, ty: &ast::Type) -> Result<<Self::Src as Layout>::TypeLayout>;
@@ -212,12 +215,19 @@ impl<'a, C: Convert> Computer<'a, C> {
 
     fn convert_type(&mut self, t: &'a ast::Type) -> Result<Type<C::Src>> {
         let variant = match &t.variant {
-            ast::TypeVariant::Opaque(l) => TypeVariant::Opaque(TypeLayout {
-                size_bits: self.eval_u64_expr(&l.size_bits)?,
-                pointer_alignment_bits: self.eval_u64_expr(&l.pointer_alignment_bits)?,
-                field_alignment_bits: self.eval_u64_expr(&l.field_alignment_bits)?,
-                required_alignment_bits: self.eval_u64_expr(&l.required_alignment_bits)?,
-            }),
+            ast::TypeVariant::Opaque(l) => {
+                let layout = if C::USE_EVALUATED_EXPR && t.layout.is_some() {
+                    t.layout.unwrap()
+                } else {
+                    TypeLayout {
+                        size_bits: self.eval_u64_expr(&l.size_bits)?,
+                        pointer_alignment_bits: self.eval_u64_expr(&l.pointer_alignment_bits)?,
+                        field_alignment_bits: self.eval_u64_expr(&l.field_alignment_bits)?,
+                        required_alignment_bits: self.eval_u64_expr(&l.required_alignment_bits)?,
+                    }
+                };
+                TypeVariant::Opaque(layout)
+            },
             ast::TypeVariant::Builtin(bi) => TypeVariant::Builtin(*bi),
             ast::TypeVariant::Record(r) => TypeVariant::Record(self.convert_record(r)?),
             ast::TypeVariant::Array(a) => TypeVariant::Array(self.convert_array(a)?),
@@ -283,9 +293,9 @@ impl<'a, C: Convert> Computer<'a, C> {
                     Annotation::PragmaPack(BITS_PER_BYTE * self.eval_u64_expr(e)?)
                 }
                 ast::Annotation::AttrPacked => Annotation::AttrPacked,
-                ast::Annotation::Aligned(None) => Annotation::Aligned(None),
+                ast::Annotation::Aligned(None) => Annotation::Align(None),
                 ast::Annotation::Aligned(Some(e)) => {
-                    Annotation::Aligned(Some(BITS_PER_BYTE * self.eval_u64_expr(e)?))
+                    Annotation::Align(Some(BITS_PER_BYTE * self.eval_u64_expr(e)?))
                 }
             });
         }
@@ -303,6 +313,11 @@ impl<'a, C: Convert> Computer<'a, C> {
     }
 
     fn eval_expr(&mut self, e: &'a ast::Expr) -> Result<i128> {
+        if C::USE_EVALUATED_EXPR {
+            if let Some(e) = e.value {
+                return Ok(e);
+            }
+        }
         match &e.ty {
             ExprType::Lit(n) => Ok(*n),
             ExprType::Builtin(b) => match b {
@@ -360,7 +375,7 @@ impl<'a, C: Convert> Computer<'a, C> {
                 let layout = self.compute_type_layout(t)?.layout;
                 Ok(match k {
                     TypeExprType::Sizeof => (layout.size_bits / BITS_PER_BYTE) as i128,
-                    TypeExprType::Alignof => (layout.field_alignment_bits / BITS_PER_BYTE) as i128,
+                    TypeExprType::SizeofBits => layout.size_bits as i128,
                 })
             }
             ExprType::Name(n) => match self.declarations.get(&**n) {

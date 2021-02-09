@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 A = typedef char
 B = typedef unsigned char
 C = typedef signed char

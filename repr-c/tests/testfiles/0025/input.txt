@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 // ra 8, pa 32, fa 64
 A = @pragma_pack(4) struct {
     @align(8) _ char:1,

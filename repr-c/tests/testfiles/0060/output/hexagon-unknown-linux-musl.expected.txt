@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 8, alignment: 8 }@attr_packed enum {
+    1,
+}
+
+B = { size: 16, alignment: 16 }@attr_packed enum {
+    1111,
+}
+
+C = { size: 8, alignment: 8 }enum {
+    1,
+}
+
+D = { size: 64, alignment: 64 }enum {
+    0x1111_0000_1111,
+}
+// hash: f3601e2b835a5112

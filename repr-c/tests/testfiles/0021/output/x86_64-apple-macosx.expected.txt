@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 Y = { size: 128, alignment: 128 }struct {
     { offset: 0, size: 1 }@align(16) i { size: 32, alignment: 32 }int:1,
 }
@@ -5,4 +6,4 @@ Z = { size: 256, alignment: 128 }struct {
     { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
     { offset: 128, size: 128 }y { size: 128, alignment: 128 }Y,
 }
-// hash: 3a0100e7eb2c60c6
+// hash: 9d3a6fbd29d17ef8

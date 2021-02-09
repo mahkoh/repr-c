@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum Compiler {
     Msvc,

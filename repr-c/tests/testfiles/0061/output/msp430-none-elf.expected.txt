@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 A = { size: 16, alignment: 16 }@pragma_pack(1) enum {
     1,
 }
@@ -9,4 +10,4 @@ B = { size: 16, alignment: 16 }@pragma_pack(1) enum {
 C = { size: 64, alignment: 16 }@pragma_pack(1) enum {
     0x1111_0000_1111,
 }
-// hash: 2dbddb4f49f9a024
+// hash: 59839e891d929805

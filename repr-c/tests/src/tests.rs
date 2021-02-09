@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 use crate::{read_input_config, GlobalConfig, InputConfig};
 use anyhow::{anyhow, bail, Context, Result};
 use c_layout_impl::ast::Declaration;
@@ -50,7 +51,9 @@ fn process_dir(
     let input = std::fs::read_to_string(&input_path)?;
     let declarations = c_layout_impl::parse(&input).context("Parsing failed")?;
     TARGETS.par_iter().try_for_each(|target| {
-        if !process_target(&dir, &input, &declarations, *target, &config, global_config)? {
+        if !process_target(&dir, &input, &declarations, *target, &config, global_config)
+            .with_context(|| anyhow!("processing target {} failed", target.name()))?
+        {
             failed
                 .lock()
                 .unwrap()

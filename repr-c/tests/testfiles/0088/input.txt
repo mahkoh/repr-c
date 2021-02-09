@@ -1,0 +1,3 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = @pragma_pack(1) typedef long long
+D = @align(2) @pragma_pack(1) typedef long long

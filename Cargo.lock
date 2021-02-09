@@ -59,6 +59,8 @@ name = "c-layout-impl"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "isnt",
+ "rayon",
  "repr-c-impl",
 ]
 
@@ -277,6 +279,7 @@ dependencies = [
 [[package]]
 name = "object"
 version = "0.23.0"
+source = "git+https://github.com/mahkoh/object.git?rev=bddaeeac024b46c64ba92b62077d762e6631c993#bddaeeac024b46c64ba92b62077d762e6631c993"
 dependencies = [
  "flate2",
  "wasmparser",
@@ -285,6 +288,7 @@ dependencies = [
 [[package]]
 name = "pdb"
 version = "0.6.0"
+source = "git+https://github.com/willglynn/pdb.git?rev=01025d3a8ef9fcad814fa741adabb0396c29ca7d#01025d3a8ef9fcad814fa741adabb0396c29ca7d"
 dependencies = [
  "fallible-iterator",
  "scroll",

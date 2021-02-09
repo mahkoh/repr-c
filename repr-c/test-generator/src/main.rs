@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 use anyhow::{anyhow, bail, Context, Result};
 use c_layout_impl::ast::Declaration;
 use rayon::iter::IntoParallelRefIterator;
@@ -9,6 +10,7 @@ use std::fs::OpenOptions;
 use std::hash::{Hash, Hasher};
 use std::io::{ErrorKind, Write};
 use std::path::Path;
+use std::process;
 use std::process::Command;
 
 mod c;
@@ -18,6 +20,7 @@ mod pdb;
 fn main() {
     if let Err(e) = main_() {
         eprintln!("{:?}", e);
+        process::exit(1);
     }
 }
 

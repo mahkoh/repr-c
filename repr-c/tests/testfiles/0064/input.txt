@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 A00 = @pragma_pack(00) struct { @align(128) l long long }
 A01 = @pragma_pack(01) struct { @align(128) l long long }
 A02 = @pragma_pack(02) struct { @align(128) l long long }

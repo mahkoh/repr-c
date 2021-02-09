@@ -1,2 +1,3 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 X = typedef i128
 Y = typedef u128

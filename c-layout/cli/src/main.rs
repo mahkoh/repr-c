@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 use anyhow::{anyhow, Context, Result};
 use clap::{App, Arg};
 use repr_c_impl::target::{Target, TARGETS};

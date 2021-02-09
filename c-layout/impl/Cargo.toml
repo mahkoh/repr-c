@@ -3,7 +3,13 @@ name = "c-layout-impl"
 version = "0.1.0"
 authors = ["Julian Orth <ju.orth@gmail.com>"]
 edition = "2018"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/mahkoh/repr-c"
 
 [dependencies]
 repr-c-impl = { path = "../../repr-c/impl", version = "0.1.0" }
 anyhow = "1.0.38"
+
+[dev-dependencies]
+rayon = "1.5.0"
+isnt = "0.1.0"

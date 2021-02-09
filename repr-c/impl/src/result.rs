@@ -1,18 +1,18 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
 use std::fmt;
 use std::fmt::{Display, Formatter};
 
-/// The result type of this crate.
 pub type Result<T> = std::result::Result<T, Error>;
 
 /// An error produced by this crate.
 #[derive(Debug)]
 pub struct Error {
-    kind: ErrorKind,
+    kind: ErrorType,
 }
 
 impl Error {
     /// Returns the type of the error.
-    pub fn kind(&self) -> ErrorKind {
+    pub fn kind(&self) -> ErrorType {
         self.kind.clone()
     }
 }
@@ -28,13 +28,15 @@ impl std::error::Error for Error {}
 /// The type of an error produced by this crate.
 #[derive(Clone, Debug)]
 #[non_exhaustive]
-pub enum ErrorKind {
+pub enum ErrorType {
     /// A builtin type was annotated.
     ///
     /// Builtin types cannot be annotated. You probably want to annotate a typedef of the
     /// builtin type.
     AnnotatedBuiltinType,
     /// An opaque type was annotated.
+    ///
+    /// Opaque types cannot be annotated.
     AnnotatedOpaqueType,
     /// An array was annotated.
     ///
@@ -46,7 +48,7 @@ pub enum ErrorKind {
     PowerOfTwoAlignment,
     /// One of the alignments given in the input is not at least 8.
     SubByteAlignment,
-    /// The size of an opaque type is not at least c.
+    /// The size of an opaque type is not a multiple of 8.
     SubByteSize,
     /// A type has multiple `PragmaPack` annotations.
     MultiplePragmaPackedAnnotations,
@@ -60,21 +62,15 @@ pub enum ErrorKind {
     UnnamedRegularField,
     /// One of the bit-fields in the input has a width larger than the size of its type.
     OversizedBitfield,
-    /// A typedef has a `PragmaPack` or `AttrPacked` annotation.
-    ///
-    /// Typedefs can only have `Aligned` annotations.
-    PackedTypedef,
     /// A field has a `PragmaPack` annotation.
     ///
     /// Fields cannot have `PragmaPack` annotations.
     PragmaPackedField,
-    /// One of the enums in the input contains a variant that is too large for the target.
-    EnumOverflow,
 }
 
-impl Display for ErrorKind {
+impl Display for ErrorType {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        use ErrorKind::*;
+        use ErrorType::*;
         let s = match self {
             AnnotatedBuiltinType => "Builtin types cannot have annotations",
             AnnotatedOpaqueType => "Opaque types cannot have annotations",
@@ -92,13 +88,11 @@ impl Display for ErrorKind {
             OversizedBitfield => {
                 "The width of a bit-field cannot be larger than the width of the underlying type"
             }
-            PackedTypedef => "Typedefs cannot have packing annotations",
-            EnumOverflow => "Enum constant cannot be represented in any integer type",
         };
         f.write_str(s)
     }
 }
 
-pub(crate) fn err(kind: ErrorKind) -> Error {
+pub(crate) fn err(kind: ErrorType) -> Error {
     Error { kind }
 }

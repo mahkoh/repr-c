@@ -1,5 +1,0 @@
-A = { size: 128, alignment: 64 }struct {
-    { offset: 0, size: 8 }a { size: 8, alignment: 8 }char,
-    { offset: 64, size: 56 }@align(2) b { size: 64, alignment: 64 }long long:56,
-}
-// hash: efa51d00c0613882

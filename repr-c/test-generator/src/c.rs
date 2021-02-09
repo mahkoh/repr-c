@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 use anyhow::bail;
 use anyhow::Result;
 use c_layout_impl::ast::{
@@ -49,9 +50,9 @@ impl Generator {
     fn emit_const(&mut self, name: &str, c: &Expr) -> Result<()> {
         self.stack
             .push(mem::replace(&mut self.current, String::new()));
-        write!(&mut self.current, "#define {} ", name)?;
+        write!(self.current, "#define {} ", name)?;
         self.emit_expr(c)?;
-        writeln!(&mut self.output, "{}", self.current)?;
+        writeln!(self.output, "{}", self.current)?;
         self.current = self.stack.pop().unwrap();
         Ok(())
     }
@@ -68,9 +69,9 @@ impl Generator {
             .push(mem::replace(&mut self.current, String::new()));
         let annotations = get_unique_annotations(&t.annotations)?;
         if let Some(p) = annotations.pragma_pack {
-            write!(&mut self.current, "#pragma pack(")?;
+            write!(self.current, "#pragma pack(")?;
             self.emit_expr(p)?;
-            writeln!(&mut self.current, ")")?;
+            writeln!(self.current, ")")?;
         }
         if self.compiler == Compiler::Msvc {
             if let Some(p) = annotations.align {
@@ -90,56 +91,56 @@ impl Generator {
             TypeVariant::Enum(r) => self.emit_enum(name, &annotations, r)?,
         }
         let id = self.generate_id();
-        writeln!(&mut self.current, "{} var{};", name, id)?;
+        writeln!(self.current, "{} var{};", name, id)?;
         if annotations.pragma_pack.is_some() {
-            writeln!(&mut self.current, "#pragma pack()")?;
+            writeln!(self.current, "#pragma pack()")?;
         }
 
-        writeln!(&mut self.current, "struct {}_alignment {{", name)?;
+        writeln!(self.current, "struct {}_alignment {{", name)?;
         if self.compiler == Compiler::Msvc {
-            writeln!(&mut self.current, "    char a[_Alignof({})];", name)?;
-            writeln!(&mut self.current, "    char b;")?;
+            writeln!(self.current, "    char a[_Alignof({})];", name)?;
+            writeln!(self.current, "    char b;")?;
         } else {
-            writeln!(&mut self.current, "    char a;")?;
-            writeln!(&mut self.current, "    {} b;", name)?;
+            writeln!(self.current, "    char a;")?;
+            writeln!(self.current, "    {} b;", name)?;
         }
-        writeln!(&mut self.current, "}};")?;
+        writeln!(self.current, "}};")?;
         let id = self.generate_id();
-        writeln!(&mut self.current, "struct {}_alignment var{};", name, id)?;
+        writeln!(self.current, "struct {}_alignment var{};", name, id)?;
 
-        writeln!(&mut self.current, "#pragma pack(1)")?;
-        writeln!(&mut self.current, "struct {}_packed {{", name)?;
-        writeln!(&mut self.current, "    {} a;", name)?;
-        writeln!(&mut self.current, "}};")?;
-        writeln!(&mut self.current, "#pragma pack()")?;
-        writeln!(&mut self.current, "struct {}_required_alignment {{", name)?;
+        writeln!(self.current, "#pragma pack(1)")?;
+        writeln!(self.current, "struct {}_packed {{", name)?;
+        writeln!(self.current, "    {} a;", name)?;
+        writeln!(self.current, "}};")?;
+        writeln!(self.current, "#pragma pack()")?;
+        writeln!(self.current, "struct {}_required_alignment {{", name)?;
         if self.compiler == Compiler::Msvc {
             writeln!(
-                &mut self.current,
+                self.current,
                 "    char a[_Alignof(struct {}_packed)];",
                 name
             )?;
-            writeln!(&mut self.current, "    char b;")?;
+            writeln!(self.current, "    char b;")?;
         } else {
-            writeln!(&mut self.current, "    char a;")?;
-            writeln!(&mut self.current, "    struct {}_packed b;", name)?;
+            writeln!(self.current, "    char a;")?;
+            writeln!(self.current, "    struct {}_packed b;", name)?;
         }
-        writeln!(&mut self.current, "}};")?;
+        writeln!(self.current, "}};")?;
         let id = self.generate_id();
         writeln!(
-            &mut self.current,
+            self.current,
             "struct {}_required_alignment var{};",
             name, id
         )?;
 
-        writeln!(&mut self.current, "struct {}_size {{", name)?;
-        writeln!(&mut self.current, "    char a[sizeof({})+1];", name)?;
-        writeln!(&mut self.current, "    char b;")?;
-        writeln!(&mut self.current, "}};")?;
+        writeln!(self.current, "struct {}_size {{", name)?;
+        writeln!(self.current, "    char a[sizeof({})+1];", name)?;
+        writeln!(self.current, "    char b;")?;
+        writeln!(self.current, "}};")?;
         let id = self.generate_id();
-        writeln!(&mut self.current, "struct {}_size var{};", name, id)?;
+        writeln!(self.current, "struct {}_size var{};", name, id)?;
 
-        writeln!(&mut self.output, "{}", self.current)?;
+        writeln!(self.output, "{}", self.current)?;
         self.current = self.stack.pop().unwrap();
         Ok(())
     }
@@ -149,51 +150,51 @@ impl Generator {
             RecordKind::Struct => "struct",
             RecordKind::Union => "union",
         };
-        writeln!(&mut self.current, "typedef {} {{", kind)?;
+        writeln!(self.current, "typedef {} {{", kind)?;
         for f in &r.fields {
             self.emit_record_field(f)?;
         }
-        write!(&mut self.current, "}}")?;
+        write!(self.current, "}}")?;
         self.emit_gcc_attributes(a)?;
-        writeln!(&mut self.current, " {};", n)?;
+        writeln!(self.current, " {};", n)?;
         Ok(())
     }
 
     fn emit_enum(&mut self, n: &str, a: &Annotations, e: &[Expr]) -> Result<()> {
-        writeln!(&mut self.current, "typedef enum {{")?;
+        writeln!(self.current, "typedef enum {{")?;
         for e in e.iter() {
             let idx = self.generate_id();
-            write!(&mut self.current, "    F{} = ", idx)?;
+            write!(self.current, "    F{} = ", idx)?;
             self.emit_expr(e)?;
-            writeln!(&mut self.current, ",")?;
+            writeln!(self.current, ",")?;
         }
-        write!(&mut self.current, "}}")?;
+        write!(self.current, "}}")?;
         self.emit_gcc_attributes(a)?;
-        writeln!(&mut self.current, " {};", n)?;
+        writeln!(self.current, " {};", n)?;
         Ok(())
     }
 
     fn emit_array(&mut self, n: &str, an: &Annotations, a: &Array) -> Result<()> {
-        write!(&mut self.current, "typedef ")?;
+        write!(self.current, "typedef ")?;
         self.emit_type_name(&a.element_type)?;
-        write!(&mut self.current, " {}[", n)?;
+        write!(self.current, " {}[", n)?;
         if let Some(v) = &a.num_elements {
             self.emit_expr(v)?;
         } else if self.compiler != Compiler::Msvc {
             write!(self.current, "0")?;
         }
-        write!(&mut self.current, "]")?;
+        write!(self.current, "]")?;
         self.emit_gcc_attributes(an)?;
-        writeln!(&mut self.current, ";")?;
+        writeln!(self.current, ";")?;
         Ok(())
     }
 
     fn emit_typedef(&mut self, n: &str, a: &Annotations, u: &Type) -> Result<()> {
-        write!(&mut self.current, "typedef ")?;
+        write!(self.current, "typedef ")?;
         self.emit_type_name(u)?;
-        write!(&mut self.current, " {}", n)?;
+        write!(self.current, " {}", n)?;
         self.emit_gcc_attributes(a)?;
-        writeln!(&mut self.current, ";")?;
+        writeln!(self.current, ";")?;
         Ok(())
     }
 
@@ -201,16 +202,16 @@ impl Generator {
         if self.compiler != Compiler::Msvc {
             match a.align {
                 Some(Some(a)) => {
-                    write!(&mut self.current, " __attribute__((aligned(")?;
+                    write!(self.current, " __attribute__((aligned(")?;
                     self.emit_expr(a)?;
-                    write!(&mut self.current, ")))")?;
+                    write!(self.current, ")))")?;
                 }
-                Some(None) => write!(&mut self.current, " __attribute__((aligned))")?,
+                Some(None) => write!(self.current, " __attribute__((aligned))")?,
                 _ => {}
             }
         }
         if a.attr_packed {
-            write!(&mut self.current, " __attribute__((packed))")?;
+            write!(self.current, " __attribute__((packed))")?;
         }
         Ok(())
     }
@@ -239,7 +240,7 @@ impl Generator {
             Double => "double",
             Pointer => "void*",
         };
-        write!(&mut self.current, "{}", s)?;
+        write!(self.current, "{}", s)?;
         Ok(())
     }
 
@@ -248,7 +249,7 @@ impl Generator {
         if annotations.pragma_pack.is_some() {
             bail!("pragma pack cannot be used on fields");
         }
-        write!(&mut self.current, "    ")?;
+        write!(self.current, "    ")?;
         if self.compiler == Compiler::Msvc {
             if let Some(a) = annotations.align {
                 match a {
@@ -259,27 +260,27 @@ impl Generator {
         }
         self.emit_type_name(&f.ty)?;
         if let Some(n) = &f.name {
-            write!(&mut self.current, " {}", n)?;
+            write!(self.current, " {}", n)?;
         }
         if let Some(bw) = &f.bit_width {
-            write!(&mut self.current, ":")?;
+            write!(self.current, ":")?;
             self.emit_expr(bw)?;
         }
         self.emit_gcc_attributes(&annotations)?;
-        writeln!(&mut self.current, ";")?;
+        writeln!(self.current, ";")?;
         Ok(())
     }
 
     fn emit_expr(&mut self, e: &Expr) -> Result<()> {
         match &e.ty {
-            ExprType::Lit(v) => write!(&mut self.current, "{}", v)?,
-            ExprType::Name(n) => write!(&mut self.current, "{}", n)?,
+            ExprType::Lit(v) => write!(self.current, "{}", v)?,
+            ExprType::Name(n) => write!(self.current, "{}", n)?,
             ExprType::Unary(k, v) => {
                 let s = match k {
                     UnaryExprType::Neg => "-",
                     UnaryExprType::Not => "!",
                 };
-                write!(&mut self.current, "{}", s)?;
+                write!(self.current, "{}", s)?;
                 self.emit_expr(v)?;
             }
             ExprType::Binary(k, l, r) => {
@@ -299,20 +300,20 @@ impl Generator {
                     BinaryExprType::Gt => ">",
                     BinaryExprType::Ge => ">=",
                 };
-                write!(&mut self.current, " {} ", s)?;
+                write!(self.current, " {} ", s)?;
                 self.emit_expr(r)?;
             }
             ExprType::TypeExpr(k, t) => {
-                let s = match k {
-                    TypeExprType::Sizeof => "sizeof",
-                    TypeExprType::Alignof => "alignof",
-                };
-                write!(&mut self.current, "{}(", s)?;
+                write!(self.current, "(sizeof(")?;
                 self.emit_type_name(t)?;
-                write!(&mut self.current, ")")?;
+                write!(self.current, ")")?;
+                if *k == TypeExprType::SizeofBits {
+                    write!(self.current, "*8")?;
+                }
+                write!(self.current, ")")?;
             }
             ExprType::Builtin(bi) => match bi {
-                BuiltinExpr::BitsPerByte => write!(&mut self.current, "8")?,
+                BuiltinExpr::BitsPerByte => write!(self.current, "8")?,
             },
             ExprType::Offsetof(_, _, _) => bail!("cannot emit offsetof"),
         }
@@ -322,21 +323,21 @@ impl Generator {
     fn emit_type_name(&mut self, ty: &Type) -> Result<()> {
         use TypeVariant::*;
         match &ty.variant {
-            Name(n, _) => write!(&mut self.current, "{}", n)?,
+            Name(n, _) => write!(self.current, "{}", n)?,
             Builtin(bi) => self.emit_builtin_type(*bi)?,
             _ => {
                 let name = format!("unnamed_type_{}", self.generate_id());
                 self.emit_type_decl(&name, &ty)?;
-                write!(&mut self.current, "{}", name)?;
+                write!(self.current, "{}", name)?;
             }
         }
         Ok(())
     }
 
     fn emit_declspec_align(&mut self, e: &Expr) -> Result<()> {
-        write!(&mut self.current, "__declspec(align(")?;
+        write!(self.current, "__declspec(align(")?;
         self.emit_expr(e)?;
-        write!(&mut self.current, ")) ")?;
+        write!(self.current, ")) ")?;
         Ok(())
     }
 }

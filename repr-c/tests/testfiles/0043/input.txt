@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 // https://github.com/llvm/llvm-project/blob/b43c26d036dcbf7a6881f39e4434cf059364022a/clang/test/Layout/ms-x86-empty-layout.c
 
 EmptyIntMemb = struct {

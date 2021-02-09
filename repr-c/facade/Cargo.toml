@@ -3,6 +3,8 @@ name = "repr-c"
 version = "0.1.0"
 authors = ["Julian Orth <ju.orth@gmail.com>"]
 edition = "2018"
+license = "MIT or Apache-2.0"
+repository = "https://github.com/mahkoh/repr-c"
 
 [dependencies]
 repr-c-impl = { path = "../impl", version = "=0.1.0" }

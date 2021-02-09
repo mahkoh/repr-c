@@ -1,6 +1,0 @@
-[submodule "vendored/object"]
-	path = vendored/object
-	url = git@github.com:mahkoh/object.git
-[submodule "vendored/pdb"]
-	path = vendored/pdb
-	url = git@github.com:mahkoh/pdb.git

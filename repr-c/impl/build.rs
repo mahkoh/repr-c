@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
 use std::fs::{File, OpenOptions};
 use std::io::{BufWriter, Write};
 use std::path::PathBuf;
@@ -510,16 +511,8 @@ fn emit_host_target() -> io::Result<()> {
     let rust_target = env::var("TARGET").unwrap();
     let llvm_target = RUST_TARGET_MAP.iter().find(|t| t.0 == rust_target);
 
-    let mut path = PathBuf::from(env::var("OUT_DIR").unwrap());
-    path.push("host.rs");
-    let mut file = BufWriter::new(
-        OpenOptions::new()
-            .create(true)
-            .write(true)
-            .truncate(true)
-            .open(path)
-            .unwrap(),
-    );
+    let mut file = open("host.rs")?;
+    writeln!(file, "// SPDX-License-Identifier: MIT OR Apache-2.0")?;
     writeln!(file, "/// The target that this crate was compiled for.")?;
     writeln!(file, "///")?;
     writeln!(file, "/// `None` if that target is not implemented.")?;
@@ -565,6 +558,7 @@ fn to_camel_case(s: &str) -> String {
 
 fn emit_targets() -> io::Result<()> {
     let mut file = open("targets.rs")?;
+    writeln!(file, "// SPDX-License-Identifier: MIT OR Apache-2.0")?;
     write!(
         file,
         "\

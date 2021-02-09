@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
 use crate::builder::common::{
     apply_alignment_override, builtin_type_layout, compute_builtin_type_layout,
     compute_opaque_type_layout, pack_all_enums,
@@ -6,7 +7,7 @@ use crate::builder::sysv_like::mingw::OngoingBitfield;
 use crate::layout::{
     Annotation, Array, BuiltinType, Record, RecordField, RecordKind, Type, TypeLayout, TypeVariant,
 };
-use crate::result::{err, ErrorKind, Result};
+use crate::result::Result;
 use crate::target::{system_compiler, Compiler, Target};
 use crate::util::{
     align_to, annotation_alignment, is_attr_packed, pragma_pack_value, size_mul, BITS_PER_BYTE,
@@ -30,7 +31,8 @@ fn compute_layout(target: Target, ty: &Type<()>, dialect: Dialect) -> Result<Typ
         }
         TypeVariant::Enum(v) => compute_enum_layout(target, v, &ty.annotations),
         TypeVariant::Typedef(dst) => {
-            // Pre-validation ensures that typedefs do not have packing annotations.
+            // #pragma pack and __attribute__((packed)) are ignored on typedefs.
+            // See test case 0088.
             let dst_ty = compute_layout(target, dst, dialect)?;
             let max_alignment = annotation_alignment(target, &ty.annotations);
             // __attribute__((aligned(N))) sets the field alignment to N even if N is smaller
@@ -72,8 +74,6 @@ fn compute_layout(target: Target, ty: &Type<()>, dialect: Dialect) -> Result<Typ
 
 struct RecordLayoutBuilder {
     target: Target,
-    // The system compiler of this target.
-    compiler: Compiler,
     // The alignment of this record.
     alignment_bits: u64,
     // The size of the record. This might not be a multiple of 8 if the record contains bit-fields.
@@ -111,7 +111,6 @@ fn compute_record_layout(
     let alignment_bits = annotation_alignment(target, annotations).unwrap_or(BITS_PER_BYTE);
     let mut rlb = RecordLayoutBuilder {
         target,
-        compiler: system_compiler(target),
         alignment_bits,
         size_bits: 0,
         attr_packed,
@@ -170,21 +169,20 @@ fn compute_enum_layout(
         BuiltinType::Long,
         BuiltinType::LongLong,
     ];
-    for &candidate in candidates.iter() {
-        let layout = builtin_type_layout(target, candidate);
-        if layout.size_bits >= required_size {
-            // Clang respects __attribute__((aligned)) on enums. The behavior is the same
-            // as the behavior on typedefs. See test case 0063.
-            let max_alignment = match system_compiler(target) {
-                Compiler::Clang => annotation_alignment(target, annotations),
-                _ => None,
-            };
-            return Ok(Type {
-                layout: apply_alignment_override(layout, max_alignment),
-                annotations: annotations.to_vec(),
-                variant: TypeVariant::Enum(v.to_vec()),
-            });
-        }
-    }
-    Err(err(ErrorKind::EnumOverflow))
+    let layout = candidates
+        .iter()
+        .map(|ty| builtin_type_layout(target, *ty))
+        .find(|l| l.size_bits >= required_size)
+        .unwrap_or_else(|| builtin_type_layout(target, BuiltinType::I128));
+    // Clang respects __attribute__((aligned)) on enums. The behavior is the same
+    // as the behavior on typedefs. See test case 0063.
+    let max_alignment = match system_compiler(target) {
+        Compiler::Clang => annotation_alignment(target, annotations),
+        _ => None,
+    };
+    Ok(Type {
+        layout: apply_alignment_override(layout, max_alignment),
+        annotations: annotations.to_vec(),
+        variant: TypeVariant::Enum(v.to_vec()),
+    })
 }

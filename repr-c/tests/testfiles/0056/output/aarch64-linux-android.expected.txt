@@ -1,0 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 32, alignment: 8 }@attr_packed struct {
+    { offset: 0, size: 32 }i { size: 32, alignment: 32 }int,
+}
+B = { size: 32, alignment: 8 }@attr_packed union {
+    { offset: 0, size: 32 }i { size: 32, alignment: 32 }int,
+}
+// hash: cfd2763f140a294e

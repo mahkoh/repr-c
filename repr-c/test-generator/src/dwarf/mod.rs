@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 mod reader;
 
 use crate::dwarf::reader::{add_relocations, Relocate};

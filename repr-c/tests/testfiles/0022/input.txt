@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 S2 = @pragma_pack(1) struct {
     @align(2) a char:1,
 }

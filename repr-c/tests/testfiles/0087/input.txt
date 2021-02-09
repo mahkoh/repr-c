@@ -1,0 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = @pragma_pack(1) typedef long long
+B = @pragma_pack(1) @attr_packed typedef long long
+C = @attr_packed typedef long long
+D = @align(2) @pragma_pack(1) typedef long long
+E = @align(2) @pragma_pack(1) @attr_packed typedef long long
+F = @align(2) @attr_packed typedef long long

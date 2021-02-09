@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
 #![allow(clippy::match_like_matches_macro)]
 
 use crate::layout::{BuiltinType, Type, TypeLayout, TypeVariant};

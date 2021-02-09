@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 use gimli::{Reader, ReaderOffset};
 use object::{Object, ObjectSection, ObjectSymbol, RelocationKind, RelocationTarget};
 use std::borrow::Cow;

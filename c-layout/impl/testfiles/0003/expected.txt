@@ -1,0 +1,26 @@
+A = { size: 32, field_alignment: 64, pointer_alignment: 32, required_alignment: 64 }@align(8) typedef { size: 32, alignment: 32 }int
+
+B = { size: 96, field_alignment: 64, pointer_alignment: 32, required_alignment: 16 }@pragma_pack(4) struct {
+    { offset: 0, size: 32 }@align(2) i { size: 32, alignment: 32 }int,
+    { offset: 64, size: 1 }@align(8) j { size: 32, alignment: 32 }int:1,
+}
+
+const D = {32}sizeof_bits(A)
+
+C = { size: 256, alignment: 128, required_alignment: 64 }struct {
+    { offset: 0, size: 8 }a { size: 8, alignment: 8 }char,
+    { offset: 128, size: 128 }b { size: 128, field_alignment: 128, pointer_alignment: 32, required_alignment: 64 }opaque {
+        size: D + sizeof_bits(B),
+        field_alignment: 128,
+        pointer_alignment: 32,
+        required_alignment: 64
+    },
+}
+
+E = { size: 8, alignment: 16 }opaque { size: 8, alignment: 16 }
+
+F = { size: 8, field_alignment: 16, pointer_alignment: 32 }opaque { size: 8, field_alignment: 16, pointer_alignment: 32 }
+
+G = { size: 8, field_alignment: 16, pointer_alignment: 32, required_alignment: 64 }opaque { size: 8, field_alignment: 16, pointer_alignment: 32, required_alignment: 64 }
+
+H = { size: 8, alignment: 32, required_alignment: 64 }opaque { size: 8, alignment: 32, required_alignment: 64 }

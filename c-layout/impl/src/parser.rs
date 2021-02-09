@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 use crate::ast::{
     Annotation, Array, BinaryExprType, BuiltinExpr, Declaration, DeclarationType, Expr, ExprType,
     Index, IndexType, OffsetofType, OpaqueTypeLayout, Record, RecordField, Span, Type,
@@ -194,10 +195,10 @@ impl Parser {
             }
             Token::BitsPerByte => ExprType::Builtin(BuiltinExpr::BitsPerByte),
             Token::Number(v) => ExprType::Lit(v),
-            Token::Sizeof | Token::AlignOf => {
+            Token::Sizeof | Token::SizeofBits => {
                 let kind = match cur.val {
                     Token::Sizeof => TypeExprType::Sizeof,
-                    _ => TypeExprType::Alignof,
+                    _ => TypeExprType::SizeofBits,
                 };
                 self.parse_token(Token::LeftParen)?;
                 let dst = self.parse_type()?;

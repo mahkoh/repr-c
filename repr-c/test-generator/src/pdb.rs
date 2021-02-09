@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 use anyhow::{bail, Result};
 use c_layout_impl::ast;
 use c_layout_impl::ast::Declaration;

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
 use crate::builder::common::{
     builtin_type_layout, compute_builtin_type_layout, compute_opaque_type_layout,
 };
@@ -5,7 +6,7 @@ use crate::layout::{
     Annotation, Array, BuiltinType, FieldLayout, Record, RecordField, RecordKind, Type, TypeLayout,
     TypeVariant,
 };
-use crate::result::{err, ErrorKind, Result};
+use crate::result::{err, ErrorType, Result};
 use crate::target::Target;
 use crate::util::{
     align_to, annotation_alignment, is_attr_packed, pragma_pack_value, size_add, size_mul,
@@ -18,7 +19,7 @@ pub fn compute_layout(target: Target, ty: &Type<()>) -> Result<Type<TypeLayout>>
         TypeVariant::Opaque(layout) => compute_opaque_type_layout(*layout),
         TypeVariant::Record(r) => compute_record_layout(target, r.kind, &ty.annotations, &r.fields),
         TypeVariant::Typedef(dst) => {
-            // Pre-validation ensures that typedefs do not have packing annotations.
+            // #pragma pack is ignored on typedefs. See test case 0088.
             let dst_ty = compute_layout(target, dst)?;
             let max_alignment =
                 annotation_alignment(target, &ty.annotations).unwrap_or(BITS_PER_BYTE);
@@ -337,7 +338,7 @@ impl<'a> RecordLayoutBuilder<'a> {
             self.ongoing_bitfield = None;
         } else {
             if width > ty_size_bits {
-                return Err(err(ErrorKind::OversizedBitfield));
+                return Err(err(ErrorType::OversizedBitfield));
             }
             // If there is an ongoing bit-field in a struct whose underlying type has the same size and
             // if there is enough space left to place this bit-field, then this bit-field is placed in

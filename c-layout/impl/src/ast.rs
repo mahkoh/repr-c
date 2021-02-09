@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 use repr_c_impl::layout::{BuiltinType, FieldLayout, RecordKind, TypeLayout};
 
 pub struct State {
@@ -121,7 +122,7 @@ pub enum UnaryExprType {
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum TypeExprType {
     Sizeof,
-    Alignof,
+    SizeofBits,
 }
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]

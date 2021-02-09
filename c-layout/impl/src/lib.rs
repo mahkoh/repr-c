@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 use crate::ast::{Declaration, Span};
 use anyhow::{anyhow, Result};
 pub use converter::{compute_layouts, extract_layouts};
@@ -13,6 +14,8 @@ mod lexer;
 mod parser;
 mod printer;
 mod result;
+#[cfg(test)]
+mod tests;
 
 pub fn parse(input: &str) -> Result<Vec<Declaration>> {
     match parser::parse(input.as_bytes()) {

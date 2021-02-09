@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 X = { size: 128, alignment: 128 }typedef { size: 128, alignment: 128 }i128
 Y = { size: 128, alignment: 128 }typedef { size: 128, alignment: 128 }u128
-// hash: c69c42a33c0be420
+// hash: a9c04c04dbe1a205

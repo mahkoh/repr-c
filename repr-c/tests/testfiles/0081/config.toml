@@ -1,2 +1,0 @@
-# https://bugs.llvm.org/show_bug.cgi?id=44601
-exclude_compilers = ["clang"]

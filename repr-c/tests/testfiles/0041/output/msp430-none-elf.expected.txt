@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 A = { size: 16, alignment: 16 }union {
     { offset: 0, size: 1 }a { size: 16, alignment: 16 }int:1,
 }
@@ -20,4 +21,4 @@ E = { size: 8, alignment: 8 }union {
     @align(8) _ { size: 16, alignment: 16 }int:0,
     @align(8) _ { size: 16, alignment: 16 }int:0,
 }
-// hash: acab5d8b7da5fed0
+// hash: b79193e145ace05b

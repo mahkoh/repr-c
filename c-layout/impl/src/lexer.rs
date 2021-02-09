@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 use crate::ast::Span;
 use crate::result::{ParseError, ParseResult};
 use std::fmt;
@@ -15,7 +16,7 @@ pub enum Token {
     AttrPacked,
     Align,
     Sizeof,
-    AlignOf,
+    SizeofBits,
     OffsetOf,
     OffsetOfBits,
     Opaque,
@@ -85,7 +86,7 @@ impl Display for Token {
             Token::AttrPacked => "attr_packed",
             Token::Align => "align",
             Token::Sizeof => "sizeof",
-            Token::AlignOf => "alignof",
+            Token::SizeofBits => "sizeof_bits",
             Token::OffsetOf => "offsetof",
             Token::OffsetOfBits => "offsetof_bits",
             Token::Opaque => "opaque",
@@ -326,7 +327,7 @@ impl<'a> Lexer<'a> {
             "attr_packed" => Some(Token::AttrPacked),
             "align" => Some(Token::Align),
             "sizeof" => Some(Token::Sizeof),
-            "alignof" => Some(Token::AlignOf),
+            "sizeof_bits" => Some(Token::SizeofBits),
             "offsetof" => Some(Token::OffsetOf),
             "offsetof_bits" => Some(Token::OffsetOfBits),
             "opaque" => Some(Token::Opaque),

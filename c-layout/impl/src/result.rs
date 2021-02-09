@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 use crate::ast::Span;
 use std::error::Error;
 use std::fmt;

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 use anyhow::Result;
 use repr_c_impl::target::{system_compiler, Compiler, Target};
 use serde::de::Error;

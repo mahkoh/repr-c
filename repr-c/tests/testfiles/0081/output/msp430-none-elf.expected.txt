@@ -1,0 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+F = { size: 64, alignment: 16 }@align(2) typedef { size: 64, alignment: 16 }long long
+
+G = { size: 80, alignment: 16 }struct {
+    { offset: 0, size: 15 }c { size: 64, alignment: 16 }F:15,
+    { offset: 16, size: 64 }d { size: 64, alignment: 16 }F:64,
+}
+// hash: a6dcff2e802493d4

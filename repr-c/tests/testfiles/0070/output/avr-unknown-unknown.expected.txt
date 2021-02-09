@@ -1,0 +1,27 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 16, alignment: 8 }@align(1) typedef { size: 16, alignment: 8 }int
+
+B = { size: 8, alignment: 8 }union {
+    { offset: 0, size: 1 }a { size: 16, alignment: 8 }A: 1,
+}
+
+C = { size: 8, alignment: 8 }union {
+    { offset: 0, size: 1 }@attr_packed a { size: 16, alignment: 8 }int: 1,
+}
+
+D = { size: 8, alignment: 8 }@pragma_pack(1) union {
+    { offset: 0, size: 1 }a { size: 16, alignment: 8 }int: 1,
+}
+
+E = { size: 16, alignment: 8 }union {
+    { offset: 0, size: 9 }a { size: 16, alignment: 8 }A: 9,
+}
+
+F = { size: 16, alignment: 8 }union {
+    { offset: 0, size: 9 }@attr_packed a { size: 16, alignment: 8 }int: 9,
+}
+
+G = { size: 16, alignment: 8 }@pragma_pack(1) union {
+    { offset: 0, size: 9 }a { size: 16, alignment: 8 }int: 9,
+}
+// hash: c6921c3fa66cc92d

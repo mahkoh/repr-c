@@ -1,6 +1,7 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
 use crate::builder::common::default_aligned_alignment;
 use crate::layout::Annotation;
-use crate::result::{err, ErrorKind, Result};
+use crate::result::{err, ErrorType, Result};
 use crate::target::Target;
 
 /// The number of bits in a byte.
@@ -135,7 +136,7 @@ pub(crate) fn align_to(n: u64, m: u64) -> Result<u64> {
     let mask = m - 1;
     match n.checked_add(mask) {
         Some(n) => Ok(n & !mask),
-        _ => Err(err(ErrorKind::SizeOverflow)),
+        _ => Err(err(ErrorType::SizeOverflow)),
     }
 }
 
@@ -146,7 +147,7 @@ pub(crate) fn is_attr_packed(a: &[Annotation]) -> bool {
 pub(crate) fn annotation_alignment(target: Target, annotations: &[Annotation]) -> Option<u64> {
     let mut max = None;
     for a in annotations {
-        if let Annotation::Aligned(n) = a {
+        if let Annotation::Align(n) = a {
             max.assign_max(n.unwrap_or_else(|| default_aligned_alignment(target)));
         }
     }
@@ -165,13 +166,13 @@ pub(crate) fn pragma_pack_value(a: &[Annotation]) -> Option<u64> {
 pub(crate) fn size_mul(a: u64, b: u64) -> Result<u64> {
     match a.checked_mul(b) {
         Some(v) => Ok(v),
-        None => Err(err(ErrorKind::SizeOverflow)),
+        None => Err(err(ErrorType::SizeOverflow)),
     }
 }
 
 pub(crate) fn size_add(a: u64, b: u64) -> Result<u64> {
     match a.checked_add(b) {
         Some(v) => Ok(v),
-        None => Err(err(ErrorKind::SizeOverflow)),
+        None => Err(err(ErrorType::SizeOverflow)),
     }
 }

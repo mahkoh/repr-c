@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 A1 = struct {
     @align(128) x int,
 }

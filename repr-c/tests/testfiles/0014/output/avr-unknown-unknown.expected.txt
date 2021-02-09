@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 A = { size: 16, alignment: 8 }@align(001) typedef { size: 16, alignment: 8 }int
 B = { size: 16, alignment: 16 }@align(002) typedef { size: 16, alignment: 8 }int
 C = { size: 16, alignment: 32 }@align(004) typedef { size: 16, alignment: 8 }int
@@ -33,4 +34,4 @@ DE = { size: 16, alignment: 128 }@align(016) typedef { size: 16, alignment: 64 }
 DF = { size: 16, alignment: 256 }@align(032) typedef { size: 16, alignment: 64 }D
 DG = { size: 16, alignment: 512 }@align(064) typedef { size: 16, alignment: 64 }D
 DH = { size: 16, alignment: 1024 }@align(128) typedef { size: 16, alignment: 64 }D
-// hash: 5ad487b450b08182
+// hash: 18dfc68d8d63a1c4

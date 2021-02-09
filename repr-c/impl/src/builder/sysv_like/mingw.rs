@@ -1,6 +1,7 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
 use crate::builder::sysv_like::{Dialect, RecordLayoutBuilder};
 use crate::layout::{FieldLayout, RecordField, RecordKind, Type, TypeLayout};
-use crate::result::{err, ErrorKind, Result};
+use crate::result::{err, ErrorType, Result};
 use crate::target::Target;
 use crate::util::{
     align_to, annotation_alignment, is_attr_packed, size_add, MaxAssign, MinAssign, BITS_PER_BYTE,
@@ -121,7 +122,7 @@ fn layout_bit_field(
         };
     }
     if width > ty_size_bits {
-        return Err(err(ErrorKind::OversizedBitfield));
+        return Err(err(ErrorType::OversizedBitfield));
     }
     // In a union, the size of the underlying type does not affect the size of the union.
     // See test case 0070.

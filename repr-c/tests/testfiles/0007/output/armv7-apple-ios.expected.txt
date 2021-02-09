@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 // Tests the relationship of required, natural, and packing alignment when it comes
 // to bitfields
 
@@ -36,4 +37,4 @@ f = { size: 64, alignment: 16 }@align(2) typedef { size: 64, alignment: 32 }long
 F = { size: 8, alignment: 8 }@pragma_pack(4) struct {
     { offset: 0, size: 1 }i { size: 64, alignment: 16 }f: 1
 }
-// hash: e8b3c8fec5a95c39
+// hash: e62d1131a45917e4

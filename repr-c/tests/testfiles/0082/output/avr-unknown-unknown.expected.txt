@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 A = { size: 16, alignment: 8 }struct {
     { offset: 0, size: 1 }a { size: 64, alignment: 8 }long long:1,
     _ { size: 64, alignment: 8 }long long:0,
@@ -107,4 +108,4 @@ J_ = { size: 8, alignment: 8 }union {
     @attr_packed _ { size: 64, alignment: 1024 }I:0,
     { offset: 0, size: 1 }b { size: 64, alignment: 8 }long long:1,
 }
-// hash: 5fd0f215fa3707fe
+// hash: d05ccea738361ece

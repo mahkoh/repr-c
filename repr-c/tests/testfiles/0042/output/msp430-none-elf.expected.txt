@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 // https://github.com/llvm/llvm-project/blob/b43c26d036dcbf7a6881f39e4434cf059364022a/clang/test/Layout/ms-aligned-array.c
 
 AlignedStruct = { size: 128, alignment: 128 }@align(16) struct {
@@ -18,4 +19,4 @@ C = { size: 16, alignment: 16 }@pragma_pack(2) struct {
     { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
     { offset: 16, size: 0 }a { size: 0, alignment: 128 }[]{ size: 16, alignment: 128 }AlignedInt,
 }
-// hash: 33a8160b555cac3e
+// hash: bd0dd8a7854be1c3

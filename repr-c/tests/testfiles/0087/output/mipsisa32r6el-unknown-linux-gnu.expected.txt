@@ -1,0 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A = { size: 64, alignment: 64 }@pragma_pack(1) typedef { size: 64, alignment: 64 }long long
+B = { size: 64, alignment: 64 }@pragma_pack(1) @attr_packed typedef { size: 64, alignment: 64 }long long
+C = { size: 64, alignment: 64 }@attr_packed typedef { size: 64, alignment: 64 }long long
+D = { size: 64, alignment: 16 }@align(2) @pragma_pack(1) typedef { size: 64, alignment: 64 }long long
+E = { size: 64, alignment: 16 }@align(2) @pragma_pack(1) @attr_packed typedef { size: 64, alignment: 64 }long long
+F = { size: 64, alignment: 16 }@align(2) @attr_packed typedef { size: 64, alignment: 64 }long long
+// hash: a6c6ddb60452cc37

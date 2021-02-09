@@ -1,0 +1,169 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+A000 = { size: 512, alignment: 256 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 256, size: 16 }@align(32) i { size: 16, alignment: 16 }int,
+}
+
+A001 = { size: 512, alignment: 256 }@attr_packed struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 256, size: 16 }@align(32) i { size: 16, alignment: 16 }int,
+}
+
+A002 = { size: 512, alignment: 256 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 256, size: 16 }@attr_packed @align(32) i { size: 16, alignment: 16 }int,
+}
+
+A003 = { size: 512, alignment: 256 }@attr_packed struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 256, size: 16 }@attr_packed @align(32) i { size: 16, alignment: 16 }int,
+}
+
+A004 = { size: 16, alignment: 128 }@align(16) typedef { size: 16, alignment: 16 }int
+
+A005 = { size: 512, alignment: 256 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 256, size: 16 }@align(32) i { size: 16, alignment: 128 }A004,
+}
+
+A006 = { size: 512, alignment: 256 }@attr_packed struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 256, size: 16 }@align(32) i { size: 16, alignment: 128 }A004,
+}
+
+A007 = { size: 512, alignment: 256 }struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 256, size: 16 }@attr_packed @align(32) i { size: 16, alignment: 128 }A004,
+}
+
+A008 = { size: 512, alignment: 256 }@attr_packed struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 256, size: 16 }@attr_packed @align(32) i { size: 16, alignment: 128 }A004,
+}
+
+A100 = { size: 32, alignment: 16 }@pragma_pack(2) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 16, size: 16 }@align(32) i { size: 16, alignment: 16 }int,
+}
+
+A101 = { size: 32, alignment: 16 }@attr_packed @pragma_pack(2) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 16, size: 16 }@align(32) i { size: 16, alignment: 16 }int,
+}
+
+A102 = { size: 32, alignment: 16 }@pragma_pack(2) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 16, size: 16 }@attr_packed @align(32) i { size: 16, alignment: 16 }int,
+}
+
+A103 = { size: 32, alignment: 16 }@attr_packed @pragma_pack(2) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 16, size: 16 }@attr_packed @align(32) i { size: 16, alignment: 16 }int,
+}
+
+A104 = { size: 16, alignment: 128 }@align(16) typedef { size: 16, alignment: 16 }int
+
+A105 = { size: 32, alignment: 16 }@pragma_pack(2) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 16, size: 16 }@align(32) i { size: 16, alignment: 128 }A104,
+}
+
+A106 = { size: 32, alignment: 16 }@attr_packed @pragma_pack(2) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 16, size: 16 }@align(32) i { size: 16, alignment: 128 }A104,
+}
+
+A107 = { size: 32, alignment: 16 }@pragma_pack(2) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 16, size: 16 }@attr_packed @align(32) i { size: 16, alignment: 128 }A104,
+}
+
+A108 = { size: 32, alignment: 16 }@attr_packed @pragma_pack(2) struct {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 16, size: 16 }@attr_packed @align(32) i { size: 16, alignment: 128 }A104,
+}
+
+B000 = { size: 256, alignment: 256 }union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 16 }@align(32) i { size: 16, alignment: 16 }int,
+}
+
+B001 = { size: 256, alignment: 256 }@attr_packed union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 16 }@align(32) i { size: 16, alignment: 16 }int,
+}
+
+B002 = { size: 256, alignment: 256 }union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 16 }@attr_packed @align(32) i { size: 16, alignment: 16 }int,
+}
+
+B003 = { size: 256, alignment: 256 }@attr_packed union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 16 }@attr_packed @align(32) i { size: 16, alignment: 16 }int,
+}
+
+B004 = { size: 16, alignment: 128 }@align(16) typedef { size: 16, alignment: 16 }int
+
+B005 = { size: 256, alignment: 256 }union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 16 }@align(32) i { size: 16, alignment: 128 }A004,
+}
+
+B006 = { size: 256, alignment: 256 }@attr_packed union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 16 }@align(32) i { size: 16, alignment: 128 }A004,
+}
+
+B007 = { size: 256, alignment: 256 }union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 16 }@attr_packed @align(32) i { size: 16, alignment: 128 }A004,
+}
+
+B008 = { size: 256, alignment: 256 }@attr_packed union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 16 }@attr_packed @align(32) i { size: 16, alignment: 128 }A004,
+}
+
+B100 = { size: 16, alignment: 16 }@pragma_pack(2) union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 16 }@align(32) i { size: 16, alignment: 16 }int,
+}
+
+B101 = { size: 16, alignment: 16 }@attr_packed @pragma_pack(2) union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 16 }@align(32) i { size: 16, alignment: 16 }int,
+}
+
+B102 = { size: 16, alignment: 16 }@pragma_pack(2) union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 16 }@attr_packed @align(32) i { size: 16, alignment: 16 }int,
+}
+
+B103 = { size: 16, alignment: 16 }@attr_packed @pragma_pack(2) union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 16 }@attr_packed @align(32) i { size: 16, alignment: 16 }int,
+}
+
+B104 = { size: 16, alignment: 128 }@align(16) typedef { size: 16, alignment: 16 }int
+
+B105 = { size: 16, alignment: 16 }@pragma_pack(2) union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 16 }@align(32) i { size: 16, alignment: 128 }A104,
+}
+
+B106 = { size: 16, alignment: 16 }@attr_packed @pragma_pack(2) union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 16 }@align(32) i { size: 16, alignment: 128 }A104,
+}
+
+B107 = { size: 16, alignment: 16 }@pragma_pack(2) union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 16 }@attr_packed @align(32) i { size: 16, alignment: 128 }A104,
+}
+
+B108 = { size: 16, alignment: 16 }@attr_packed @pragma_pack(2) union {
+    { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
+    { offset: 0, size: 16 }@attr_packed @align(32) i { size: 16, alignment: 128 }A104,
+}
+// hash: 9e146e9ee4ba904b

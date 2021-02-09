@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 // Tests the relationship of required, natural, and packing alignment when it comes
 // to bitfields
 

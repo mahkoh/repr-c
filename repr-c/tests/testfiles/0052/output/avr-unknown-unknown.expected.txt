@@ -1,4 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 A = { size: 8, alignment: 8 }@align struct {
     { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
 }
-// hash: c33ef01d0ba2207e
+// hash: 7bbc4b9dbe425b02

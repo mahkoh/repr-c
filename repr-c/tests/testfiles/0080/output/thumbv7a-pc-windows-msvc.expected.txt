@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 A = { size: 32, alignment: 128, required_alignment: 128 }@align(16) typedef { size: 32, alignment: 32 }int
 
 B = { size: 64, alignment: 128 }struct {
@@ -29,4 +30,4 @@ G = { size: 192, alignment: 64 }struct {
     { offset: 80, size: 15 }c { size: 64, alignment: 64, required_alignment: 16 }F:15,
     { offset: 128, size: 63 }d { size: 64, alignment: 64, required_alignment: 16 }F:63,
 }
-// hash: 24df1e8d359a74b7
+// hash: a916c414bd2bf48

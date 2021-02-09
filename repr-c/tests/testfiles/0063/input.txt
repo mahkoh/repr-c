@@ -1,2 +1,3 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 A = @align(8) enum { 1 }
 B = @align(1) enum { 1000 }

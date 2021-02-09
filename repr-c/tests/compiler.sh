@@ -1,4 +1,5 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 set -xe
 
@@ -10,6 +11,7 @@ function error() {
 case "$1" in
   *-msvc | *-windows)
     if [[ -v USE_CLANG_FOR_MSVC ]]; then
+      PATH=~/bin/custom-clang/bin
       clang -gdwarf-5 -glldb -target "$1" -c -o "$3" "$2"
     else
       case "$1" in
@@ -153,6 +155,7 @@ case "$1" in
   hexagon-unknown-linux-musl | \
   powerpc-unknown-linux-gnuspe | \
   x86_64-unknown-redox)
+    PATH=~/bin/custom-clang/bin
     clang -gdwarf-5 -glldb -target "$1" -integrated-as -c -o "$3" "$2"
     ;;
   *)

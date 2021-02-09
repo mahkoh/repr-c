@@ -14,5 +14,5 @@ serde = { version = "1.0.120", features = ["derive"] }
 toml = "0.5.8"
 rayon = "1.5.0"
 gimli = "0.23.0"
-object = { path = "../../vendored/object", features = ["coff"] }
-pdb = { path = "../../vendored/pdb" }
+pdb = { git = "https://github.com/willglynn/pdb.git", rev = "01025d3a8ef9fcad814fa741adabb0396c29ca7d" }
+object = { git = "https://github.com/mahkoh/object.git", rev = "bddaeeac024b46c64ba92b62077d762e6631c993", features = ["coff"] }

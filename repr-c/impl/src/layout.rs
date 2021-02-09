@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
 use std::fmt::Debug;
 
 /// A C type.
@@ -57,7 +58,7 @@ pub enum Annotation {
     ///
     /// If the argument is `None`, it corresponds to `__attribute__((aligned))`. On MSVC
     /// targets, the behavior is the behavior of Clang.
-    Aligned(Option<u64>),
+    Align(Option<u64>),
 }
 
 /// A collection of types encoding the layout of a type.
@@ -79,8 +80,6 @@ pub struct TypeLayout {
     /// (but in bits instead of bytes). This is a multiple of `pointer_alignment_bits`.
     pub size_bits: u64,
     /// The alignment of the type, in bits, when used as a field in a record.
-    ///
-    /// This is the value returned by `_Alignof` in C (but in bits instead of bytes).
     pub field_alignment_bits: u64,
     /// The alignment, in bits, of valid pointers to this type.
     ///
@@ -201,7 +200,7 @@ impl<I: Layout> TypeVariant<I> {
 ///         fields: vec![
 ///             RecordField {
 ///                 layout: None,
-///                 annotations: vec!(Annotation::Aligned(Some(128))),
+///                 annotations: vec!(Annotation::Align(Some(128))),
 ///                 named: true,
 ///                 bit_width: None,
 ///                 ty: Type {

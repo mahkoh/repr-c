@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 Char = { size: 8, alignment: 32 }@align(4) typedef { size: 8, alignment: 8 }char
 
 A = { size: 32, alignment: 16 }@pragma_pack(2) struct {
@@ -9,4 +10,4 @@ B = { size: 32, alignment: 16 }@pragma_pack(2) struct {
     { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
     { offset: 16, size: 8 }@align(4) a { size: 8, alignment: 8 }char,
 }
-// hash: c662ebd6e957828f
+// hash: 61544ea61e26852a

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 // https://github.com/llvm/llvm-project/blob/b43c26d036dcbf7a6881f39e4434cf059364022a/clang/test/Layout/ms-x86-empty-layout.c
 
 EmptyIntMemb = { size: 0, alignment: 16 }struct {
@@ -23,4 +24,4 @@ EmptyPackedAligned4LongLongMemb = { size: 0, alignment: 32 }@align(4) @pragma_pa
 EmptyPackedAligned8LongLongMemb = { size: 0, alignment: 8 }@pragma_pack(1) struct {
     { offset: 0, size: 0 }@align(8) FlexArrayMemb { size: 0, alignment: 16 }[]{ size: 64, alignment: 16 }long long,
 }
-// hash: 8cf0879e0477c3d7
+// hash: 1f41eebbf48f575a

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 A = @align(001) typedef int
 B = @align(002) typedef int
 C = @align(004) typedef int

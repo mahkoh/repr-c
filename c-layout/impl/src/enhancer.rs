@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 use crate::ast;
 use crate::ast::DeclarationType;
 use crate::converter::ConversionResult;
@@ -106,7 +107,7 @@ fn enhance_annotations(a: &[ast::Annotation], an: &[Annotation]) -> Vec<ast::Ann
 
 fn enhance_annotation(a: &ast::Annotation, an: &Annotation) -> ast::Annotation {
     match (a, an) {
-        (ast::Annotation::Aligned(Some(l)), Annotation::Aligned(Some(r))) => {
+        (ast::Annotation::Aligned(Some(l)), Annotation::Align(Some(r))) => {
             let mut a = l.clone();
             a.value = Some((*r / BITS_PER_BYTE) as i128);
             ast::Annotation::Aligned(Some(a))

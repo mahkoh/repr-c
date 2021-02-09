@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 // https://github.com/llvm/llvm-project/blob/50337fb933e0f666d34d747a43d46840b3982bf7/clang/test/Layout/ms-x86-pack-and-align.cpp
 
 A = { size: 8, alignment: 8 }struct {
@@ -101,4 +102,4 @@ EmptyAlignedLongLongMemb = { size: 0, alignment: 64 }@align(4) struct {
 EmptyPackedAlignedLongLongMemb = { size: 0, alignment: 32 }@pragma_pack(1) @align(4) struct {
     { offset: 0, size: 0 }FlexArrayMemb { size: 0, alignment: 64 }[]{ size: 64, alignment: 64 }long long,
 }
-// hash: f3855df8be830d86
+// hash: 772f2e8dfed1c7bf
