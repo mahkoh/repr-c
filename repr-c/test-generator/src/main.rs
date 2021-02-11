@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 use anyhow::{anyhow, bail, Context, Result};
-use c_layout_impl::ast::Declaration;
+use cly_impl::ast::Declaration;
 use rayon::iter::IntoParallelRefIterator;
 use rayon::iter::ParallelIterator;
 use repr_c_impl::target::{system_compiler, Compiler, Target, TARGETS};
@@ -46,7 +46,7 @@ fn main_() -> Result<()> {
             config.0.hash(&mut hash);
             hash.finish()
         };
-        let declarations = c_layout_impl::parse(&input)
+        let declarations = cly_impl::parse(&input)
             .with_context(|| anyhow!("Parsing of {} failed", input_path.display()))?;
         std::fs::create_dir_all(dir.join("output"))?;
         TARGETS.par_iter().try_for_each(|target| {
@@ -110,11 +110,17 @@ fn process_target(
     let c_file = tmpdir.path().join("test.c");
     let output_file = tmpdir.path().join("test.output");
     std::fs::write(&c_file, code)?;
+    let compiler = match system_compiler(target) {
+        Compiler::Msvc if config.use_clang_for_msvc_targets => "clang",
+        Compiler::Msvc => "msvc",
+        Compiler::Gcc => "gcc",
+        Compiler::Clang => "clang",
+    };
     let mut cmd = Command::new(&userconfig.compiler);
-    cmd.arg(target.name()).arg(&c_file).arg(&output_file);
-    if config.use_clang_for_msvc_targets {
-        cmd.env("USE_CLANG_FOR_MSVC", "");
-    }
+    cmd.env("COMPILER", compiler);
+    cmd.env("TARGET", target.name());
+    cmd.env("INPUT", &c_file);
+    cmd.env("OUTPUT", &output_file);
     let output = cmd.output()?;
     if output.status.code() != Some(0) {
         bail!(
@@ -131,8 +137,8 @@ fn process_target(
         }
         _ => dwarf::convert(target, &input, &declarations, &output, &ids),
     }?;
-    let decls = c_layout_impl::enhance_declarations(&declarations, &conversion_result);
-    let output = c_layout_impl::printer(&input, &decls).to_string();
+    let decls = cly_impl::enhance_declarations(&declarations, &conversion_result);
+    let output = cly_impl::printer(&input, &decls).to_string();
     let mut file = OpenOptions::new()
         .write(true)
         .create(true)

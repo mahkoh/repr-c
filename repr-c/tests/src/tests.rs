@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 use crate::{read_input_config, GlobalConfig, InputConfig};
 use anyhow::{anyhow, bail, Context, Result};
-use c_layout_impl::ast::Declaration;
+use cly_impl::ast::Declaration;
 use isnt::std_1::vec::IsntVecExt;
 use rayon::iter::IntoParallelRefIterator;
 use rayon::iter::ParallelIterator;
@@ -13,12 +13,12 @@ use std::sync::Mutex;
 
 #[test]
 fn test() -> Result<()> {
-    let userconfig: GlobalConfig = toml::from_str(&std::fs::read_to_string("config.toml")?)?;
+    let global_config: GlobalConfig = toml::from_str(&std::fs::read_to_string("config.toml")?)?;
     let mut dirs = vec![];
     for dir in std::fs::read_dir("testfiles")? {
         let dir = dir?;
         if dir.file_type()?.is_dir() {
-            if userconfig.test_test(dir.file_name().to_str().unwrap()) {
+            if global_config.test_test(dir.file_name().to_str().unwrap()) {
                 dirs.push(dir.path());
             }
         }
@@ -26,7 +26,7 @@ fn test() -> Result<()> {
     dirs.sort();
     let failed = Mutex::new(vec![]);
     let r: Result<()> = dirs.par_iter().try_for_each(|dir| {
-        process_dir(dir, &userconfig, &failed)
+        process_dir(dir, &global_config, &failed)
             .with_context(|| anyhow!("processing {} failed", dir.display()))
     });
     r?;
@@ -49,7 +49,7 @@ fn process_dir(
     let config = read_input_config(dir)?.1;
     let input_path = dir.join("input.txt");
     let input = std::fs::read_to_string(&input_path)?;
-    let declarations = c_layout_impl::parse(&input).context("Parsing failed")?;
+    let declarations = cly_impl::parse(&input).context("Parsing failed")?;
     TARGETS.par_iter().try_for_each(|target| {
         if !process_target(&dir, &input, &declarations, *target, &config, global_config)
             .with_context(|| anyhow!("processing target {} failed", target.name()))?
@@ -77,7 +77,7 @@ fn process_target(
     if !global_config.test_target(target) {
         return Ok(true);
     }
-    let mut actual_conversion_result = c_layout_impl::compute_layouts(input, declarations, target)?;
+    let mut actual_conversion_result = cly_impl::compute_layouts(input, declarations, target)?;
     for ty in actual_conversion_result.types.values() {
         TypeValidator.visit_type(ty);
     }
@@ -94,21 +94,17 @@ fn process_target(
     let expected_file = output_dir.join(format!("{}.expected.txt", target.name()));
     let expected = std::fs::read_to_string(&expected_file)
         .with_context(|| anyhow!("cannot read {}", expected_file.display()))?;
-    let expected_declarations = c_layout_impl::parse(&expected)
+    let expected_declarations = cly_impl::parse(&expected)
         .with_context(|| anyhow!("Parsing {} failed", expected_file.display()))?;
-    let expected_conversion_result =
-        c_layout_impl::extract_layouts(&expected, &expected_declarations)?;
+    let expected_conversion_result = cly_impl::extract_layouts(&expected, &expected_declarations)?;
 
     if actual_conversion_result == expected_conversion_result {
         return Ok(true);
     }
 
     let actual_file = output_dir.join(format!("{}.actual.txt", target.name()));
-    let enhanced = c_layout_impl::enhance_declarations(declarations, &actual_conversion_result);
-    std::fs::write(
-        actual_file,
-        c_layout_impl::printer(input, &enhanced).to_string(),
-    )?;
+    let enhanced = cly_impl::enhance_declarations(declarations, &actual_conversion_result);
+    std::fs::write(actual_file, cly_impl::printer(input, &enhanced).to_string())?;
     Ok(false)
 }
 
@@ -161,4 +157,16 @@ impl Layout for TypeLayoutWithoutPointerAlignment {
     type TypeLayout = TypeLayoutWithoutPointerAlignment;
     type FieldLayout = FieldLayout;
     type OpaqueLayout = TypeLayoutWithoutPointerAlignment;
+}
+
+#[test]
+fn check_none_excluded() -> Result<()> {
+    let global_config: GlobalConfig = toml::from_str(&std::fs::read_to_string("config.toml")?)?;
+    assert!(global_config.exclude_targets.is_none());
+    assert!(global_config.include_targets.is_none());
+    assert!(global_config.exclude_compilers.is_none());
+    assert!(global_config.include_compilers.is_none());
+    assert!(global_config.exclude_tests.is_none());
+    assert!(global_config.include_tests.is_none());
+    Ok(())
 }

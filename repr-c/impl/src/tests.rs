@@ -1,7 +1,9 @@
-use crate::layout::{Type, Annotation, TypeVariant, BuiltinType, TypeLayout, Array, Record, RecordKind, RecordField};
 use crate::builder::compute_layout;
+use crate::layout::{
+    Annotation, Array, BuiltinType, Record, RecordField, RecordKind, Type, TypeLayout, TypeVariant,
+};
+use crate::result::ErrorType;
 use crate::target::Target;
-use crate::result::{ErrorType};
 
 #[test]
 fn annotated_builtin() {
@@ -23,7 +25,7 @@ fn annotated_opaque() {
             size_bits: 0,
             field_alignment_bits: 8,
             pointer_alignment_bits: 8,
-            required_alignment_bits: 8
+            required_alignment_bits: 8,
         }),
     };
     let err = compute_layout(Target::X86_64UnknownLinuxGnu, &ty).unwrap_err();
@@ -41,7 +43,7 @@ fn annotated_array() {
                 annotations: vec![],
                 variant: TypeVariant::Builtin(BuiltinType::Int),
             }),
-            num_elements: None
+            num_elements: None,
         }),
     };
     let err = compute_layout(Target::X86_64UnknownLinuxGnu, &ty).unwrap_err();
@@ -73,7 +75,7 @@ fn power_of_two_alignment_1() {
         annotations: vec![Annotation::Align(Some(24))],
         variant: TypeVariant::Record(Record {
             kind: RecordKind::Struct,
-            fields: vec![]
+            fields: vec![],
         }),
     };
     let err = compute_layout(Target::X86_64UnknownLinuxGnu, &ty).unwrap_err();
@@ -89,7 +91,7 @@ fn power_of_two_alignment_2() {
             size_bits: 0,
             field_alignment_bits: 8,
             pointer_alignment_bits: 24,
-            required_alignment_bits: 8
+            required_alignment_bits: 8,
         }),
     };
     let err = compute_layout(Target::X86_64UnknownLinuxGnu, &ty).unwrap_err();
@@ -105,7 +107,7 @@ fn power_of_two_alignment_3() {
             size_bits: 0,
             field_alignment_bits: 24,
             pointer_alignment_bits: 8,
-            required_alignment_bits: 8
+            required_alignment_bits: 8,
         }),
     };
     let err = compute_layout(Target::X86_64UnknownLinuxGnu, &ty).unwrap_err();
@@ -121,15 +123,12 @@ fn power_of_two_alignment_4() {
             size_bits: 0,
             field_alignment_bits: 8,
             pointer_alignment_bits: 8,
-            required_alignment_bits: 24
+            required_alignment_bits: 24,
         }),
     };
     let err = compute_layout(Target::X86_64UnknownLinuxGnu, &ty).unwrap_err();
     assert!(matches!(err.kind(), ErrorType::PowerOfTwoAlignment));
 }
-
-
-
 
 #[test]
 fn sub_byte_alignment_1() {
@@ -138,7 +137,7 @@ fn sub_byte_alignment_1() {
         annotations: vec![Annotation::Align(Some(4))],
         variant: TypeVariant::Record(Record {
             kind: RecordKind::Struct,
-            fields: vec![]
+            fields: vec![],
         }),
     };
     let err = compute_layout(Target::X86_64UnknownLinuxGnu, &ty).unwrap_err();
@@ -154,7 +153,7 @@ fn sub_byte_alignment_2() {
             size_bits: 0,
             field_alignment_bits: 8,
             pointer_alignment_bits: 4,
-            required_alignment_bits: 8
+            required_alignment_bits: 8,
         }),
     };
     let err = compute_layout(Target::X86_64UnknownLinuxGnu, &ty).unwrap_err();
@@ -170,7 +169,7 @@ fn sub_byte_alignment_3() {
             size_bits: 0,
             field_alignment_bits: 4,
             pointer_alignment_bits: 8,
-            required_alignment_bits: 8
+            required_alignment_bits: 8,
         }),
     };
     let err = compute_layout(Target::X86_64UnknownLinuxGnu, &ty).unwrap_err();
@@ -186,7 +185,7 @@ fn sub_byte_alignment_4() {
             size_bits: 0,
             field_alignment_bits: 8,
             pointer_alignment_bits: 8,
-            required_alignment_bits: 4
+            required_alignment_bits: 4,
         }),
     };
     let err = compute_layout(Target::X86_64UnknownLinuxGnu, &ty).unwrap_err();
@@ -216,11 +215,14 @@ fn multiple_pragma_pack() {
         annotations: vec![Annotation::PragmaPack(8), Annotation::PragmaPack(8)],
         variant: TypeVariant::Record(Record {
             kind: RecordKind::Struct,
-            fields: vec![]
+            fields: vec![],
         }),
     };
     let err = compute_layout(Target::X86_64UnknownLinuxGnu, &ty).unwrap_err();
-    assert!(matches!(err.kind(), ErrorType::MultiplePragmaPackedAnnotations));
+    assert!(matches!(
+        err.kind(),
+        ErrorType::MultiplePragmaPackedAnnotations
+    ));
 }
 
 #[test]
@@ -230,19 +232,17 @@ fn named_zero_sized_bit_field() {
         annotations: vec![],
         variant: TypeVariant::Record(Record {
             kind: RecordKind::Struct,
-            fields: vec![
-                RecordField {
-                    layout: None,
+            fields: vec![RecordField {
+                layout: None,
+                annotations: vec![],
+                named: true,
+                bit_width: Some(0),
+                ty: Type {
+                    layout: (),
                     annotations: vec![],
-                    named: true,
-                    bit_width: Some(0),
-                    ty: Type {
-                        layout: (),
-                        annotations: vec![],
-                        variant: TypeVariant::Builtin(BuiltinType::Int),
-                    }
-                }
-            ]
+                    variant: TypeVariant::Builtin(BuiltinType::Int),
+                },
+            }],
         }),
     };
     let err = compute_layout(Target::X86_64UnknownLinuxGnu, &ty).unwrap_err();
@@ -256,19 +256,17 @@ fn unnamed_regular_field() {
         annotations: vec![],
         variant: TypeVariant::Record(Record {
             kind: RecordKind::Struct,
-            fields: vec![
-                RecordField {
-                    layout: None,
+            fields: vec![RecordField {
+                layout: None,
+                annotations: vec![],
+                named: false,
+                bit_width: None,
+                ty: Type {
+                    layout: (),
                     annotations: vec![],
-                    named: false,
-                    bit_width: None,
-                    ty: Type {
-                        layout: (),
-                        annotations: vec![],
-                        variant: TypeVariant::Builtin(BuiltinType::Int),
-                    }
-                }
-            ]
+                    variant: TypeVariant::Builtin(BuiltinType::Int),
+                },
+            }],
         }),
     };
     let err = compute_layout(Target::X86_64UnknownLinuxGnu, &ty).unwrap_err();
@@ -282,19 +280,17 @@ fn oversized_bitfield() {
         annotations: vec![],
         variant: TypeVariant::Record(Record {
             kind: RecordKind::Struct,
-            fields: vec![
-                RecordField {
-                    layout: None,
+            fields: vec![RecordField {
+                layout: None,
+                annotations: vec![],
+                named: true,
+                bit_width: Some(64),
+                ty: Type {
+                    layout: (),
                     annotations: vec![],
-                    named: true,
-                    bit_width: Some(64),
-                    ty: Type {
-                        layout: (),
-                        annotations: vec![],
-                        variant: TypeVariant::Builtin(BuiltinType::Int),
-                    }
-                }
-            ]
+                    variant: TypeVariant::Builtin(BuiltinType::Int),
+                },
+            }],
         }),
     };
     let err = compute_layout(Target::X86_64UnknownLinuxGnu, &ty).unwrap_err();
@@ -308,19 +304,17 @@ fn pragma_packed_field() {
         annotations: vec![],
         variant: TypeVariant::Record(Record {
             kind: RecordKind::Struct,
-            fields: vec![
-                RecordField {
-                    layout: None,
-                    annotations: vec![Annotation::PragmaPack(8)],
-                    named: true,
-                    bit_width: None,
-                    ty: Type {
-                        layout: (),
-                        annotations: vec![],
-                        variant: TypeVariant::Builtin(BuiltinType::Int),
-                    }
-                }
-            ]
+            fields: vec![RecordField {
+                layout: None,
+                annotations: vec![Annotation::PragmaPack(8)],
+                named: true,
+                bit_width: None,
+                ty: Type {
+                    layout: (),
+                    annotations: vec![],
+                    variant: TypeVariant::Builtin(BuiltinType::Int),
+                },
+            }],
         }),
     };
     let err = compute_layout(Target::X86_64UnknownLinuxGnu, &ty).unwrap_err();

@@ -1,7 +1,7 @@
 [workspace]
 members = [
-    "c-layout/cli",
-    "c-layout/impl",
+    "cly/cli",
+    "cly/impl",
     "repr-c/facade",
     "repr-c/test-generator",
     "repr-c/impl",

@@ -67,10 +67,10 @@ fn main_() -> Result<()> {
             .read_to_string(&mut input)
             .context("cannot read from stdin")?,
     };
-    let res = c_layout_impl::parse(&input).context("Parsing failed")?;
-    let layouts = c_layout_impl::compute_layouts(&input, &res, target)
-        .context("Layout computation failed")?;
-    let res = c_layout_impl::enhance_declarations(&res, &layouts);
-    print!("{}", c_layout_impl::printer(&input, &res));
+    let res = cly_impl::parse(&input).context("Parsing failed")?;
+    let layouts =
+        cly_impl::compute_layouts(&input, &res, target).context("Layout computation failed")?;
+    let res = cly_impl::enhance_declarations(&res, &layouts);
+    print!("{}", cly_impl::printer(&input, &res));
     Ok(())
 }

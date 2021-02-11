@@ -45,26 +45,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf1de2fe8c75bc145a2f577add951f8134889b4795d47466a54a5c846d691693"
 
 [[package]]
-name = "c-layout"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "c-layout-impl",
- "clap",
- "repr-c-impl",
-]
-
-[[package]]
-name = "c-layout-impl"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "isnt",
- "rayon",
- "repr-c-impl",
-]
-
-[[package]]
 name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -83,6 +63,26 @@ dependencies = [
  "textwrap",
  "unicode-width",
  "vec_map",
+]
+
+[[package]]
+name = "cly"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "cly-impl",
+ "repr-c-impl",
+]
+
+[[package]]
+name = "cly-impl"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "isnt",
+ "rayon",
+ "repr-c-impl",
 ]
 
 [[package]]
@@ -181,7 +181,7 @@ name = "generator"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "c-layout-impl",
+ "cly-impl",
  "gimli",
  "object",
  "pdb",
@@ -400,7 +400,7 @@ name = "repr-c-tests"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "c-layout-impl",
+ "cly-impl",
  "isnt",
  "rayon",
  "repr-c-impl",

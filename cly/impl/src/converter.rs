@@ -227,7 +227,7 @@ impl<'a, C: Convert> Computer<'a, C> {
                     }
                 };
                 TypeVariant::Opaque(layout)
-            },
+            }
             ast::TypeVariant::Builtin(bi) => TypeVariant::Builtin(*bi),
             ast::TypeVariant::Record(r) => TypeVariant::Record(self.convert_record(r)?),
             ast::TypeVariant::Array(a) => TypeVariant::Array(self.convert_array(a)?),

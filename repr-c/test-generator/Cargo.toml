@@ -7,7 +7,7 @@ edition = "2018"
 [dependencies]
 repr-c-tests = { path = "../tests" }
 repr-c-impl = { path = "../impl" }
-c-layout-impl = { path = "../../c-layout/impl" }
+cly-impl = { path = "../../cly/impl" }
 anyhow =  "1.0.38"
 tempdir = "0.3.7"
 serde = { version = "1.0.120", features = ["derive"] }

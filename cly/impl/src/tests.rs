@@ -3,7 +3,7 @@ use anyhow::{anyhow, bail, Context, Result};
 use isnt::std_1::vec::IsntVecExt;
 use rayon::iter::IntoParallelRefIterator;
 use rayon::iter::ParallelIterator;
-use repr_c_impl::target::{Target};
+use repr_c_impl::target::Target;
 use std::path::Path;
 use std::sync::Mutex;
 
@@ -22,10 +22,7 @@ fn test() -> Result<()> {
     let failed = Mutex::new(vec![]);
     let r: Result<()> = dirs.par_iter().try_for_each(|dir| {
         if !process_dir(dir).with_context(|| anyhow!("processing {} failed", dir.display()))? {
-            failed
-                .lock()
-                .unwrap()
-                .push(format!("{}", dir.display()));
+            failed.lock().unwrap().push(format!("{}", dir.display()));
         }
         Ok(())
     });
@@ -41,9 +38,7 @@ fn test() -> Result<()> {
     Ok(())
 }
 
-fn process_dir(
-    dir: &Path,
-) -> Result<bool> {
+fn process_dir(dir: &Path) -> Result<bool> {
     let input_path = dir.join("input.txt");
     let input = std::fs::read_to_string(&input_path)?;
     let declarations = crate::parse(&input).context("Parsing failed")?;
@@ -54,8 +49,7 @@ fn process_dir(
     if expected_file.exists() {
         let expected = std::fs::read_to_string(&expected_file)?;
         let expected_declarations = crate::parse(&expected)?;
-        let expected_conversion_result =
-            crate::extract_layouts(&expected, &expected_declarations)?;
+        let expected_conversion_result = crate::extract_layouts(&expected, &expected_declarations)?;
 
         if actual_conversion_result == expected_conversion_result {
             return Ok(true);
@@ -64,9 +58,6 @@ fn process_dir(
 
     let actual_file = dir.join("actual.txt");
     let enhanced = crate::enhance_declarations(&declarations, &actual_conversion_result);
-    std::fs::write(
-        actual_file,
-        crate::printer(&input, &enhanced).to_string(),
-    )?;
+    std::fs::write(actual_file, crate::printer(&input, &enhanced).to_string())?;
     Ok(false)
 }

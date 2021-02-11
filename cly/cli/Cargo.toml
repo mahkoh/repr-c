@@ -1,15 +1,16 @@
 [package]
-name = "c-layout-impl"
+name = "cly"
 version = "0.1.0"
 authors = ["Julian Orth <ju.orth@gmail.com>"]
 edition = "2018"
 license = "GPL-3.0-or-later"
 repository = "https://github.com/mahkoh/repr-c"
+description = "A program to calculate the layout of C types"
+keywords = ["cli", "api", "utility", "language"]
+categories = ["command-line-utilities", "compilers", "development-tools::ffi"]
 
 [dependencies]
+cly-impl = { path = "../impl", version = "=0.1.0" }
 repr-c-impl = { path = "../../repr-c/impl", version = "0.1.0" }
+clap = "2"
 anyhow = "1.0.38"
-
-[dev-dependencies]
-rayon = "1.5.0"
-isnt = "0.1.0"

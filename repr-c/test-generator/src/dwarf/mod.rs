@@ -4,9 +4,9 @@ mod reader;
 use crate::dwarf::reader::{add_relocations, Relocate};
 use anyhow::Result;
 use borrow::Cow;
-use c_layout_impl::ast;
-use c_layout_impl::ast::Declaration;
-use c_layout_impl::converter::{Computer, ConversionResult, Convert};
+use cly_impl::ast;
+use cly_impl::ast::Declaration;
+use cly_impl::converter::{Computer, ConversionResult, Convert};
 use gimli::{
     Attribute, AttributeValue, DW_AT_bit_size, DW_AT_byte_size, DW_AT_data_bit_offset,
     DW_AT_data_member_location, DW_AT_name, DW_AT_type, DW_TAG_member, DW_TAG_pointer_type,

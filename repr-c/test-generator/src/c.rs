@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 use anyhow::bail;
 use anyhow::Result;
-use c_layout_impl::ast::{
+use cly_impl::ast::{
     Annotation, Array, BinaryExprType, BuiltinExpr, Declaration, DeclarationType, Expr, ExprType,
     Record, RecordField, Type, TypeExprType, TypeVariant, UnaryExprType,
 };

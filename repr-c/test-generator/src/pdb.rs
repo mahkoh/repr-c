@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 use anyhow::{bail, Result};
-use c_layout_impl::ast;
-use c_layout_impl::ast::Declaration;
-use c_layout_impl::converter::{Computer, ConversionResult, Convert};
+use cly_impl::ast;
+use cly_impl::ast::Declaration;
+use cly_impl::converter::{Computer, ConversionResult, Convert};
 use pdb::{BitfieldType, FallibleIterator, FieldList, MemberType, TypeData};
 use repr_c_impl::builder::common::builtin_type_layout;
 use repr_c_impl::layout::{FieldLayout, Type, TypeLayout};
