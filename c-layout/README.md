@@ -6,6 +6,7 @@ cly is a program that calculates the layout of C types using a domain-specific l
 
 ```
 ~$ cat input
+
 const C = sizeof(char) + sizeof(long long)
 A = @pragma_pack(2) struct {
     c char,
@@ -15,6 +16,7 @@ A = @pragma_pack(2) struct {
 }
 
 ~$ cly --target x86_64-unknown-linux-gnu input
+
 const C = {9}sizeof(char) + sizeof(long long)
 A = { size: 176, alignment: 16 }@pragma_pack(2) struct {
     { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
@@ -24,6 +26,7 @@ A = { size: 176, alignment: 16 }@pragma_pack(2) struct {
 }
 
 ~$ cly --target i686-pc-windows-msvc input
+
 const C = {9}sizeof(char) + sizeof(long long)
 A = { size: 208, field_alignment: 32, pointer_alignment: 16 }@pragma_pack(2) struct {
     { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
