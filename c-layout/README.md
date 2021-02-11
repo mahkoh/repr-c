@@ -4,7 +4,7 @@ cly is a program that calculates the layout of C types using a domain-specific l
 
 # Example
 
-```console
+```shell-session
 ~$ cat input
 const C = sizeof(char) + sizeof(long long)
 A = @pragma_pack(2) struct {
