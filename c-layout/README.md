@@ -4,7 +4,7 @@ cly is a program that calculates the layout of C types using a domain-specific l
 
 # Example
 
-```sh
+```
 ~$ cat input
 const C = sizeof(char) + sizeof(long long)
 A = @pragma_pack(2) struct {
@@ -13,6 +13,7 @@ A = @pragma_pack(2) struct {
     j int:5,
     k [C]short,
 }
+
 ~$ cly --target x86_64-unknown-linux-gnu input
 const C = {9}sizeof(char) + sizeof(long long)
 A = { size: 176, alignment: 16 }@pragma_pack(2) struct {
@@ -21,6 +22,7 @@ A = { size: 176, alignment: 16 }@pragma_pack(2) struct {
     { offset: 19, size: 5 }j { size: 32, alignment: 32 }int:5,
     { offset: 32, size: 144 }k { size: 144, alignment: 16 }[{9}C]{ size: 16, alignment: 16 }short,
 }
+
 ~$ cly --target i686-pc-windows-msvc input
 const C = {9}sizeof(char) + sizeof(long long)
 A = { size: 208, field_alignment: 32, pointer_alignment: 16 }@pragma_pack(2) struct {
@@ -37,7 +39,7 @@ See [examples.md](./examples.md) for a full description of the program input and
 
 You can install cly with [cargo](https://rustup.rs):
 
-```console
+```
 ~$ cargo install c-layout
 ```
 
