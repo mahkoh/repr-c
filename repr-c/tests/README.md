@@ -1,7 +1,7 @@
 This directory contains test cases for the repr-c crate.
 
 Each directory within [./testfiles](./testfiles) is a test case. Each such directory
-contains a file called `input.txt` and a directory `output`. `input.txt` in the input
+contains a file called `input.txt` and a directory `output`. `input.txt` is the input
 to repr_c in form of a [cly](../../cly) file. For each target, `output` contains a file
 called `{TARGET_NAME}.expected.txt`. This file is in the form of a cly output file.
 
