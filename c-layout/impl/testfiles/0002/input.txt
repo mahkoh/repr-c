@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 const A000 = !3
 const A001 = !0
 const A002 = -2

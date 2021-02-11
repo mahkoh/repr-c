@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+MyType = int
+MyStruct = struct {
+    my_type MyType,
+    my_undeclared_type [3]union {
+        i int,
+        j MyType:4,
+    }
+}

@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+MyPackedStruct = { size: 32, alignment: 32 }@pragma_pack(4) struct {
+    { offset: 0, size: 32 }l { size: 32, alignment: 32 }long,
+}
+MyPackedStruct2 = { size: 32, alignment: 8 }@attr_packed struct {
+    { offset: 0, size: 32 }l { size: 32, alignment: 32 }long,
+}
+MyAlignedStruct = { size: 64, alignment: 64, required_alignment: 64 }@align(8) struct {
+    { offset: 0, size: 16 }s { size: 16, alignment: 16 }short,
+}
+MyAlignedStruct2 = { size: 128, alignment: 128, required_alignment: 128 }@align struct {
+    { offset: 0, size: 16 }s { size: 16, alignment: 16 }short,
+}
+MyStructWithFieldAnnotations = { size: 64, alignment: 64, required_alignment: 64 }struct {
+    { offset: 0, size: 32 }@align(8) i { size: 32, alignment: 32 }int,
+    { offset: 32, size: 32 }@attr_packed j { size: 32, alignment: 32 }long,
+}

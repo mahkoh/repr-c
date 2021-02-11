@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 A = { size: 32, field_alignment: 64, pointer_alignment: 32, required_alignment: 64 }@align(8) typedef { size: 32, alignment: 32 }int
 
 B = { size: 96, field_alignment: 64, pointer_alignment: 32, required_alignment: 16 }@pragma_pack(4) struct {

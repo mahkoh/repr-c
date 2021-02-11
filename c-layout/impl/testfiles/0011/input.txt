@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+MyPackedStruct = @pragma_pack(4) struct {
+    l long,
+}
+MyPackedStruct2 = @attr_packed struct {
+    l long,
+}
+MyAlignedStruct = @align(8) struct {
+    s short,
+}
+MyAlignedStruct2 = @align struct {
+    s short,
+}
+MyStructWithFieldAnnotations = struct {
+    @align(8) i int,
+    @attr_packed j long,
+}

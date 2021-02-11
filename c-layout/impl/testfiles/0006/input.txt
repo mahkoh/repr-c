@@ -1,0 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+MyTypedefInt = typedef int
+MyPlainInt = int
+MyTypedefIntWithAnnotations = @align(8) typedef int

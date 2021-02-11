@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+const A = 1 + 2 * 3 - 4 / 5 % 6 + -7 + !!9
+const B = A > 0 && A < 100 || A == 33
+const C = 0b1010_1010 // _ is supported as a separator within numbers
+const D = 0o077
+const E = 1237
+const F = 0xff
+const G = BITS_PER_BYTE == 8
+const H = sizeof(int)
+const I = sizeof_bits(long long)
+J = struct {
+    c char,
+    i int,
+    j [2]struct {
+        a int:1,
+        b int:1,
+    }
+}
+const K = offsetof(J, i)
+const L = offsetof_bits(J, j[1].b)

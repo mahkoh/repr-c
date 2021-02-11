@@ -6,6 +6,10 @@ edition = "2018"
 license = "GPL-3.0-or-later"
 repository = "https://github.com/mahkoh/repr-c"
 
+[[bin]]
+name = "cly"
+path = "src/main.rs"
+
 [dependencies]
 c-layout-impl = { path = "../impl", version = "=0.1.0" }
 repr-c-impl = { path = "../../repr-c/impl", version = "0.1.0" }

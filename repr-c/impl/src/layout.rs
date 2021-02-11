@@ -35,15 +35,12 @@ impl<I: Layout> Type<I> {
 pub enum Annotation {
     /// The `PragmaPack` annotation.
     ///
-    /// This cannot be used on typedefs or fields. At most one of these can be used on a
-    /// type.
+    /// This cannot be used on fields. At most one of these can be used on a type.
     ///
     /// If the argument is `n`, it corresponds to `#pragma pack(n/8)` in C.
     /// If `n` is not a multiple of 8, this annotation will be ignored.
     PragmaPack(u64),
     /// The `AttrPacked` annotation.
-    ///
-    /// This cannot be used on typedefs.
     ///
     /// This corresponds to `__attribute__((packed))` in C. On MSVC targets, the behavior
     /// is the behavior of Clang.
@@ -80,6 +77,9 @@ pub struct TypeLayout {
     /// (but in bits instead of bytes). This is a multiple of `pointer_alignment_bits`.
     pub size_bits: u64,
     /// The alignment of the type, in bits, when used as a field in a record.
+    ///
+    /// This is usually the value returned by `_Alignof` in C, but there are some edge
+    /// cases in GCC where `_Alignof` returns a smaller value.
     pub field_alignment_bits: u64,
     /// The alignment, in bits, of valid pointers to this type.
     ///

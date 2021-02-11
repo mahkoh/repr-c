@@ -1,2 +1,3 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-A = int
+MyArray = [1]int
+MyArrayWithoutASize = []int
