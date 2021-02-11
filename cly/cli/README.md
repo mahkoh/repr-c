@@ -43,7 +43,7 @@ See [examples.md](../examples.md) for a full description of the program input an
 You can install cly with [cargo](https://rustup.rs):
 
 ```
-~$ cargo install c-layout
+~$ cargo install cly
 ```
 
 # Grammar
