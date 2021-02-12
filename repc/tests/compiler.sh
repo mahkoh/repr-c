@@ -20,6 +20,8 @@ case "$COMPILER" in
       mips64* | mipsisa64*)
         mabi="-mabi=64"
         ;;
+      *-gnux32)
+        mabi="-mx32"
     esac
     PATH=~/bin/gcc-cross/$TARGET/bin
     gcc $mabi -gdwarf-5 -c -o "$OUTPUT" "$INPUT"

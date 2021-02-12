@@ -186,6 +186,7 @@ pub fn builtin_type_layout(target: Target, b: BuiltinType) -> TypeLayout {
             | Wasm32UnknownEmscripten
             | Wasm32UnknownUnknown
             | Wasm32Wasi
+            | X86_64UnknownLinuxGnux32
             | X86_64PcWindowsGnu
             | X86_64PcWindowsMsvc
             | X86_64UnknownWindows => (4, 4),
@@ -259,7 +260,8 @@ pub fn builtin_type_layout(target: Target, b: BuiltinType) -> TypeLayout {
             | Thumbv8mMainNoneEabihf
             | Wasm32UnknownEmscripten
             | Wasm32UnknownUnknown
-            | Wasm32Wasi => (4, 4),
+            | Wasm32Wasi
+            | X86_64UnknownLinuxGnux32 => (4, 4),
             _ => (8, 8),
         },
     };
