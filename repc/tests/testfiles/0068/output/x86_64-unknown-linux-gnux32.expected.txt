@@ -363,36 +363,36 @@ A7 = { size: 256, alignment: 256 }struct {
     { offset: 0, size: 8 }a { size: 8, alignment: 256 }A4,
 }
 
-A8 = { size: 64, alignment: 64 }struct {
+A8 = { size: 64, alignment: 32 }struct {
     { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
-    { offset: 8, size: 31 }@attr_packed i { size: 64, alignment: 64 }long:31,
-    { offset: 39, size: 2 }j { size: 64, alignment: 64 }long:2,
+    { offset: 8, size: 31 }@attr_packed i { size: 32, alignment: 32 }long:31,
+    { offset: 39, size: 2 }j { size: 32, alignment: 32 }long:2,
 }
 
-A9 = { size: 128, alignment: 64 }struct {
+A9 = { size: 96, alignment: 32 }struct {
     { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
-    { offset: 8, size: 31 }@attr_packed i { size: 64, alignment: 64 }long:31,
-    { offset: 64, size: 64 }j { size: 64, alignment: 64 }long,
+    { offset: 8, size: 31 }@attr_packed i { size: 32, alignment: 32 }long:31,
+    { offset: 64, size: 32 }j { size: 32, alignment: 32 }long,
 }
 
-A10 = { size: 64, alignment: 128 }@align(16) typedef { size: 64, alignment: 64 }long
+A10 = { size: 32, alignment: 128 }@align(16) typedef { size: 32, alignment: 32 }long
 
 A11 = { size: 256, alignment: 128 }struct {
     { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
-    { offset: 8, size: 31 }@attr_packed i { size: 64, alignment: 64 }long:31,
-    { offset: 128, size: 2 }j { size: 64, alignment: 128 }A10:2,
+    { offset: 8, size: 31 }@attr_packed i { size: 32, alignment: 32 }long:31,
+    { offset: 128, size: 2 }j { size: 32, alignment: 128 }A10:2,
 }
 
 A12 = { size: 256, alignment: 128 }struct {
     { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
-    { offset: 8, size: 31 }@attr_packed i { size: 64, alignment: 64 }long:31,
-    { offset: 128, size: 64 }j { size: 64, alignment: 128 }A10,
+    { offset: 8, size: 31 }@attr_packed i { size: 32, alignment: 32 }long:31,
+    { offset: 128, size: 32 }j { size: 32, alignment: 128 }A10,
 }
 
 A13 = { size: 256, alignment: 128 }struct {
     { offset: 0, size: 8 }c { size: 8, alignment: 8 }char,
-    { offset: 8, size: 1 }i { size: 64, alignment: 64 }long:1,
-    { offset: 128, size: 1 }@align(16) j { size: 64, alignment: 64 }long:1,
+    { offset: 8, size: 1 }i { size: 32, alignment: 32 }long:1,
+    { offset: 128, size: 1 }@align(16) j { size: 32, alignment: 32 }long:1,
     { offset: 136, size: 8 }d { size: 8, alignment: 8 }char,
 }
 // hash: eb572b5fb701179b
