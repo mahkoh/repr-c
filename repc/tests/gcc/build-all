@@ -12,6 +12,12 @@ targets=(
     armv5te-unknown-linux-uclibcgnueabi
     armv7-unknown-linux-gnueabi
     armv7-unknown-linux-gnueabihf
+    avr
+    i586-unknown-linux-gnu
+    i586-unknown-linux-musl
+    i686-unknown-linux-gnu
+    i686-unknown-linux-musl
+    i686-w64-mingw32
     mips64el-unknown-linux-gnuabi64
     mips64el-unknown-linux-musl
     mips64-unknown-linux-gnuabi64
@@ -40,11 +46,6 @@ targets=(
     x86_64-unknown-linux-gnu
     x86_64-unknown-linux-gnux32
     x86_64-unknown-linux-musl
-    i586-unknown-linux-gnu
-    i586-unknown-linux-musl
-    i686-unknown-linux-gnu
-    i686-unknown-linux-musl
-    i686-w64-mingw32
     x86_64-w64-mingw64
 )
 
@@ -57,3 +58,4 @@ done
 
 ln -sfn x86_64-w64-mingw64 x86_64-pc-windows-gnu
 ln -sfn i686-w64-mingw32 i686-pc-windows-gnu
+ln -sfn avr avr-unknown-unknown
