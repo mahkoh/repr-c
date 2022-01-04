@@ -1,6 +1,6 @@
 [package]
 name = "cly"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Julian Orth <ju.orth@gmail.com>"]
 edition = "2018"
 license = "GPL-3.0-or-later"
@@ -10,7 +10,7 @@ keywords = ["cli", "api", "utility", "language"]
 categories = ["command-line-utilities", "compilers", "development-tools::ffi"]
 
 [dependencies]
-cly-impl = { path = "../impl", version = "=0.1.0" }
-repc-impl = { path = "../../repc/impl", version = "0.1.0" }
+cly-impl = { path = "../impl", version = "=0.1.1" }
+repc-impl = { path = "../../repc/impl", version = "0.1.1" }
 clap = "2"
 anyhow = "1.0.38"

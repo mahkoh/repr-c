@@ -1,6 +1,6 @@
 [package]
 name = "repc"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Julian Orth <ju.orth@gmail.com>"]
 edition = "2018"
 license = "MIT OR Apache-2.0"
@@ -8,4 +8,4 @@ repository = "https://github.com/mahkoh/repr-c"
 description = "APIs to calculate the layout of C types."
 
 [dependencies]
-repc-impl = { path = "../impl", version = "=0.1.0" }
+repc-impl = { path = "../impl", version = "=0.1.1" }

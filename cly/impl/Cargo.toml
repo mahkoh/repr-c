@@ -1,6 +1,6 @@
 [package]
 name = "cly-impl"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Julian Orth <ju.orth@gmail.com>"]
 edition = "2018"
 license = "GPL-3.0-or-later"
@@ -8,7 +8,7 @@ repository = "https://github.com/mahkoh/repr-c"
 description = "An internal dependency of the cly crate"
 
 [dependencies]
-repc-impl = { path = "../../repc/impl", version = "0.1.0" }
+repc-impl = { path = "../../repc/impl", version = "0.1.1" }
 anyhow = "1.0.38"
 
 [dev-dependencies]
