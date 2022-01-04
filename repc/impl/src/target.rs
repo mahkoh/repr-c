@@ -9,3 +9,5 @@ pub enum Compiler {
 include!(concat!(env!("OUT_DIR"), "/targets.rs"));
 
 include!(concat!(env!("OUT_DIR"), "/host.rs"));
+
+include!(concat!(env!("OUT_DIR"), "/target_map.rs"));
