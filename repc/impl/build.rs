@@ -507,6 +507,23 @@ const RUST_TARGET_MAP: &[(&str, &str)] = &[
     (X86_64_WRS_VXWORKS, X86_64_UNKNOWN_LINUX_GNU),
 ];
 
+fn emit_target_map() -> io::Result<()> {
+    let mut file = open("target_map.rs")?;
+    writeln!(file, "// SPDX-License-Identifier: MIT OR Apache-2.0")?;
+    writeln!(file, "/// A map mapping rustc targets to repc targets.")?;
+    writeln!(file, "pub const TARGET_MAP: &[(&str, Target)] = &[")?;
+    for &(rustc, llvm) in RUST_TARGET_MAP {
+        writeln!(
+            file,
+            "    (\"{}\", Target::{}),",
+            rustc,
+            to_camel_case(llvm)
+        )?;
+    }
+    writeln!(file, "];")?;
+    Ok(())
+}
+
 fn emit_host_target() -> io::Result<()> {
     let rust_target = env::var("TARGET").unwrap();
     let llvm_target = RUST_TARGET_MAP.iter().find(|t| t.0 == rust_target);
@@ -641,6 +658,7 @@ pub enum Target {{
 fn main() -> io::Result<()> {
     emit_targets()?;
     emit_host_target()?;
+    emit_target_map()?;
     println!("cargo:rerun-if-changed=build.rs");
     Ok(())
 }

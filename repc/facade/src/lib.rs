@@ -72,7 +72,7 @@
 
 pub use repc_impl::builder::compute_layout;
 
-pub use repc_impl::target::{Target, HOST_TARGET, TARGETS};
+pub use repc_impl::target::{Target, HOST_TARGET, TARGETS, TARGET_MAP};
 
 pub mod layout {
     //! Types describing the structure and layout of C types.
